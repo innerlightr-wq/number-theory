@@ -1,0 +1,29 @@
+cff-version: 1.2.0
+message: "If you use this repository, please cite the individual paper by its DOI; the entry below is the preferred repository-level citation."
+title: "number-theory: general number-theory work"
+authors:
+  - family-names: "De Jesús"
+    given-names: "Elias"
+    orcid: "https://orcid.org/0009-0007-0190-9143"
+    email: "dejesuselias10@gmail.com"
+    affiliation: "Independent Researcher"
+license: MIT
+repository-code: "https://github.com/innerlightr-wq/number-theory"
+keywords:
+  - number theory
+  - 2-adic transcendence
+  - Sturmian words
+  - Diophantine approximation
+  - Weil positivity
+preferred-citation:
+  type: report
+  title: "Transcendence of the 3x+1 conjugacy map on Sturmian words"
+  authors:
+    - family-names: "De Jesús"
+      given-names: "Elias"
+      orcid: "https://orcid.org/0009-0007-0190-9143"
+  year: 2026
+  month: 10
+  doi: "10.5281/zenodo.23210794"
+  institution:
+    name: "Zenodo"
