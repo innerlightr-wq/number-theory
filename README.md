@@ -49,9 +49,11 @@ papers/     one folder per deposited paper
 Python 3.9+, standard library only. No third-party packages, no network access.
 
 ```
-python3 lib/tests/test_ntlib.py                     # library tests        ~3 min
-cd papers/sturmian-transcendence/verification && python3 rev_main.py   # paper's Appendix B
+python3 lib/tests/test_ntlib.py          # 23 library tests                     <1 s
+cd papers/sturmian-transcendence/verification && python3 rev_main.py   # Appendix B   7 s
 ```
+
+The full verification suite of every paper in this repository runs in about 11 seconds.
 
 ## License
 

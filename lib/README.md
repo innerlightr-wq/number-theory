@@ -24,7 +24,7 @@ python3 tests/test_ntlib.py
 [`papers/sturmian-transcendence`](../papers/sturmian-transcendence): the isometry, the periodic
 value formula, the depth law `q_{k+1}+q_k−2` at both convergent parities, the Step-2 height
 bound, `c_W ≤ 3ℓ·max(2^ℓ,3^k)`, the sign check of Remark 3.3, the affine transfer of eq. (10),
-and `γ*` to 19 decimals. Runtime ~3 minutes; exit code 0 on success.
+and `γ*` to 19 decimals. Runtime under a second; exit code 0 on success.
 
 ## Relation to the papers' own scripts
 

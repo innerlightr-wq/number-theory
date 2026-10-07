@@ -64,17 +64,17 @@ CHECKLIST.md   per-statement ledger: proof location, prior source, verification 
 ## Reproduction
 
 Python 3.9+, standard library only (`fractions`, `decimal`). No third-party packages.
-Runtimes on an Apple Silicon laptop.
+Measured on an Apple Silicon laptop; the whole suite is **11 s**.
 
 ```
 cd verification
-python3 rev_core.py               # primitives; silent, asserts only          ~40 s
-python3 rev_main.py               # depth, heights, certified omega, 4 slopes ~90 s
-python3 rev_collapse.py           # the 1c_gamma parity collapse (§4)         ~25 s
-python3 rev_boundary_controls.py  # noble slopes either side of gamma*        ~60 s
-python3 sign_check.py             # Remark 3.3, the two Xi conventions        ~15 s
-python3 rev_nguyen.py             # literature exclusion (Nguyen Thm A)        ~5 s
-python3 p1_ridout_gap.py          # the quartic witness of the §2.4 footnote  ~30 s
+python3 rev_core.py               # primitives; silent, asserts only          0.0 s
+python3 rev_main.py               # depth, heights, certified omega, 4 slopes 6.8 s
+python3 rev_collapse.py           # the 1c_gamma parity collapse (§4)         0.3 s
+python3 rev_boundary_controls.py  # noble slopes either side of gamma*        3.0 s
+python3 sign_check.py             # Remark 3.3, the two Xi conventions        0.4 s
+python3 rev_nguyen.py             # literature exclusion (Nguyen Thm A)       0.0 s
+python3 p1_ridout_gap.py          # the quartic witness of the §2.4 footnote  0.7 s
 ```
 
 `rev_main.py`, `rev_collapse.py` and `rev_boundary_controls.py` reproduce `out_main.txt`,
