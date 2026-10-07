@@ -1,0 +1,1278 @@
+\documentclass[11pt,reqno]{amsart}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage[margin=1.15in]{geometry}
+\usepackage{xcolor}
+\usepackage{booktabs}
+\usepackage[expansion=false]{microtype}
+\usepackage[colorlinks=true,linkcolor=blue!55!black,citecolor=blue!55!black,urlcolor=blue!55!black]{hyperref}
+\usepackage{url}
+
+% Typesetting only: lets TeX resolve tight lines by stretching interword
+% space in a final pass. No effect on content.
+\emergencystretch=2em
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{question}[theorem]{Question}
+\newtheorem*{theoremR}{Theorem R}
+\newtheorem*{theoremS}{Theorem S}
+
+\DeclareMathOperator{\lcp}{lcp}
+\DeclareMathOperator{\ice}{ice}
+\DeclareMathOperator{\Dio}{Dio}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Zt}{\Z_2}
+\newcommand{\Qt}{\Q_2}
+\newcommand{\PH}{\Phi}
+\newcommand{\gs}{\gamma^{*}}
+\newcommand{\Av}{A(\gamma)}
+\newcommand{\om}{\omega_1^{(2)}}
+\newcommand{\vtwo}{v_2}
+
+\begin{document}
+
+\title[Transcendence of the $3x+1$ conjugacy map on Sturmian words]
+      {Transcendence of the $3x+1$ conjugacy map on Sturmian words}
+\author{Elias De Jes\'us}
+\address{Independent Researcher}
+\email{dejesuselias10@gmail.com}
+\urladdr{https://orcid.org/0009-0007-0190-9143}
+\date{October 2026}
+
+\subjclass[2020]{Primary 11J61; Secondary 11B83, 68R15, 11J81}
+\keywords{$3x+1$ problem, conjugacy map, Sturmian word, $2$-adic transcendence,
+Ridout's theorem, initial critical exponent}
+
+\begin{abstract}
+Let $T$ be the $3x+1$ map on the $2$-adic integers and let $\PH\colon\Zt\to\Zt$ be the
+Bernstein--Lagarias conjugacy map, which sends a parity vector to the unique $2$-adic integer
+realising it. We prove that $\PH(c_\gamma)$, $\PH(1c_\gamma)$, $\PH(0c_\gamma)$ and $\PH$ of every
+shift of these words are transcendental for every irrational slope
+$\gamma<\gs=(3+\sqrt5)/(4\log_2 3)=0.8258977\ldots$, with no hypothesis whatever on the partial
+quotients of $\gamma$; in particular at the resonance slope $\gamma=\log_3 2$. The mechanism is a
+bridge: by the Bernstein--Lagarias isometry, the $2$-adic approximation depth of a periodic shadow
+equals a longest common prefix, so the Diophantine behaviour of $\PH$ is governed by the repetition
+structure of the parity word, at a height cost $\Av=\max(1,\gamma\log_2 3)$ that we control at every
+level. Quantitatively $\om(\PH(c_\gamma))\ge\ice(c_\gamma)/\Av-1$, where $\ice$ is the initial
+critical exponent of Berth\'e--Holton--Zamboni; their floor $\ice(c_\gamma)\ge1+\varphi$ then beats
+the Ridout threshold $\om\le1$ by a margin bounded away from zero. The result is not a corollary of
+the digit-based transcendence criteria: the $2$-adic Hensel digits of $\PH(c_{\log_3 2})$ are
+measured to have full complexity $2^n$, against the parity word's $n+1$, and the shadow denominators
+$2^{\ell}-3^{k}$ are not $S$-units for any fixed finite $S$. We also record the Liouville
+alternative for unbounded partial quotients and a finite effective irrationality measure for bounded
+ones at slopes $\gamma\le\log_3 2$.
+\end{abstract}
+
+\maketitle
+
+\section{Introduction}\label{sec:intro}
+
+\subsection{The conjugacy map and the Periodicity Conjecture}
+The $3x+1$ map is defined on the $2$-adic integers $\Zt$ by
+\[
+T(x)=\frac{3x+1}{2}\quad(x\text{ odd}),\qquad T(x)=\frac{x}{2}\quad(x\text{ even}),
+\]
+and the $2$-adic shift by $S(x)=(x-1)/2$ for $x$ odd and $S(x)=x/2$ for $x$ even, so that $S$ shifts
+the $2$-adic digit expansion. Bernstein and Lagarias \cite[\S1]{BL96} proved that $T$ and $S$ are
+conjugate: there is a unique homeomorphism $\PH\colon\Zt\to\Zt$ with $\PH(0)=0$ and
+\begin{equation}\label{eq:conj}
+  \PH\circ S\circ\PH^{-1}=T .
+\end{equation}
+Identifying a word $v=v_0v_1v_2\cdots\in\{0,1\}^{\N}$ with the $2$-adic integer $\sum_k v_k2^k$, the
+inverse $\PH^{-1}(x)=\sum_{k\ge0}\bigl(T^k(x)\bmod 2\bigr)2^k$ is the \emph{parity vector} of $x$,
+so $\PH(v)$ is the unique $x\in\Zt$ whose parity vector is $v$, and \eqref{eq:conj} reads
+\begin{equation}\label{eq:shift}
+  \PH(\sigma v)=T(\PH(v)),
+\end{equation}
+$\sigma$ being the shift on words. A $2$-adic integer is rational if and only if its digit
+expansion is eventually periodic; and if $v$ is eventually periodic then $\PH(v)\in\Q$, by
+Proposition~\ref{prop:shadow} below. The \emph{Periodicity Conjecture}, which goes back to Lagarias's survey \cite{Lagarias85} and is
+stated in the form below in \cite[Abstract]{LS09} and \cite[\S1]{LS21}, asserts the converse:
+
+\begin{question}[Periodicity Conjecture; open]\label{q:per}
+Is the parity vector of every rational $2$-adic integer eventually periodic? Equivalently: is
+$\PH(v)$ irrational for every aperiodic $v\in\{0,1\}^{\N}$?
+\end{question}
+
+Nothing in the present paper bears on Question~\ref{q:per} in general: it quantifies over an
+uncountable family of words. What can be done is to settle it, and more, on thin but genuinely
+aperiodic families. The thinnest are the Sturmian words, of factor complexity $p(L)=L+1$.
+
+\subsection{Prior irrationality results}
+For Sturmian words Question~\ref{q:per} is a theorem. Write $\beta=\log_3 2=0.6309297\ldots$ for the
+\emph{resonance} slope. Three strands of prior work:
+
+\begin{itemize}
+\item Monks and Yazinski \cite[Theorem 2.7(b)]{MY04} proved that a rational $2$-adic integer with
+  infinite orbit has lower ones-density at least $\beta$. Contrapositively, $\PH(v)\notin\Q$ for
+  every aperiodic $v$ of lower ones-density $<\beta$; in particular for every Sturmian word of slope
+  $\gamma<\beta$.
+\item L\'opez and Stoll \cite[\S4]{LS09} proved that the \emph{real} value
+  $\PH_{\R}(m_\alpha)$ is irrational for $1>\alpha>\beta$, using the continued fraction of their
+  Corollary~2, with a dual construction below $\beta$. This is a different number from the $2$-adic
+  $\PH$; see Remark~\ref{rem:real}. Their later preprint \cite[Theorem 1]{LS21} concerns the
+  $2$-adic value; we cite it as context only and depend on it nowhere.
+\item The author \cite[Theorems 8.5 and 10.1, Corollary 10.5]{DJirr} proved that $\PH(s)\notin\Q$
+  for \emph{every} mechanical word $s$ of every irrational slope and every intercept, effectively.
+  Cassidy \cite[Theorems R and S]{Cassidy26} proved the irrationality statement independently and
+  contemporaneously, by a $2$-adic repetition criterion, for every slope and intercept and for a
+  wider class of maps; his note was posted first (see \S\ref{sec:related}).
+\end{itemize}
+
+Irrationality says $\PH(s)$ is not a rational point. It says nothing about whether $\PH(s)$ is
+algebraic. That is the gap this paper closes.
+
+\subsection{Main results}
+Let $\gamma\in(0,1)$ be irrational with continued fraction $\gamma=[0;a_1,a_2,\dots]$ and
+convergent denominators $q_k$. Let $c_\gamma$ be the characteristic Sturmian word of slope $\gamma$
+and let $1c_\gamma$, $0c_\gamma$ be the two mechanical words of slope $\gamma$ at intercept $0$.
+Put
+\[
+  \Av:=\max(1,\gamma\log_2 3),\qquad
+  \gs:=\frac{1+\varphi}{2\log_2 3}=\frac{3+\sqrt5}{4\log_2 3}=0.8258977696818354644\ldots,
+\]
+where $\varphi=(1+\sqrt5)/2$, and let $\ice$ denote the initial critical exponent of
+Berth\'e--Holton--Zamboni \cite[\S2]{BHZ06} (Definition~\ref{def:ice}). Our normalisation of the
+$2$-adic Koksma exponent $\om$ is fixed in \S\ref{ss:norm}.
+
+\begin{theorem}[Quantitative form]\label{thm:quant}
+For every irrational $\gamma\in(0,1)$,
+\[
+  \om\bigl(\PH(c_\gamma)\bigr)\;\ge\;\frac{\ice(c_\gamma)}{\Av}-1
+  \;=\;\frac{1+\limsup_{k}q_{k+1}/q_k}{\Av}-1 .
+\]
+\end{theorem}
+
+\begin{theorem}[Transcendence]\label{thm:main}
+Let $\gamma\in(0,1)$ be irrational and suppose
+\begin{equation}\label{eq:T}
+  \ice(c_\gamma)>2\Av . \tag{T}
+\end{equation}
+Then $\PH(c_\gamma)$ is transcendental, and so are $\PH(1c_\gamma)$, $\PH(0c_\gamma)$ and
+$\PH(\sigma^k 1c_\gamma)$ for every $k\ge0$.
+\end{theorem}
+
+\begin{corollary}[Unconditional range]\label{cor:uncond}
+For every irrational $\gamma<\gs$ the numbers $\PH(c_\gamma)$, $\PH(1c_\gamma)$, $\PH(0c_\gamma)$
+and $\PH$ of every shift of these words are transcendental. In particular they are transcendental at
+the resonance slope $\gamma=\beta=\log_3 2$, \emph{with no hypothesis on the partial quotients of
+$\log_2 3$}.
+\end{corollary}
+
+Two complements. If the partial quotients of $\gamma$ are unbounded then $\ice(c_\gamma)=\infty$ and
+the conclusion sharpens to a Liouville statement (Theorem~\ref{thm:liouville}); if they are bounded
+and $\gamma\le\beta$ then $\PH(c_\gamma)$ has a finite \emph{effective} irrationality measure
+(Theorem~\ref{thm:Bstar}).
+
+Theorem~\ref{thm:main} and Corollary~\ref{cor:uncond} answer problem~(3) of \cite[\S12]{DJirr}
+--- ``is $\PH(1c_\beta)$, or $\PH(1c_\gamma)$ for a given irrational $\gamma$, transcendental
+over $\Q$?'' --- for every irrational $\gamma<\gs$, the resonance slope $\gamma=\beta$ included.
+Problem~(2) of \cite[\S12]{DJirr} is a different question and is \emph{not} answered here: it asks
+for $\mu<\infty$ and $C>0$ with $|\PH(1c_\gamma)-y|_2\ge C|y|^{-\mu}$ for all \emph{integers}
+$y\ge1$. Theorems~\ref{thm:liouville} and \ref{thm:Bstar} concern approximation by
+\emph{rationals} and do not bear on it; \S\ref{ss:integer} records only the negative fact that the
+Liouville blow-up of Theorem~\ref{thm:liouville} does not descend to $\Z$, so problem~(2) is not
+obstructed by it. It remains open.
+
+\subsection{Non-claims}\label{ss:nonclaims}
+Stated plainly, so that the scope is not inferred from the title. This paper does \emph{not} bear on
+the convergence of the $3x+1$ map on the positive integers, nor on the existence of divergent or
+cyclic orbits. It does not prove the Periodicity Conjecture (Question~\ref{q:per}), which quantifies
+over an uncountable family of aperiodic parity vectors; the Sturmian words form a measure-zero,
+countable-slope subfamily. It proves nothing for slopes $\gamma\ge\gs$ except what
+Theorem~\ref{thm:main} gives under its hypothesis~\eqref{eq:T}, and $\gs$ is sufficient, not
+necessary: slopes above $\gs$ with large partial quotients still satisfy \eqref{eq:T}
+(\S\ref{ss:aboveg}). It says nothing about intercepts other than $0$ beyond \S\ref{ss:intercepts},
+and nothing about approximation by \emph{integers}, which is problem~(2) of \cite[\S12]{DJirr} and
+remains open (\S\ref{ss:integer}). No claim of priority is made over \cite{Cassidy26}; see
+\S\ref{sec:related}.
+
+\subsection{Epistemic tiers}\label{ss:tiers}
+Three labels are used, and used consistently. \textbf{T1}: proved here or quoted from a cited source
+with its hypotheses checked --- Theorems~\ref{thm:quant}--\ref{thm:main},
+Corollary~\ref{cor:uncond}, Propositions~\ref{prop:iso}--\ref{prop:irr},
+Theorems~\ref{thm:liouville} and \ref{thm:Bstar}, and the two propositions of
+\S\ref{sec:truncations}. \textbf{T2}: established by exact integer or $2$-adic computation, with the
+precision stated --- every table and every numerical assertion in Appendix~\ref{app:verif},
+Example~\ref{ex:witness}, the complexity table of \S\ref{ss:notcor}, and the quartic witness in the
+footnote of \S\ref{ss:norm}. No floating-point number decides any inequality anywhere in this paper.
+\textbf{T3}: interpretation, flagged as such in the text --- the reading of \eqref{eq:terms} as the
+reason the archimedean place is unavailable, and the discussion in \S\ref{sec:scope}.
+
+\subsection{Why this is not a corollary of the digit-based criteria}\label{ss:notcor}
+There is a well-developed theory which concludes transcendence from low complexity of a \emph{digit
+expansion}: Ferenczi--Mauduit \cite{FM97} for low-complexity $b$-ary expansions, the combinatorial
+transcendence criterion of Adamczewski--Bugeaud \cite{AB07} and its $p$-adic analogues, and --- the
+closest formal match --- Ooto \cite{Ooto16}, who proves that an irrational $p$-adic number whose
+\emph{Hensel digits} form an automatic, primitive morphic or Sturmian sequence is an $S$-, $T$- or
+$U_1$-number. Had any of these applied, Theorem~\ref{thm:main} would be a corollary, and Ooto's
+theorem would in addition supply the Mahler class. None applies, for two independent reasons.
+
+\emph{First, the wrong coordinate.} The Sturmian structure of our object lives in the parity vector,
+not in the digits, and $\PH$ destroys it on the way to the digits. This is measurable. For
+$\gamma=\log_3 2$ we computed the first $3000$ Hensel digits of $\PH(c_\gamma)$ in exact arithmetic
+from the parity-vector definition and counted distinct factors:
+
+\begin{center}
+\begin{tabular}{lcccccl}
+\toprule
+factor length $n$ & $2$ & $3$ & $4$ & $5$ & $6$ \\
+\midrule
+Hensel digits of $\PH(c_{\log_3 2})$ & $4$ & $8$ & $16$ & $32$ & $64$ \\
+the parity word $c_{\log_3 2}$       & $3$ & $4$ & $5$  & $6$  & $7$  \\
+Sturmian requires                    & $3$ & $4$ & $5$  & $6$  & $7$  \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\noindent
+The digits attain the maximum $2^n$ at every length computed, while the parity word is Sturmian on
+the nose. So the hypothesis of each criterion above fails as badly as it can. (This is also consistent with
+the closing conjecture of \cite{LS09}, that $\PH$ "always maps Sturmian words to infinite words of
+full complexity", at lengths $\le6$ for this slope.)
+
+\emph{Second, the denominators are not $S$-units.} Our approximants are the periodic shadows
+$\PH(W^\infty)=c_W/(2^{\ell}-3^{k})$ of Proposition~\ref{prop:shadow}. No fixed finite set $S$ of
+primes contains the prime divisors of $2^{\ell}-3^{k}$ for all $\ell,k$. In the Adamczewski--Bugeaud
+construction the denominators are $b^{s}-b^{r}$, supported on the primes of $b$ together with
+$b^{s-r}-1$, and Ridout's $S$-unit refinement buys a full unit of exponent when the denominator is
+an $S$-unit. We get no such gain. This is exactly why the threshold in \eqref{eq:T} is $2\Av$ and
+not $\Av$, and why initial squares --- $\ice\ge2$, which holds for every Sturmian word
+\cite[Theorem 1]{ADQZ2001} --- are \emph{not} enough at $\Av=1$: they give $\om\ge1$, the Ridout
+borderline, which proves nothing. The entire margin of the proof is the amount by which
+Berth\'e--Holton--Zamboni's floor $1+\varphi=2.6180\ldots$ exceeds $2$.
+
+\subsection{The bridge}\label{ss:bridge}
+The contribution of this paper, and of \cite{DJirr} before it, is best described as a bridge rather
+than a technique. The Bernstein--Lagarias isometry (Proposition~\ref{prop:iso}) says
+\[
+  \vtwo\bigl(\PH(v)-\PH(w)\bigr)=\lcp(v,w),
+\]
+so the $2$-adic approximation depth of a periodic shadow is \emph{exactly} a longest common prefix.
+A repetition in the parity word is therefore a Diophantine approximation, with no loss. What the
+bridge costs is height: the shadow of a block of length $\ell$ has
+$\log_2 H\le\Av\,\ell+O(\log\ell)$ (Proposition~\ref{prop:height}). Hence
+\[
+  \text{Diophantine exponent of }\PH(s)\;\longleftrightarrow\;
+  \frac{\text{repetition exponent of }s}{\Av},
+\]
+and any theorem about initial repetitions in Sturmian words becomes a theorem about $\PH$. The two
+payoffs recorded so far are irrationality \cite{DJirr}, which needs only that the repetitions are
+unbounded, and transcendence (this paper), which needs them to beat $2\Av$.
+
+The two differ by exactly one factor of two in the exponent, and that factor is the whole of the
+distance between the two papers. Irrationality \cite[\S10]{DJirr} needs the initial repetition
+exponent of $s$ to exceed $\Av$: a shadow of height $2^{\Av\ell+O(\log\ell)}$ agreeing with
+$\PH(s)$ to depth $>\Av\ell$ is already incompatible with a fixed rational value. Transcendence
+needs the exponent to exceed $2\Av$, because Theorem R --- the $2$-adic Ridout theorem --- bites
+only beyond approximation exponent $2$, equivalently $\om>1$ in the normalisation of
+\S\ref{ss:norm}. What supplies the second, and with room to spare, is the
+Berth\'e--Holton--Zamboni floor $\ice(c_\gamma)\ge1+\varphi=2.6180\ldots$
+(Proposition~\ref{prop:icefloor}); the inequality $1+\varphi>2\Av$ is exactly the condition
+$\gamma<\gs$ of Corollary~\ref{cor:uncond}.
+
+\subsection{What is new here}
+New in this paper: the transcendence theorem and its range, Theorem~\ref{thm:main} and
+Corollary~\ref{cor:uncond}; the quantitative bound $\om\ge\ice/\Av-1$ of
+Theorem~\ref{thm:quant}, obtained through $c_\gamma$; the parity obstruction of
+\S\ref{sec:parity} with the witness of Example~\ref{ex:witness}; and the two complements,
+Theorem~\ref{thm:liouville} and Theorem~\ref{thm:Bstar}.
+
+Three ingredients are the author's \emph{prior} work. They are quoted here with exact locators and
+are not claimed as new: the depth law at both convergent parities is \cite[Theorem 8.3]{DJirr}
+(used in \S\ref{sec:parity}, and see Remark~\ref{rem:depthfromP1}); the height bound
+$c_W\le3\ell\max(2^{\ell},3^{k})$ for cyclic permutations of standard words is
+\cite[Lemma 10.4]{DJirr} (Proposition~\ref{prop:height}); and the transfer identities are
+\cite[Corollaries 7.1 and 8.8]{DJirr} (equation~\eqref{eq:affine}). Everything else is inherited:
+in particular the isometry is \cite{BL96}, the periodic shadows and their approximation depths are
+\cite[Theorem 1]{LS09}, the term-size estimate is \cite[Lemma 43, \S11]{LS21}, the $\ice$ formula
+and its floor are \cite[\S4.2]{BHZ06}, and the threshold is \cite[Theorem 1.3]{BK18}. Where we
+keep a proof of an inherited statement it is labelled a re-derivation. A table of every ingredient
+against its prior source accompanies this paper.
+
+Transcendence of $\PH(s)$ for every Sturmian word $s$ was first proposed by Cassidy
+\cite[\S4.6]{Cassidy26}, with a sketch via Schlickewei's $p$-adic Subspace Theorem, recorded
+there as unaudited. We give a complete proof for characteristic words of every irrational slope
+$\gamma<\gs$, by a different route: Ridout's theorem in the single-prime form
+\cite[Theorem 1.3]{BK18}, together with the Berth\'e--Holton--Zamboni bound on initial powers.
+The general claim remains open.
+
+
+\subsection{Organisation}
+\S\ref{sec:setup} fixes notation and assembles the inherited apparatus. \S\ref{sec:main} proves
+Theorems~\ref{thm:quant} and \ref{thm:main}. \S\ref{sec:parity} explains, with an explicit witness,
+why the argument must run through $c_\gamma$. \S\ref{sec:liouville} records the Liouville
+alternative, \S\ref{sec:measure} a finite effective measure in the bounded-partial-quotient case.
+\S\ref{sec:scope} lists the scope limitations and open problems, \S\ref{sec:related} the related
+work. Appendix~\ref{app:schlickewei} re-derives the threshold from Schlickewei's subspace theorem;
+Appendix~\ref{app:verif} summarises the exact-arithmetic verification.
+
+\section{Setup}\label{sec:setup}
+
+\subsection{The conjugacy map and the isometry}
+Throughout, $\vtwo$ is the $2$-adic valuation, $|x|_2=2^{-\vtwo(x)}$, and for words
+$v,w\in\{0,1\}^{\N}$, $\lcp(v,w)$ is the length of their longest common prefix. For a word $v$ and
+$m\ge0$ set $k_m(v):=\#\{i<m:v_i=1\}$.
+
+\begin{proposition}[{\cite{BL96}; also recorded as \cite[eq.~(4), \S1]{LS21}}]\label{prop:iso}
+For all $v,w\in\{0,1\}^{\N}$,
+\[
+  \vtwo\bigl(\PH(v)-\PH(w)\bigr)=\lcp(v,w),
+  \qquad\text{equivalently}\qquad |\PH(x)-\PH(y)|_2=|x-y|_2 .
+\]
+In particular $\PH$ is injective: distinct words have finite $\lcp$, hence distinct values.
+\end{proposition}
+
+L\'opez and Stoll state the isometry as their equation~(4) and attribute it to \cite{BL96}; it is
+restated as \cite[Proposition 2.2]{DJirr}. We also use, from \cite[\S1]{BL96}, that $\PH(v)$ is odd
+if and only if $v_0=1$, and the identity \eqref{eq:shift}; iterating the latter and writing
+$c_m(v):=\sum_{i<m,\,v_i=1}3^{\,k_m(v)-k_{i+1}(v)}2^{i}\in\Z$ gives
+\begin{equation}\label{eq:affinegen}
+  2^{m}\,\PH(\sigma^{m}v)=3^{\,k_m(v)}\,\PH(v)+c_m(v)\qquad(m\ge0),
+\end{equation}
+a relation with rational coefficients.
+
+\begin{proposition}[{Periodic shadows; \cite[Theorem 1 and Lemma 12]{LS09}, restated as
+\cite[Proposition 4.1]{DJirr}}]\label{prop:shadow}
+Let $w$ be a finite word of length $\ell$ with $k\ge1$ ones. Then $2^{\ell}\ne3^{k}$ and
+\[
+  \PH(w^{\infty})=\frac{c_w}{2^{\ell}-3^{k}},\qquad
+  c_w=\sum_{i<\ell,\,w_i=1}3^{\,k-k_{i+1}(w)}2^{i}\in\Z_{>0},
+\]
+and the denominator is \textbf{odd}.
+\end{proposition}
+
+The periodic approximants, and their approximation depths, go back to L\'opez and Stoll. Their
+\cite[Theorem 1]{LS09} gives the closed $2$-adic series
+\begin{equation}\label{eq:LS09series}
+  \PH(1c_{\beta})=-\frac13-\sum_{j\ge0}(-1)^{j+1}
+  \frac{2^{\,q_{j+1}+q_j-1}}{3\,(3^{p_{j+1}}-2^{q_{j+1}})(3^{p_j}-2^{q_j})},
+\end{equation}
+indexed by consecutive pairs of convergents of $\beta$, with \cite[Corollary 2]{LS09} the associated
+generalised continued fraction for $-1/\PH(1c_\beta)$. The term exponents $q_{j+1}+q_j-1$ of
+\eqref{eq:LS09series} \emph{are} the approximation depths used in this paper, at the convergents
+from above; this was pointed out in \cite[\S1]{DJirr}. We verified \eqref{eq:LS09series} against an
+independent computation of $\PH$ at three slopes, exactly modulo $2^{4000}$
+(Appendix~\ref{app:verif}).
+
+\subsection{Sturmian words, heights, and the constant \texorpdfstring{$\Av$}{A(gamma)}}
+For irrational $\gamma\in(0,1)$ the characteristic word is $c_\gamma(j)=\lfloor(j+1)\gamma\rfloor
+-\lfloor j\gamma\rfloor$ for $j\ge1$, and $1c_\gamma$, $0c_\gamma$ are $1$, resp.\ $0$, followed by
+$c_\gamma$; these are the two mechanical words of slope $\gamma$ at intercept $0$. Every Sturmian
+word is balanced, so any factor of length $\ell$ has $k$ ones with $|k-\gamma\ell|<1$. For
+$x=u/v\in\Q$ in lowest terms with $v>0$ we write $H(x)=\max(|u|,v)$.
+
+A finite word $W$ is a conjugate (cyclic permutation) of a standard word if and only if $W^\infty$
+is balanced \cite[Ch.~2]{Lothaire02}. The input we need is:
+
+\begin{proposition}[{\cite[Proposition 3.2]{BHZ06}}]\label{prop:bhz32}
+If a Sturmian sequence begins in $W^{r}$ with $r\ge2$, $|W|\ge2$ and $W$ primitive, then $W$ is a
+conjugate of a standard word; hence $W^{\infty}$ is balanced. If $W$ is not primitive, $W=V^{t}$ and
+the sequence begins in $V^{rt}$, so primitivity costs nothing.
+\end{proposition}
+
+The height of a shadow is controlled by an archimedean estimate on the terms of the defining series.
+At the resonance slope that estimate is \cite[Lemma 43, \S11]{LS21}: writing
+$\lfloor j\alpha\rfloor=j\alpha-\{j\alpha\}$ with $\alpha=\log_2 3$ and using $2^{\alpha}=3$,
+\begin{equation}\label{eq:terms}
+  3^{-(j+1)}2^{\lfloor j\alpha\rfloor}=\tfrac13\,2^{-\{j\alpha\}}\in\bigl(\tfrac16,\tfrac13\bigr]
+  \qquad (j\ge0),
+\end{equation}
+and L\'opez and Stoll give in addition the exact distribution of these terms inside
+$(\frac16,\frac13]$, by an explicit permutation sorting them into
+$\frac16<y_1<\cdots<y_{p_k}=\frac13$; see also \cite[Lemmas 41--42]{LS21} for their arithmetic and
+geometric means. Read archimedean-ly, \eqref{eq:terms} is why the real series diverges at the
+resonance, so that the $2$-adic place is the only one available; see \S\ref{sec:scope}. The
+extension of the estimate from the resonance slope to every slope, by balance, is
+\cite[Lemma 10.4]{DJirr}, the author's prior work, quoted here and not claimed as new:
+
+\begin{proposition}[{Height of a shadow; \cite[Lemma 10.4]{DJirr}, resting on
+\cite[Lemma 43]{LS21}}]\label{prop:height}
+Let $W$ be a conjugate of a standard word, $|W|=\ell$, with $k\ge1$ ones, and suppose $W$ is a
+factor of a Sturmian word of slope $\gamma$. Then $0<c_W\le3\ell\max(2^{\ell},3^{k})$ and
+\[
+  \log_2 H\bigl(\PH(W^{\infty})\bigr)\;<\;\Av\,\ell+\log_2(3\ell)+\log_2 3 .
+\]
+\end{proposition}
+
+\begin{proof}
+With $\delta=2^{\ell}-3^{k}$ and $g=\gcd(c_W,|\delta|)$ we have $H=\max(c_W,|\delta|)/g\le
+\max(c_W,|\delta|)$. Since $2^{\ell}$ and $3^{k}$ are distinct positive integers,
+$|\delta|<\max(2^{\ell},3^{k})$; and $c_W\le3\ell\max(2^{\ell},3^{k})$ by
+\cite[Lemma 10.4]{DJirr}, whose input is that $W^{\infty}$ is balanced, so that
+$|k_{i+1}(W)-(i+1)k/\ell|<1$. Hence $\log_2 H\le\log_2(3\ell)+\max(\ell,k\log_2 3)$. Balance of the
+ambient Sturmian word gives $|k-\gamma\ell|<1$, so $k\log_2 3<\gamma\ell\log_2 3+\log_2 3$ and
+therefore $\max(\ell,k\log_2 3)<\Av\ell+\log_2 3$.
+\end{proof}
+
+\subsection{The initial critical exponent}
+\begin{definition}[{\cite[\S2]{BHZ06}}]\label{def:ice}
+The \emph{prefix power} of a finite word $W$ in a sequence $\omega$ is the largest real $p$ such
+that $W^{p}$ is a prefix of $\omega$; equivalently $\lcp(\omega,W^{\infty})/|W|$. The
+\emph{initial critical exponent} $\ice(\omega)$ is the limit superior of the prefix powers of the
+words $\omega[0,n)$ in $\omega$.
+\end{definition}
+
+Because the prefix power is defined as the largest \emph{real} such $p$, we have
+$\lcp(\omega,W^{\infty})=p\,|W|$ \emph{exactly}: no floor and no $O(1)$ is lost in passing between
+$\ice$ and approximation depth. This is the precise sense in which $\ice$ is the right quantity for
+the bridge of \S\ref{ss:bridge}.
+
+\begin{proposition}[{\cite[\S4.2]{BHZ06}}]\label{prop:icefla}
+For the characteristic Sturmian sequence of slope $\alpha=[0;a_1,a_2,\dots]$,
+\[
+  \ice(c_\alpha)=\limsup_{k\to\infty}\frac{q_{k+1}+q_k-2}{q_k}
+  =1+\limsup_{k\to\infty}\frac{q_{k+1}}{q_k}
+  =1+\limsup_{k\to\infty}[a_{k+1};a_k,\dots,a_1].
+\]
+\end{proposition}
+
+\begin{remark}[The $c_\gamma$ depth from {\cite[Theorem 8.3]{DJirr}}]\label{rem:depthfromP1}
+The depth $q_{n+1}+q_n-2$ of Proposition~\ref{prop:icefla} can be read off the author's depth law
+for $1c_\gamma$. Let $w_n$ be the periodic word attached to the convergent $p_n/q_n$ as in
+\cite[\S8]{DJirr}. Then \cite[Theorem 8.3]{DJirr} gives
+$\lcp(1c_\gamma,w_n^{\infty})=q_n+q_{n+1}-1$ for $n$ odd. Since $c_\gamma=\sigma(1c_\gamma)$
+and the two words agree in their first letter, shifting removes exactly one position from the common
+prefix, so
+\[
+  \lcp\bigl(c_\gamma,\sigma(w_n^{\infty})\bigr)=q_n+q_{n+1}-2
+  \qquad(n\ \text{odd}),
+\]
+and $\sigma(w_n^{\infty})=(w_n')^{\infty}$ where $w_n'$ is the cyclic permutation of $w_n$ by one
+position --- the same length, the same number of ones, hence a shadow of the same shape
+(Proposition~\ref{prop:shadow}) with the same denominator bound. This recovers the depths of
+Proposition~\ref{prop:icefla} along the odd levels, and with them
+$\ice(c_\gamma)\ge1+\limsup_{n\ \mathrm{odd}}q_{n+1}/q_n$.
+
+It does \emph{not} recover the even levels: there \cite[Theorem 8.3]{DJirr} gives
+$\lcp(1c_\gamma,w_n^{\infty})=q_n-1$, so the shift yields only $q_n-2$. The limit superior over
+\emph{all} $k$ in Proposition~\ref{prop:icefla} is Berth\'e--Holton--Zamboni's and is what we
+quote; its approximant at every level $k$ is $W_k^{\infty}$ for $W_k$ the length-$q_k$ prefix of
+$c_\gamma$ itself --- the word used in the proof of Theorem~\ref{thm:Bstar} --- and not the shift
+$\sigma(w_n^{\infty})$ of a $1c_\gamma$ approximant. The asymmetry is not a defect of the
+bookkeeping: it is the parity phenomenon of \S\ref{sec:parity}, and it is precisely what separates
+$\ice(1c_\gamma)$ from $\ice(c_\gamma)$ there.
+\end{remark}
+
+\begin{proposition}[{Floor; \cite[\S4.2]{BHZ06}}]\label{prop:icefloor}
+For every irrational $\gamma$,
+\[
+  \ice(c_\gamma)\;\ge\;1+\varphi=\varphi^{2}=\frac{3+\sqrt5}{2}=2.6180339887\ldots,
+\]
+with equality if and only if $a_k=1$ for all large $k$.
+\end{proposition}
+
+This is \cite[\S4.2]{BHZ06}: in the sentence following the proof of their Theorem~1.2 they state
+that $\ice(\omega)\le3$ if and only if all but finitely many $a_k$ equal $1$, in which case
+$\ice(\omega)=1+\theta$, where $\theta=(1+\sqrt5)/2$ is the golden mean fixed on \cite[p.~3]{BHZ06}.
+Eventually-all-ones therefore gives $\ice=1+\varphi$; otherwise $\ice>3>1+\varphi$. The Fibonacci
+equality case is also stated in their introduction (the characteristic sequence ``begins in no
+$(3+\sqrt5)/2\approx2.62$ power at all'', so the supremum is not attained), and the constant
+$1+\theta$ appears in \cite[Proposition 2.1(3)]{BHZ06}. The formula of
+Proposition~\ref{prop:icefla} is also obtainable from Cassaigne's recurrence quotient
+\cite{Cassaigne99}; the companion index formula is Vandeth \cite[Theorem 16]{Vandeth00} and the
+Fibonacci repetition constants are Mignosi--Pirillo \cite{MignosiPirillo92}. For completeness we
+record the elementary re-derivation of the floor; it is not a new result.
+
+\begin{lemma}[Re-derivation of Proposition~\ref{prop:icefloor}]\label{lem:phifloor}
+For every irrational $\gamma=[0;a_1,a_2,\dots]$ one has $\limsup_k q_{k+1}/q_k\ge\varphi$, with
+equality if and only if $a_k=1$ for all large $k$.
+\end{lemma}
+
+\begin{proof}
+$q_{k+1}/q_k=a_{k+1}+q_{k-1}/q_k>a_{k+1}$. Suppose $L:=\limsup_k q_{k+1}/q_k<\varphi$. As
+$\varphi<2$, for all large $k$ we get $a_{k+1}<2$, i.e.\ $a_{k+1}=1$; then $q_{k+1}=q_k+q_{k-1}$
+eventually, so the ratios satisfy $x_{k+1}=1+1/x_k$ and converge to $\varphi$, giving $L=\varphi$, a
+contradiction. Conversely $a_k=1$ eventually gives $q_{k+1}/q_k\to\varphi$.
+\end{proof}
+
+\subsection{The normalisation of \texorpdfstring{$\om$}{omega} and the threshold}\label{ss:norm}
+For $\xi\in\Zt$ and $r\in\Q$ put $H(r)=\max(|\mathrm{num}|,\mathrm{den})$ as above, and let
+$\om(\xi)$ be the supremum of the real $w$ for which
+\begin{equation}\label{eq:omdef}
+  |\xi-r|_2\le H(r)^{-(1+w)}
+\end{equation}
+holds for infinitely many $r\in\Q$. This is Koksma's $w_1$ in the $p$-adic normalisation of
+\cite[Ch.~9]{Bugeaud04}: for $P(X)=\mathrm{den}\cdot X-\mathrm{num}$ one has
+$|P(\xi)|_2=|\mathrm{den}|_2\,|\xi-r|_2$, which equals $|\xi-r|_2$ when the denominator is odd. A
+pigeonhole over odd denominators $q\le H$ shows $\om(\xi)\ge1$ for every $\xi\in\Zt$, so
+$\om=1$ is the generic value and the transcendence threshold is $\om>1$, not $\om>0$. The threshold
+is the following, which we quote in its \emph{single-prime} form.\footnote{Do not quote the
+\emph{several-primes} form of Ridout's theorem that circulates in some secondary sources, namely:
+given $f\in\Z[X]$ of degree $\ge2$, let $\alpha$ be a \emph{real} root of $f$ and $\alpha_i$ be
+$p_i$-adic roots ($p_1,\dots,p_t$ distinct primes); then for every $\varepsilon>0$ the inequality
+$\min(1,|\alpha-A/B|_\infty)\prod_i\min(1,|\alpha_i-A/B|_{p_i})<\max(|A|,|B|)^{-2-\varepsilon}$ has
+only finitely many coprime integer solutions. Its hypothesis that $f$ have a real root is a genuine
+restriction on algebraic elements of $\Zt$, so the $t=1$ specialisation is not available in general.
+Witness: $f(X)=X^{4}-3X^{3}+2X+6$ has $0$ real roots by Sturm's theorem in exact rational
+arithmetic, no rational root, and no factorisation into integer quadratics (exhaustive over
+$B\mid6$, $|A|\le40$, which by Gauss's lemma exhausts factorisations over $\Q$ of a monic quartic),
+hence is irreducible over $\Q$ of degree $4$; while $f(1)=6\equiv0\pmod 2$ and $f'(1)=-3$ is odd, so
+Hensel's lemma gives a root $\xi\in\Zt$, with $\xi\equiv16095319\pmod{2^{24}}$ and
+$f(\xi)\equiv0\pmod{2^{800}}$, verified exactly. An exhaustive search over a small coefficient box
+produced $1138$ such quartics, so this is generic rather than exotic.}
+
+\begin{theoremR}[{\cite[Theorem 1.3]{BK18}, attributed there to Ridout \cite{Ridout58}}]
+Let $\xi$ be a $p$-adic number and $\varepsilon>0$. Suppose there is a sequence
+$(x_n/y_n)_{n\ge1}$ of rationals with $\gcd(x_n,y_n)=1$,
+$2\le|x_1,y_1|<|x_2,y_2|<\cdots$, and
+\[
+  0<\Bigl|\xi-\frac{x_n}{y_n}\Bigr|_p<|x_n,y_n|^{-2-\varepsilon}\qquad(n=1,2,\dots),
+\]
+where $|x,y|:=\max(|x|,|y|)$ is the height of $x/y$. Then $\xi$ is transcendental.
+\end{theoremR}
+
+Theorem R is stated for an \emph{arbitrary} $p$-adic number, with our height normalisation and no
+hypothesis on the minimal polynomial, and its hypothesis is exactly the family of approximants
+produced in Step~4 of \S\ref{sec:main}. Equivalently $\om(\xi)\le1$ for every algebraic irrational
+$\xi\in\Qt$. Appendix~\ref{app:schlickewei} re-derives it from Schlickewei's $p$-adic subspace
+theorem; that derivation is not new and nothing depends on it.
+
+Finally, the irrationality input, which Theorem R cannot supply: a rational $r$ has
+$\om(r)=\infty$, so $\om>1$ does not by itself exclude rationality.
+
+\begin{proposition}[{\cite[Theorem 10.1 and Corollary 10.5]{DJirr}}]\label{prop:irr}
+$\PH(s)\notin\Q$ for every mechanical word $s$ of every irrational slope and every intercept.
+\end{proposition}
+
+Prior partial coverage: \cite[Theorem 2.7(b)]{MY04} gives this whenever the lower ones-density is
+$<\beta$. We do not use \cite[Theorem 1]{LS21}.
+
+\section{Proof of the main theorems}\label{sec:main}
+
+\subsection{Proof of Theorem~\ref{thm:main}}
+
+\emph{Step 1: choice of the exponent.} By Proposition~\ref{prop:icefloor},
+$\ice(c_\gamma)\ge1+\varphi>2$. We must produce a fixed real $e>\max(2\Av,2)$ such that
+arbitrarily long prefixes of $c_\gamma$ have prefix power at least $e$. Two cases, treated
+separately because $\ice$ may be infinite.
+
+\begin{itemize}
+\item \emph{Case L ($\ice(c_\gamma)=\infty$).} By Proposition~\ref{prop:icefla} this happens exactly
+  when the partial quotients of $\gamma$ are unbounded. Here \emph{every} real $e$ is admissible:
+  since $\ice$ is a limit superior of prefix powers, for each $e$ there are arbitrarily long
+  prefixes of $c_\gamma$ whose prefix power exceeds $e$. Fix, for definiteness,
+  $e:=2\Av+1$. At the end of Step~5 we let $e\to\infty$; see \S\ref{sec:liouville}.
+\item \emph{Case F ($\ice(c_\gamma)<\infty$).} By \eqref{eq:T} and $\ice\ge1+\varphi>2$ we have
+  $\max(2\Av,2)<\ice(c_\gamma)$, so we may fix a real $e$ with $\max(2\Av,2)<e<\ice(c_\gamma)$.
+\end{itemize}
+
+No perturbation of $\ice$ is needed, and none is taken: the limit-superior definition supplies the
+prefixes directly.
+
+\emph{Step 2: the family of shadows, and their heights.} Replacing each such prefix by its
+primitive root if necessary --- which only increases the prefix power, since $W=V^{t}$ gives $V$
+prefix power $t$ times that of $W$ --- choose an infinite sequence $W_1,W_2,\dots$ of primitive
+prefixes of $c_\gamma$ with $\ell_j:=|W_j|\to\infty$, $\ell_j\ge2$, and
+\begin{equation}\label{eq:depth}
+  \lcp\bigl(c_\gamma,W_j^{\infty}\bigr)\;\ge\;e\,\ell_j .
+\end{equation}
+The lengths of the primitive roots do tend to infinity: otherwise $c_\gamma$ would agree with one
+fixed periodic word to unbounded depth, contradicting its aperiodicity. By
+Definition~\ref{def:ice} the relation \eqref{eq:depth} involves no floor and no $O(1)$ loss.
+
+Since $e>2$, Proposition~\ref{prop:bhz32} applies: each $W_j$ is a conjugate of a standard word, so
+$W_j^{\infty}$ is balanced. Also $k_j:=|W_j|_1\ge1$ once $\ell_j$ is large, a Sturmian word of
+irrational slope not being $0^{\infty}$; so Proposition~\ref{prop:shadow} gives
+\begin{equation}\label{eq:Rj}
+  R_j:=\PH\bigl(W_j^{\infty}\bigr)=\frac{c_{W_j}}{2^{\ell_j}-3^{k_j}}\in\Q,
+  \qquad\text{denominator odd},
+\end{equation}
+and Proposition~\ref{prop:height} gives
+\begin{equation}\label{eq:hbound}
+  \log_2 H(R_j)\;<\;\Av\,\ell_j+\log_2(3\ell_j)+\log_2 3 .
+\end{equation}
+This bound holds \emph{at every level used}, not merely along the convergent family: its only input
+is that $W_j^{\infty}$ is balanced, which Proposition~\ref{prop:bhz32} supplies. (We verified both
+$c_W\le3\ell\max(2^{\ell},3^{k})$ and \eqref{eq:hbound} directly at every level used, for the
+prefixes of $c_\gamma$ specifically; see Appendix~\ref{app:verif}.)
+
+\emph{Step 3: the approximation exponent.} By Proposition~\ref{prop:iso} and \eqref{eq:depth},
+$\vtwo(\PH(c_\gamma)-R_j)=\lcp(c_\gamma,W_j^{\infty})\ge e\ell_j$, so
+$|\PH(c_\gamma)-R_j|_2\le2^{-e\ell_j}$. Combining with \eqref{eq:hbound},
+$|\PH(c_\gamma)-R_j|_2\le H(R_j)^{-(1+w_j)}$ where
+\begin{equation}\label{eq:wj}
+  1+w_j=\frac{e\,\ell_j}{\log_2 H(R_j)}
+  >\frac{e\,\ell_j}{\Av\,\ell_j+\log_2(3\ell_j)+\log_2 3}
+  \;\xrightarrow[j\to\infty]{}\;\frac{e}{\Av}.
+\end{equation}
+Since $e>2\Av$, the limit exceeds $2$, so $w_j>1$ for all large $j$.
+
+\emph{Step 4: the shadows are infinitely many, pairwise distinct, and distinct from the target.} If
+$R_j=\PH(c_\gamma)$ then $\PH(W_j^{\infty})=\PH(c_\gamma)$, so by injectivity
+(Proposition~\ref{prop:iso}) $c_\gamma=W_j^{\infty}$ would be periodic --- impossible, $\gamma$
+being irrational. Hence $R_j\ne\PH(c_\gamma)$ for every $j$. Next, $R_j$ determines $W_j^{\infty}$
+by injectivity, and $W_j$ primitive means $W_j^{\infty}$ has minimal period exactly $\ell_j$; since
+$\ell_j\to\infty$, the $R_j$ take infinitely many distinct values. Passing to a subsequence they are
+pairwise distinct with $H(R_j)\to\infty$, only finitely many rationals having bounded height. In
+particular no shadow has $H=1$, where \eqref{eq:omdef} would be vacuous.
+
+\emph{Step 5: the threshold, and excluding rationality.} By Steps~3 and~4 we have infinitely many
+pairwise distinct rationals $R_j$, of strictly increasing height after passing to a subsequence,
+with odd denominators, satisfying $|\PH(c_\gamma)-R_j|_2\le H(R_j)^{-(1+w_j)}$ and $w_j>1$. Hence
+\begin{equation}\label{eq:omlb}
+  \om\bigl(\PH(c_\gamma)\bigr)\;\ge\;\liminf_j w_j\;\ge\;\frac{e}{\Av}-1\;>\;1 .
+\end{equation}
+Choosing $\varepsilon>0$ with $1+w_j>2+\varepsilon$ for large $j$, Theorem R applies and
+$\PH(c_\gamma)$ is \emph{not} an algebraic irrational.
+
+It remains to exclude rationality, which Theorem R cannot do: a rational $r$ has $\om(r)=\infty$.
+By Proposition~\ref{prop:irr}, $\PH(c_\gamma)\notin\Q$ --- either directly, $c_\gamma$ being a
+mechanical word of slope $\gamma$ and intercept $\{\gamma\}$, or from $\PH(1c_\gamma)\notin\Q$
+through Step~6: if $\PH(c_\gamma)$ were rational then so would be
+$\PH(1c_\gamma)=(2\PH(c_\gamma)-1)/3$. There is no circularity, Step~6 transferring rationality by
+an invertible $\Q$-affine map independently of the transcendence conclusion. Therefore
+$\PH(c_\gamma)$ is transcendental.
+
+\emph{Step 6: transfer along the shift orbit.} Specialising \eqref{eq:affinegen} to $m=1$ with
+$v=1c_\gamma$ (so $k_1=1$, $c_1=1$) and with $v=0c_\gamma$ (so $k_1=0$, $c_1=0$), and using
+$\sigma(1c_\gamma)=\sigma(0c_\gamma)=c_\gamma$:
+\begin{equation}\label{eq:affine}
+  2\,\PH(c_\gamma)=3\,\PH(1c_\gamma)+1=\PH(0c_\gamma),
+  \qquad\text{equivalently}\qquad \PH(1c_\gamma)=\frac{2\PH(c_\gamma)-1}{3}.
+\end{equation}
+All three maps are $\Q$-affine and invertible over $\Q$, so the three values are simultaneously
+algebraic or simultaneously transcendental; the same holds for every $\PH(\sigma^{m}v)$ by
+\eqref{eq:affinegen}. More generally \eqref{eq:affinegen} shows that $\PH$ of any two
+\emph{tail-equivalent} words are $\Q$-affinely related, through
+$3^{k_m(v)}\PH(v)-3^{k_m(w)}\PH(w)=c_m(w)-c_m(v)$. This proves Theorem~\ref{thm:main}. \qed
+
+\medskip
+The identity \eqref{eq:affine} is not new. \cite[Lemma 37]{LS21} (equivalently
+\cite[Lemma 25]{LS21}) gives $\PH_{\R}(0c_\alpha)=3\PH_{\R}(1c_\alpha)+1$ in the \emph{real}
+normalisation for $\alpha>\beta$, and the $2$-adic form used here, valid for every irrational
+slope, is the author's prior work \cite[Corollaries 7.1 and 8.8]{DJirr}. What this paper adds is
+only the observation that, being $\Q$-affine, it carries transcendence along the shift orbit. We verified
+\eqref{eq:affine} exactly modulo $2^{400}$ at three slopes (Appendix~\ref{app:verif}).
+
+\subsection{Proof of Theorem~\ref{thm:quant}}
+Steps 1--5 give $\om(\PH(c_\gamma))\ge e/\Av-1$ for every admissible $e$. In Case F, $e$ may be any
+real number below $\ice(c_\gamma)$; in Case L, any real number at all. Taking the supremum over
+admissible $e$ gives $\om(\PH(c_\gamma))\ge\ice(c_\gamma)/\Av-1$, which together with
+Proposition~\ref{prop:icefla} is the assertion. \qed
+
+\subsection{The margin is a fixed \texorpdfstring{$\delta$}{delta}}
+\begin{lemma}\label{lem:margin}
+Assume \eqref{eq:T} and set $\kappa:=\ice(c_\gamma)-2\Av>0$. In Case F the value
+$e:=2\Av+\kappa/2$ is admissible in Step~1, and then $w_j\to1+\delta$ with
+\[
+  \delta=\frac{\kappa}{2\Av}>0,
+\]
+independent of $j$, of $\ell_j$ and of $H(R_j)$. Moreover the loss in \eqref{eq:wj} is
+$O(\log\ell_j/\ell_j)=O(\log\log H_j/\log H_j)\to0$, so there is an explicit
+$L_0=L_0(\kappa,\gamma)$ with $w_j\ge1+\delta/2>1$ whenever $\ell_j\ge L_0$. In Case L,
+$\kappa=\infty$ and every finite $\delta$ is achieved.
+\end{lemma}
+
+\begin{proof}
+$e=2\Av+\kappa/2$ lies strictly between $\max(2\Av,2)$ and $\ice=2\Av+\kappa$, so it is admissible;
+the limit in \eqref{eq:wj} is $e/\Av=2+\kappa/(2\Av)$. For the loss, \eqref{eq:hbound} gives
+$1+w_j\ge(e/\Av)\bigl(1-O(\log\ell_j/\ell_j)\bigr)$, and $\log_2 H_j\asymp\Av\ell_j$.
+\end{proof}
+
+This is the quantitative point on which the argument turns. For an algebraic irrational the excess
+of $\om$ over $1$ \emph{is} a vanishing slack: for a quadratic irrational, Liouville's inequality
+caps it at $1+\log_2 9/\log_2 H\to1$ (Appendix~\ref{app:verif}). Here the excess is the constant
+$\delta$ while the slack is $O(\log\log H/\log H)$. A vanishing slack cannot eat a fixed $\delta$.
+
+\subsection{Proof of Corollary~\ref{cor:uncond}}
+By Proposition~\ref{prop:icefloor}, $\ice(c_\gamma)\ge1+\varphi$. If $\gamma<\gs=(1+\varphi)/(2\log_2 3)$
+then $\gamma\log_2 3<(1+\varphi)/2$; also $1<(1+\varphi)/2$ since $\varphi>1$. Hence
+$\Av=\max(1,\gamma\log_2 3)<(1+\varphi)/2$, i.e.\ $2\Av<1+\varphi\le\ice(c_\gamma)$, so \eqref{eq:T}
+holds with strict inequality and Theorem~\ref{thm:main} applies. At $\gamma=\beta=\log_3 2$ one has
+$\gamma\log_2 3=1$, so $\Av=1$ and $2\Av=2<2.618\le\ice$. \qed
+
+\begin{remark}[Threshold arithmetic]\label{rem:threshold}
+Explicitly, $(1+\varphi)/\Av>2\iff\Av<(1+\varphi)/2=(3+\sqrt5)/4=1.3090169943749474241\ldots$. For
+$\gamma\le\beta$ one has $\Av=1$ and the condition is automatic; for $\gamma>\beta$ it is
+$\gamma\log_2 3<(3+\sqrt5)/4$, i.e.\ $\gamma<\gs$. The constant $\Av$ is the right height exponent
+across the whole range: for $\gamma\le\beta$ the denominator $|2^{\ell}-3^{k}|\asymp2^{\ell}$
+dominates and $\log_2 H\asymp\ell$; for $\gamma>\beta$, $3^{k}\asymp2^{\gamma\ell\log_2 3}$ dominates
+and $\log_2 H\asymp\gamma\ell\log_2 3$. Both regimes are confirmed numerically
+(Appendix~\ref{app:verif}).
+\end{remark}
+
+\begin{remark}[The two $\Xi$ conventions; read once, not used again]\label{rem:xi}
+Two conventions for a symbol $\Xi$ are in circulation in this circle of papers, and they denote
+\emph{negatives of each other}. In \cite[Proposition 3.2]{DJirr} the definition carries no sign,
+$\Xi_\alpha:=\sum_{j\ge0}3^{-(j+1)}2^{\lfloor j\alpha\rfloor}$, and then
+$\PH(1c_\beta)=-\Xi_\alpha$ with $\alpha=\log_2 3$, $\beta=\log_3 2$. In
+\cite[Theorem 4.1]{DJedge} the sign is inside the definition,
+$\Xi_{\alpha,b}:=-\frac13\sum_{i\ge0}3^{-i}2^{S_i}=-\sum_{i\ge0}3^{-i-1}2^{\lfloor i\alpha+b\rfloor}$
+with $S_i=\lfloor i\alpha+b\rfloor$, and then $\PH(1c_\beta)=+\Xi_{\alpha,0}$. Equivalently
+$\Xi_{\alpha,0}=-\Xi_\alpha$. Both papers are internally correct; crossing the conventions is not.
+We verified exactly, with $\PH$ computed from the parity-vector definition alone and certified
+floors, that $\PH(1c_\beta)=-\Xi_\alpha$ and $\PH(1c_\beta)=+\Xi_{\alpha,0}$ both hold modulo
+$2^{3000}$ (1893 terms summed) while the opposite signs both fail, and that
+$\vtwo(\PH(1c_\beta))=0$. To avoid the collision, no statement in this paper uses $\Xi$; everything
+is phrased in terms of $\PH(c_\gamma)$, $\PH(1c_\gamma)$ and $\PH(0c_\gamma)$.
+\end{remark}
+
+\section{The parity obstruction: why \texorpdfstring{$c_\gamma$}{c-gamma} and not
+\texorpdfstring{$1c_\gamma$}{1c-gamma}}\label{sec:parity}
+
+It is natural to try to run \S\ref{sec:main} directly on $1c_\gamma$, the word whose $\PH$-value is
+the object of \cite{DJirr} and of the realizer problem of \cite{DJedge}. That fails, and the failure
+is not an artifact. By the depth law of \cite[Theorems 5.3 and 8.3]{DJirr} --- the author's prior work, and the
+one place where both convergent parities are computed exactly --- the length-$q_n$ prefix of
+$1c_\gamma$ has prefix power exactly $1$ at every \emph{even} $n$, whereas at odd $n$ it is
+$(q_n+q_{n+1}-1)/q_n$. Consequently
+\begin{equation}\label{eq:parity}
+  \ice(1c_\gamma)=1+\limsup_{n\ \mathrm{odd}}\frac{q_{n+1}}{q_n},
+  \qquad\text{against}\qquad
+  \ice(c_\gamma)=1+\limsup_{k}\frac{q_{k+1}}{q_k},
+\end{equation}
+and the first can be strictly smaller. Both halves of \eqref{eq:parity} were verified
+independently at every level of four slopes (Appendix~\ref{app:verif}).
+
+That the gap can be fatal is shown by an explicit witness.
+
+\begin{example}[The $1c_\gamma$ route genuinely fails]\label{ex:witness}
+Take
+\[
+  \gamma=[0;2,1,4,1,8,1,16,1,32,1,\dots]=0.35329542\ldots<\gs,
+\]
+so that $a_n\to\infty$ along odd $n$ while $a_n=1$ for even $n$. For odd $n$ one has $a_{n+1}=1$
+and $q_{n-1}/q_n\to0$, so the odd-$n$ ratios collapse to $1$: we computed
+\[
+  q_{n+1}/q_n=1.50000,\ 1.21429,\ 1.11333,\ 1.05918,\ 1.03035,\ 1.01539,\ 1.00775,\ 1.00389,\ 1.00195
+\]
+at $n=1,3,5,\dots,17$. Hence $\ice(1c_\gamma)=2$ \emph{exactly}, the $1c_\gamma$ route yields only
+$\om\ge1$ --- the threshold of Theorem R, with zero margin, proving nothing --- and the measured
+certified lower bounds for $\om$ along the levels decrease, $1.1429$, $1.1067$, $1.0588$, towards
+$1$. On the \emph{same} slope the full limit superior over all $k$ is infinite (ratios
+$1.50$, $4.67$, $1.21$, $8.82$, $1.11$, $16.90$, $1.06$, $32.94$, $1.03$), so
+$\ice(c_\gamma)=\infty$; this is Case~L of Step~1, and the $c_\gamma$ route gives a measured
+$\om\ge16.886$ at the levels computed.
+\end{example}
+
+So Theorem~\ref{thm:main} is formulated for $c_\gamma$ of necessity, and Step~6 is what carries the
+conclusion back to $1c_\gamma$ and $0c_\gamma$ through \eqref{eq:affine}. The transfer is lossless
+in the limit: a shadow $R=u/v$ of $\PH(c_\gamma)$ with depth $D$ and odd $v$ becomes $2R=2u/v$ for
+$0c_\gamma$ and $(2R-1)/3=(2u-v)/(3v)$ for $1c_\gamma$, each with depth exactly $D+1$, each with
+odd denominator, and with height cost only $\log_2 H+1$, respectively $\log_2 H+\log_2 3$. Since
+$\log_2 H(R_j)\asymp\Av\ell_j\to\infty$, the limit in \eqref{eq:wj} is unchanged for all three
+words. In our sweep over every prefix length $\ell<900$ of $1c_\gamma$, no other prefix family repairs
+the parity loss.
+
+\section{Why the truncations fail and the periodic approximants succeed}\label{sec:truncations}
+
+The question of approximating $\PH(1c_\beta)$ at the resonance slope was first posed in
+\cite{DJedge}, where the natural approximants are the Hensel truncations of the defining series
+rather than the periodic shadows used here. It is worth recording exactly why that family cannot
+prove a statement of this kind, since the contrast isolates what the shadows supply.
+
+Fix $\alpha=\log_2 3$, $\beta=\log_3 2$ and $S_i=\lfloor i\alpha\rfloor$, and write
+$\PH(1c_\beta)=-\frac13\sum_{i\ge0}3^{-i}2^{S_i}$ in the convention of
+\cite[Theorem 4.1]{DJedge} (Remark~\ref{rem:xi}). Its $N$-term truncation is
+\[
+  \Xi_N=-\frac{C_N}{3^{N}},\qquad C_N:=\sum_{i<N}3^{\,N-1-i}2^{S_i}\in\Z_{>0},
+\]
+so $P_N:=-C_N$ and $Q_N:=3^{N}$. The fraction is already reduced: the $i=N-1$ term is $2^{S_{N-1}}$
+and every other term is divisible by $3$, so $3\nmid C_N$.
+
+\begin{proposition}[Determinant identity]\label{prop:det}
+For every $N\ge1$,\; $P_NQ_{N+1}-P_{N+1}Q_N=+3^{N}2^{S_N}$.
+\end{proposition}
+
+\begin{proof}
+From the definition, $C_{N+1}=3C_N+2^{S_N}$. Hence
+$P_NQ_{N+1}-P_{N+1}Q_N=(-C_N)3^{N+1}+C_{N+1}3^{N}=3^{N}(C_{N+1}-3C_N)=3^{N}2^{S_N}$.
+\end{proof}
+
+\begin{remark}[The determinant is an $S$-unit, and the product formula prices it]\label{rem:sunit}
+Write $D_N=3^{N}2^{S_N}$. Then $|D_N|_2|D_N|_3|D_N|_\infty=2^{-S_N}\cdot3^{-N}\cdot3^{N}2^{S_N}=1$
+exactly: $D_N$ is an $S$-unit for $S=\{2,3,\infty\}$, so its $2$-adic depth is paid, to the last
+bit, by its archimedean size. Consequently
+$\vtwo(D_N)/\log_2|D_N|=S_N/(N\log_2 3+S_N)\to\frac12$, the exponent a Minkowski-generic lattice
+vector already achieves. No linear combination of two consecutive truncations can therefore cross
+the threshold; the obstruction is a conservation law, not a loose estimate.
+\end{remark}
+
+\begin{proposition}[Truncations are subcritical against the Weil height]\label{prop:trunc}
+$S_N-\log_2 Q_N\in(-1,0]$ for every $N$, while $S_N-\log_2 H(\Xi_N)=-\log_2 N+O(1)$.
+\end{proposition}
+
+\begin{proof}
+Since $2^{\alpha}=3$ we have $2^{S_i}=2^{i\alpha-\{i\alpha\}}=3^{i}2^{-\{i\alpha\}}$, so each term of
+$C_N$ equals $3^{N-1}2^{-\{i\alpha\}}\in(\tfrac12 3^{N-1},3^{N-1}]$ --- this is \eqref{eq:terms}
+again. Summing the $N$ terms, $\tfrac12N3^{N-1}<C_N\le N3^{N-1}$, so
+$H(\Xi_N)=\max(C_N,3^{N})=C_N$ once $N\ge4$ and
+$\log_2 H(\Xi_N)=N\log_2 3+\log_2 N-\log_2 3+O(1)$. Meanwhile $S_N=N\alpha-\{N\alpha\}$ gives
+$S_N-\log_2 Q_N=-\{N\alpha\}\in(-1,0]$, and subtracting the two displays gives the second claim.
+\end{proof}
+
+Both propositions are \textbf{T1}; both were checked in exact integer arithmetic
+(Appendix~\ref{app:verif}). The contrast with \S\ref{sec:main} is now explicit. A truncation has
+depth $S_N\approx N\log_2 3$ against height $\approx N\log_2 3+\log_2 N$, so its exponent tends to
+$1$ --- it is \emph{sub}critical, and it is subcritical because the Weil height, not the
+denominator, is what Theorem R and the $p$-adic Liouville inequality use. A shadow $\PH(W^{\infty})$
+has depth at least $e\,|W|$ against height at most $\Av|W|+O(\log|W|)$, so its exponent tends to
+$e/\Av>2$. The gain is in the depth and not in the height: a Sturmian prefix repeats, with initial
+power at least $1+\varphi$ by Proposition~\ref{prop:icefloor}, whereas a truncation of a series
+repeats not at all. That is the whole of the difference.
+
+\section{Unbounded partial quotients: the Liouville alternative}\label{sec:liouville}
+
+\begin{theorem}\label{thm:liouville}
+Let $\gamma\in(0,1)$ be irrational with unbounded partial quotients. Then
+$\om(\PH(c_\gamma))=\infty$; that is, $\PH(c_\gamma)$ is a $2$-adic Liouville number, a $p$-adic
+$U_1$-number in Mahler's classification. The same holds for $\PH(1c_\gamma)$, $\PH(0c_\gamma)$ and
+every shift. In particular no finite irrationality measure exists for these numbers.
+\end{theorem}
+
+\begin{proof}
+Unbounded partial quotients give $\limsup_k q_{k+1}/q_k=\infty$, hence $\ice(c_\gamma)=\infty$ by
+Proposition~\ref{prop:icefla}; Theorem~\ref{thm:quant} then gives $\om(\PH(c_\gamma))=\infty$. This
+is Case~L of Step~1: every real $e$ is admissible, and \eqref{eq:omlb} holds for each, so
+$\om\ge e/\Av-1$ for every $e$. For the other words, $\om$ is unchanged up to the $O(1/\log H)$
+cost of the transfer computed at the end of \S\ref{sec:parity}, which does not affect its being
+infinite. A $2$-adic number with $\om=\infty$ attained along infinitely many distinct rationals is
+a $U_1$-number by the $p$-adic Mahler classification \cite[Ch.~9]{Bugeaud04}.
+\end{proof}
+
+Theorem~\ref{thm:liouville} refines the corresponding statement of the author's earlier notes, where
+the limit superior was taken over odd $n$ only; passing from $1c_\gamma$ to $c_\gamma$ removes the
+parity restriction, so unbounded partial quotients at \emph{either} parity now suffice.
+
+For $\gamma=\beta=\log_3 2$ it is unknown whether the partial quotients of $\log_2 3$ are bounded.
+We computed $1456$ certified partial quotients, with maximum $3308$; the largest certified lower
+bound on $\om(\PH(c_\beta))$ obtainable from a single level in our range is $23.274$. Whether
+$\om(\PH(c_\beta))$ is finite is therefore open, and equivalent to the boundedness of the partial
+quotients of $\log_2 3$. \emph{Transcendence does not depend on it}: that is the content of
+Corollary~\ref{cor:uncond}.
+
+\section{Bounded partial quotients: a finite effective measure}\label{sec:measure}
+
+This section is logically independent of \S\ref{sec:main} and is stated at a narrower scope than the
+rest of the paper. \textbf{It was not covered by the independent verification reported in
+Appendix~\ref{app:verif}}, whose remit was Theorems~\ref{thm:quant}--\ref{thm:main}; the numerics
+quoted below are the author's own.
+
+We first record the abstract mechanism.
+
+\begin{lemma}[Lower bound for shadow heights]\label{lem:hlow}
+Let $R\ne R'$ be rationals with odd denominators. Then
+$\vtwo(R-R')\le\log_2 H(R)+\log_2 H(R')+1$.
+\end{lemma}
+
+\begin{proof}
+Write $R=A/B$, $R'=A'/B'$ in lowest terms with $B,B'$ odd. Then $R-R'=(AB'-A'B)/(BB')$ with
+$BB'$ odd, so $\vtwo(R-R')=\vtwo(AB'-A'B)$, and $AB'-A'B$ is a nonzero integer of absolute value at
+most $|A|B'+|A'|B\le2H(R)H(R')$.
+\end{proof}
+
+\begin{lemma}[Abstract measure lemma]\label{lem:P}
+Let $\xi\in\Zt$ be irrational and let $(R_k)_{k\ge1}$ be pairwise distinct rationals with odd
+denominators, $L_k:=\vtwo(\xi-R_k)<\infty$ and $h_k:=\log_2 H(R_k)\to\infty$ strictly increasing.
+Put
+\[
+  \theta:=\liminf_k\frac{L_k}{h_k},\qquad \Theta:=\limsup_k\frac{L_k}{h_k},\qquad
+  g:=\limsup_k\frac{h_{k+1}}{h_k}.
+\]
+Assume $\Theta<\infty$, $g<\infty$ and $\theta>1$. Then for every
+$\mu>\max\bigl(\Theta,\,1+g/(\theta-1)\bigr)$ there is $C>0$ with
+$|\xi-r|_2\ge C\,H(r)^{-\mu}$ for all $r\in\Q\cap\Zt$.
+\end{lemma}
+
+\begin{proof}
+\emph{Basic step.} Let $r=p/q$ in lowest terms with $q>0$ odd, $H=H(r)$, and suppose $r\ne R_k$,
+$R_k=A_k/B_k$. By Lemma~\ref{lem:hlow} applied to $r$ and $R_k$,
+$\vtwo(R_k-r)\le h_k+\log_2 H+1$. If moreover $L_k>h_k+\log_2 H+1$ then
+$\vtwo(\xi-R_k)=L_k>\vtwo(R_k-r)$, so the two valuations differ and the ultrametric equality gives
+$\vtwo(\xi-r)=\vtwo(R_k-r)\le h_k+\log_2 H+1$, whence
+\begin{equation}\label{eq:basic}
+  |\xi-r|_2\ \ge\ 2^{-1}\,2^{-h_k}H^{-1}.
+\end{equation}
+
+\emph{Measure.} Fix $\mu$ as stated and choose $\epsilon>0$ with
+$\mu>\max\bigl(\Theta+\epsilon,\,1+(g+\epsilon)/(\theta-1-\epsilon)\bigr)$, then $N$ with
+$\theta-\epsilon<L_k/h_k<\Theta+\epsilon$ and $h_{k+1}/h_k<g+\epsilon$ for all $k\ge N$.
+
+If $r=R_k$ for some $k\ge N$ then $H=2^{h_k}>1$ and
+$|\xi-r|_2=2^{-L_k}=H^{-L_k/h_k}\ge H^{-(\Theta+\epsilon)}\ge H^{-\mu}$. The finitely many $k<N$
+have bounded height and are absorbed into $C$.
+
+Otherwise $r\ne R_k$ for all $k$. Put $X=\log_2 H$ and let $k$ be the largest index with
+$h_k\le(\mu-1)X-1$; for $X$ large this $k$ exists and $k\ge N$. Then $h_{k+1}>(\mu-1)X-1$, so
+$h_k>h_{k+1}/(g+\epsilon)>\bigl((\mu-1)X-1\bigr)/(g+\epsilon)$. Now
+$L_k>(\theta-\epsilon)h_k$, and $L_k>h_k+X+1$ holds as soon as
+$h_k(\theta-1-\epsilon)>X+1$, for which it suffices that
+$(\theta-1-\epsilon)\bigl((\mu-1)X-1\bigr)>(g+\epsilon)(X+1)$; as $X\to\infty$ this is implied by
+$(\theta-1-\epsilon)(\mu-1)>g+\epsilon$, i.e.\ by the choice of $\epsilon$. So the basic step
+applies, and \eqref{eq:basic} together with $h_k\le(\mu-1)X-1$ gives
+$|\xi-r|_2\ge2^{-1-h_k-X}\ge2^{-\mu X}=H^{-\mu}$. The finitely many $r$ with $X$ below the
+resulting threshold have bounded height and are absorbed into $C$.
+\end{proof}
+
+The hypothesis $\Theta<\infty$ is not a convenience: $\Theta=\infty$ says exactly that $\xi$ is a
+$2$-adic Liouville number, i.e.\ that the conclusion is false. Lemma~\ref{lem:P} therefore fails
+precisely where it must.
+
+\begin{theorem}\label{thm:Bstar}
+Let $\gamma\in(0,\beta]$ be irrational with bounded partial quotients, $\beta=\log_3 2$. Put
+\[
+  \lambda:=\liminf_k\frac{q_{k+1}}{q_k},\qquad \Lambda:=\limsup_k\frac{q_{k+1}}{q_k}
+  \quad(\text{both finite, and }\lambda>1).
+\]
+Then for every $\mu>\max\bigl(1+\Lambda,\,1+\Lambda/\lambda\bigr)$ there is an effective $C>0$ with
+\[
+  \bigl|\PH(c_\gamma)-r\bigr|_2\ \ge\ C\,H(r)^{-\mu}\qquad\text{for all }r\in\Q\cap\Zt,
+\]
+and the same with $\PH(1c_\gamma)$ or $\PH(0c_\gamma)$ in place of $\PH(c_\gamma)$, after adjusting
+$C$. For a constant partial quotient $a$, with $\lambda=\Lambda=(a+\sqrt{a^{2}+4})/2$, this reads
+$\mu>1+\lambda$; e.g.\ $\mu>\varphi^{2}=2.6180\ldots$ for $\gamma=1/\varphi$ and
+$\mu>2+\sqrt2=3.4142\ldots$ for $\gamma=\sqrt2-1$.
+\end{theorem}
+
+\begin{proof}
+Let $W_k$ be the prefix of $c_\gamma$ of length $q_k$ and $R_k=\PH(W_k^{\infty})$; these are
+pairwise distinct with odd denominators, as in Step~4. By Proposition~\ref{prop:icefla} and the
+proof of \cite[\S4.2]{BHZ06}, $L_k:=\vtwo(\PH(c_\gamma)-R_k)=q_{k+1}+q_k-2$. Since
+$\gamma\le\beta$ we have $\Av=1$, so \eqref{eq:hbound} gives the upper bound
+$h_k<q_k+\log_2(3q_k)+\log_2 3$. For the lower bound, Lemma~\ref{lem:hlow} applied to $R_k\ne
+R_{k+1}$ gives $L_k=\vtwo(R_k-R_{k+1})\le h_k+h_{k+1}+1$ (the valuation of the difference being
+$\min(L_k,L_{k+1})=L_k$), whence
+\[
+  h_k\ \ge\ L_k-1-h_{k+1}\ >\ (q_{k+1}+q_k-3)-q_{k+1}-\log_2(3q_{k+1})-\log_2 3
+  \ =\ q_k-O(\log q_{k+1}).
+\]
+Bounded partial quotients give $q_{k+1}\le(M+1)q_k$, so $\log q_{k+1}=O(\log q_k)$ and therefore
+$h_k=q_k+O(\log q_k)$. Consequently
+\[
+  \theta=1+\lambda,\qquad \Theta=1+\Lambda,\qquad g=\Lambda,
+\]
+all finite, and $\theta>1$; indeed $q_{k+1}/q_k=a_{k+1}+q_{k-1}/q_k\ge1+1/(M+1)$, so
+$\lambda>1$. Lemma~\ref{lem:P} applies with
+$\max(\Theta,1+g/(\theta-1))=\max(1+\Lambda,1+\Lambda/\lambda)$. For a constant partial quotient
+$\lambda=\Lambda>1$ and the maximum is $1+\lambda$. The statement for $\PH(1c_\gamma)$,
+$\PH(0c_\gamma)$ follows from \eqref{eq:affine}, which changes $H(r)$ by a bounded factor.
+\end{proof}
+
+\begin{remark}[Scope of Theorem~\ref{thm:Bstar}, honestly]\label{rem:Bscope}
+The restriction $\gamma\le\beta$ is needed, and is narrower than one might expect. The upper bound
+\eqref{eq:hbound} on $h_k$ is available at every slope, but Lemma~\ref{lem:P} also needs a
+\emph{lower} bound, to make $\Theta$ and $g$ finite, and the only elementary source we have for one
+is Lemma~\ref{lem:hlow}, which yields $h_k\ge q_k+q_{k+1}-3-h_{k+1}$. For $\Av=1$ this is
+$q_k-O(\log q_{k+1})$ and suffices; for $\Av>1$ the right-hand side is negative and the argument
+breaks. We do not know whether $\gcd(c_W,2^{\ell}-3^{k})$ can be large enough to make $h_k$ much
+smaller than $\Av\,q_k$, and we make no claim for $\gamma\in(\beta,\gs)$.
+\end{remark}
+
+\section{Scope and open problems}\label{sec:scope}
+
+Four limitations of the argument, with the open problems they carry: general intercepts
+(\S\ref{ss:intercepts}, Question~\ref{q:intercepts}); extending the range towards all slopes
+(\S\ref{ss:aboveg}, Question~\ref{q:subspace}); the integer target (\S\ref{ss:integer}); and the
+real place (\S\ref{ss:realplace}).
+
+\subsection{General intercepts}\label{ss:intercepts}
+Theorem~\ref{thm:main} covers $c_\gamma$, $1c_\gamma$, $0c_\gamma$ and the whole shift orbit of
+$c_\gamma$ --- equivalently its tail-equivalence class, the countably many intercepts
+$\{k\gamma\}$. It does \emph{not} cover arbitrary intercepts, and this is an obstruction rather than
+an omission. Every Sturmian word begins in infinitely many squares \cite[Theorem 1]{ADQZ2001}, so
+$\ice\ge2$ always; but by \cite[Theorem 1.1]{BHZ06} there are slopes $\alpha$ carrying a Sturmian
+word $\omega\in X_\alpha$ with $\ice(\omega)=2$ \emph{exactly} --- namely those for which, for each
+pair $(s,t)$ with $s>1$, only finitely many $k$ have $(a_k,a_{k+1})=(s,t)$ or
+$(a_k,a_{k+1},a_{k+2})=(1,1,t)$. For such a word the argument yields $\om\ge2/\Av-1=1$ at $\Av=1$:
+the threshold of Theorem R with $\delta=0$, which proves nothing. The full generality of
+\cite[Corollary 10.5]{DJirr} therefore does not transfer to transcendence, and no claim is made for
+it. For the golden slope no such word exists, since $(a_k,a_{k+1},a_{k+2})=(1,1,1)$ recurs; for
+$\gamma=\beta$ whether such a word exists is open, being a statement about recurrence of patterns in
+the partial quotients of $\log_2 3$.
+
+\begin{question}\label{q:intercepts}
+Is $\PH(s)$ transcendental for every Sturmian word $s$ of every intercept, at least for
+$\gamma<\gs$?
+\end{question}
+
+\subsection{Slopes above \texorpdfstring{$\gs$}{gamma*}}\label{ss:aboveg}
+For $\gamma\ge\gs$ the condition \eqref{eq:T} becomes a genuine hypothesis on the partial quotients,
+and Theorem~\ref{thm:main} is conditional. The boundary is sharp in our method: on noble slopes,
+where $\ice=1+\varphi$ exactly, the limit of $\om$ along the levels is $(1+\varphi)/\Av-1$, which is
+$>1$ for $\gamma=0.82200179\ldots$ and $<1$ for $\gamma=0.84889772\ldots$; both sides were verified
+(Appendix~\ref{app:verif}). Improving the range requires either a better height exponent than $\Av$
+or an input stronger than Theorem R at the single place $2$.
+
+\begin{question}\label{q:subspace}
+Can the range be extended towards all slopes by an $S$-unit or Subspace argument over
+$\{\infty,2,3\}$, in place of the single place $2$?
+\end{question}
+
+\noindent
+This is the route sketched by Cassidy \cite[\S4.6]{Cassidy26}: build integer points
+from the shadow data and apply Schlickewei's $p$-adic Subspace Theorem --- Theorem S of
+Appendix~\ref{app:schlickewei} --- at the three places $\{\infty,2,3\}$, rather than Theorem R at
+the one place $2$. The slope-range bookkeeping is not carried out there, as that note itself
+indicates, and it is what such a proof would have to supply. The cost of the extra coordinate is
+explicit: with three forms the place-product must be pushed below $H(\mathbf{x})^{-3-\varepsilon}$,
+where the single-prime route needs only $H(\mathbf{x})^{-2-\varepsilon}$ with two. Against that cost one may set a concrete gain. Working at the places $2$ and $3$ together puts
+both primes in $S$, so the shadow denominators $2^{\ell}-3^{k}$ may be handled with both primes
+available at once, rather than at the single place $2$. That is the obstruction identified in
+\S\ref{ss:notcor} --- these denominators are not $S$-units for any fixed finite $S$, so the single
+prime $2$ buys no unit of exponent --- and it is the one an argument over $\{\infty,2,3\}$ would
+be in a position to attack.
+
+\subsection{The integer target}\label{ss:integer}
+A different and more demanding question is attached to the realizer problem of \cite{DJedge}: an
+effective bound $|\cdot|_2\ge C\,y^{-\mu}$ against positive \emph{integers} $y$, which by
+\cite[Proposition 7.2]{DJedge} is equivalent to a sublinear zero-run law on the Hensel digits.
+Theorem~\ref{thm:liouville} does not obstruct it: the shadows all have large odd denominators ---
+$2^{\ell}-3^{k}=\pm1$ only for $(\ell,k)\in\{(1,1),(2,1),(3,2)\}$, by an elementary argument ---
+so none is an integer, and the Liouville blow-up does not descend to $\Z$. This remains open.
+
+\subsection{The real place, and a remark of L\'opez and Stoll}\label{ss:realplace}
+\begin{remark}\label{rem:real}
+Equation \eqref{eq:terms} shows that at the resonance slope the terms of the defining series lie in
+$(\frac16,\frac13]$ and do not tend to $0$: the real series \emph{diverges}, and the $2$-adic place
+is the only one available. L\'opez and Stoll reach the same point from the other side: their real
+staircase diverges at $x=\beta$. Their function $F(x):=\PH_{\R}(m_x)$ on $(\beta,1]$
+\cite[Definition 26]{LS09} is a devil's staircase, and in \cite[\S4]{LS09} they remark: ``The
+function is similar to other devil's staircases. \dots It seems that $F$ additionally maps
+irrationals to transcendental numbers. We have no proof.'' That remark concerns the \emph{real}
+function $F$, for slopes $>\beta$, and is explicitly unproven. The present paper proves
+transcendence for the \emph{$2$-adic} $\PH$, on $(0,\gs)$, by a different mechanism. The two
+statements are about different numbers and neither implies the other.
+\end{remark}
+
+\section{Related work}\label{sec:related}
+
+L\'opez and Stoll are the origin of the explicit study of $\PH$ on Sturmian words. Their
+\cite[Theorem 1]{LS09} is the closed $2$-adic series \eqref{eq:LS09series} and
+\cite[Corollary 2]{LS09} the associated generalised continued fraction; \cite[Lemma 11]{LS09} is the
+one-position formula for mechanical words, with \cite[Ch.~2]{Lothaire02} for the framework;
+\cite[Lemma 12]{LS09} is the rational-slope shadow; \cite[\S4]{LS09} contains the irrationality of
+the real value and the remark quoted in Remark~\ref{rem:real}; and \cite[Lemma 43, \S11]{LS21} is
+the term-size estimate \eqref{eq:terms} with the distribution of the terms, while
+\cite[Lemma 37]{LS21} is the real form of \eqref{eq:affine}. The approximation depths used
+throughout this paper are the term exponents of their 2009 series. We do not rely on
+\cite[Theorem 1]{LS21}.
+
+Two contemporaneous independent contributions should be recorded, both concerning
+\emph{irrationality}. We reuse the characterisations of \cite[\S1]{DJirr}. Pham
+\cite[Theorem 3, Corollaries 4--5]{Pham26}, in an unrefereed note dated 22 July 2026, transported
+Dubickas's counting argument to rational $2$-adic integers and drew the conclusion that every
+Sturmian parity word has irrational $\PH$-value; his Theorem 3 is moreover sensitive to the drift
+of the word. Cassidy \cite[Theorems R and S]{Cassidy26}, in an unrefereed note of September
+2026, proved by a $2$-adic repetition (Liouville) criterion that no rational with odd denominator
+has an eventually Sturmian parity vector, for every slope and intercept, and for a wider class of
+maps: $3x+r$, $5x+1$ at slopes below $0.804$, and Mahler's map; his second route, through initial
+squares, is the method of \cite[\S10]{DJirr}. Both were found independently of \cite{DJirr}, and
+Cassidy's note was posted first. Neither note is refereed and we make no comparative claim about
+either.
+
+Transcendence of $\PH(s)$ for every Sturmian word $s$ was first proposed by Cassidy
+\cite[\S4.6]{Cassidy26}, with a sketch via Schlickewei's $p$-adic Subspace Theorem, recorded
+there as unaudited. The complete proof given here covers characteristic words of every irrational
+slope $\gamma<\gs$ and goes by a different route, Ridout's theorem in the single-prime form
+\cite[Theorem 1.3]{BK18} with the Berth\'e--Holton--Zamboni bound on initial powers; the general
+claim remains open. See \S\ref{ss:aboveg} for what an argument over $\{\infty,2,3\}$ would
+have to supply.
+
+
+On the archimedean side the analogous programme is well developed: Ferenczi--Mauduit \cite{FM97},
+Adamczewski--Bugeaud \cite{AB07}, and for Hecke--Mahler values Bugeaud--Laurent
+\cite{BugeaudLaurent23}. As explained in \S\ref{ss:notcor}, the hypotheses of these results are on a
+digit expansion and our object does not satisfy them.
+
+\section*{Acknowledgments}
+The author thanks Josefina L\'opez for identifying the earlier sources of several ingredients used
+here --- the isometry, the one-position formula, the term-size bound of \cite[Lemma 43]{LS21}, and
+the periodic approximants of \cite[Theorem 1]{LS09} --- and for the correction recorded in
+Remark~\ref{rem:xi}.
+
+Theorems~\ref{thm:quant}--\ref{thm:main} and their supporting computations were re-checked in a
+separate AI session (Anthropic's Claude), working blind from the primary sources before reading the
+proofs, with its own exact-arithmetic scripts. It re-established the three primary inputs from those
+sources rather than from this paper: Ridout's exponent $2+\varepsilon$ with the height
+$\max(|\mathrm{num}|,\mathrm{den})$, giving the threshold $\om>1$ and applying to the
+odd-denominator shadows; Berth\'e--Holton--Zamboni's formula
+$\ice(c_\alpha)=1+\limsup_k q_{k+1}/q_k$ with the elementary floor
+$\limsup_k q_{k+1}/q_k\ge\varphi$; and the Bernstein--Lagarias convention
+$\PH\circ S\circ\PH^{-1}=T$, from which \eqref{eq:affine} follows. The conjugacy map, the
+periodic-value formula and the isometry were re-derived from the parity-vector definition and
+checked against the closed forms used here. The height bound, the balanced-numerator bound and the
+depth identity were each verified directly at every level the proof uses --- $46$ of $46$ across
+four slopes --- rather than by analogy; the slope threshold $\gs$ was checked from both sides on
+noble slopes; and controls on a rational target and on the quadratic irrational $\sqrt{17}\in\Zt$
+both stayed within $\om\le1+O(1/\log H)$. That session also supplied the witness of
+Example~\ref{ex:witness} and the quartic of the footnote in \S\ref{ss:norm}.
+\S\ref{sec:measure} was outside its remit.
+
+AI assistance was used for algebra checking, numerical verification, adversarial review, literature
+organization, and manuscript drafting. All conceptual development, research direction,
+interpretation, and final responsibility for the content belong to the author.
+
+\appendix
+
+\section{Theorem R from Schlickewei's subspace theorem (not new)}\label{app:schlickewei}
+
+Included for completeness only. Theorem R is \cite[Theorem 1.3]{BK18}; the argument below
+re-derives it and claims no novelty. It has the mild advantage of being checkable without recourse
+to \cite{Ridout58}.
+
+\begin{theoremS}[{$p$-adic subspace theorem; \cite{Schlickewei76,Schlickewei77}, in the formulation
+of \cite[Theorem 7.2.2]{BG06}}]
+Let $n\ge1$, $K$ a number field, $S$ a finite subset of $M_K$. For each $w\in S$ let
+$L_{1,w},\dots,L_{n,w}$ be $n$ linearly independent linear forms in $X_1,\dots,X_n$ with algebraic
+coefficients. Then for every $\varepsilon>0$ the set of nonzero $\mathbf{x}\in K^{n}$ with
+\[
+  \prod_{w\in S}\prod_{i=1}^{n}\frac{|L_{i,w}(\mathbf{x})|_w}{|\mathbf{x}|_w}
+  \le H(\mathbf{x})^{-n-\varepsilon}
+\]
+lies in finitely many proper subspaces of $K^{n}$.
+\end{theoremS}
+
+\begin{proposition}\label{prop:Rderiv}
+Let $\xi\in\Qt$ be algebraic over $\Q$ and irrational. For every $\varepsilon>0$ there are only
+finitely many $r=p/q\in\Q$ in lowest terms with $q>0$ odd and $|\xi-r|_2\le H(r)^{-2-\varepsilon}$.
+Equivalently $\om(\xi)\le1$.
+\end{proposition}
+
+\begin{proof}
+Take $K=\Q$, $n=2$, $S=\{\infty,2\}$, and fix an extension of $|\cdot|_2$ to $\overline{\Q}$
+compatible with the given embedding $\Q(\xi)\hookrightarrow\Qt$. Set
+\[
+  L_{1,2}=X_1-\xi X_2,\quad L_{2,2}=X_2,\qquad L_{1,\infty}=X_1,\quad L_{2,\infty}=X_2 .
+\]
+At each place the two forms are linearly independent (coefficient determinant $1$) and their
+coefficients are algebraic, as Theorem S requires. Let $\mathbf{x}=(p,q)$ with $p,q$ coprime
+integers and $q>0$ odd. Then $|\mathbf{x}|_\infty=\max(|p|,q)=H$, while
+$|\mathbf{x}|_w=\max(|p|_w,|q|_w)=1$ at every finite place $w$ by coprimality; hence
+$H(\mathbf{x})=\prod_w|\mathbf{x}|_w=H$. The double product is
+\[
+  \text{at }\infty:\ \frac{|p|}{H}\cdot\frac{q}{H}=\frac{|p|q}{H^{2}}\le1,
+  \qquad
+  \text{at }2:\ |p-\xi q|_2\cdot|q|_2=|p-\xi q|_2=|\xi-p/q|_2
+\]
+(the last since $q$ is odd, so $|q|_2=1$), so
+$\prod_w\prod_i|L_{i,w}(\mathbf{x})|_w/|\mathbf{x}|_w\le|\xi-p/q|_2$. Hence every $r=p/q$ with
+$|\xi-r|_2\le H^{-2-\varepsilon}$ satisfies the hypothesis of Theorem S with $n=2$, and all such
+$(p,q)$ lie in finitely many proper subspaces of $\Q^{2}$, i.e.\ finitely many lines through the
+origin. A line through the origin contains at most one coprime pair $(p,q)$ with $q>0$, hence at
+most one rational $p/q$. Finitely many lines, finitely many $r$. Irrationality of $\xi$ gives
+$p-\xi q\ne0$, so no form vanishes on the relevant $\mathbf{x}$.
+\end{proof}
+
+\section{Exact-arithmetic verification}\label{app:verif}
+
+All computations are in exact integer or rational arithmetic; no floating-point number decides any
+inequality. Slopes are pinned by a certified integer interval and every floor or ceiling used to
+build a word is checked to agree at both endpoints. Approximation exponents are reported as the
+certified interval $[D/\mathrm{bitlen}(H)-1,\;D/(\mathrm{bitlen}(H)-1)-1]$, since
+$\mathrm{bitlen}(H)-1\le\log_2 H<\mathrm{bitlen}(H)$. Scripts accompany this paper in
+\texttt{verification/}.
+
+\emph{Primitives.} $\PH$ was implemented twice: once from the closed form of
+\cite[Proposition 2.1]{DJirr} and once, independently, from the parity-vector definition alone via
+the recursion $\PH(v)=2\PH(\sigma v)$ or $(2\PH(\sigma v)-1)/3$ according to $v_0$. The closed
+form, the periodic-value formula of Proposition~\ref{prop:shadow}, and the isometry of
+Proposition~\ref{prop:iso} were then checked against the independent implementation in $300$, $200$
+and $300$ exact random trials respectively; all matched.
+
+\emph{The 2009 series.} Equation \eqref{eq:LS09series} was evaluated in exact $2$-adic arithmetic
+and compared with the independently computed $\PH(1c_\alpha)$: agreement was exact modulo $2^{4000}$
+at all three slopes tested (golden, $\sqrt2-1$, $\log_3 2$; $16$, $9$, $9$ terms). The $j$-th term
+has $\vtwo=q_{j+1}+q_j-1$, which coincides with the depth law at the convergents from above.
+
+\emph{Depth law and height bound across the $\gs$ range (this audit).} The depth identity
+$\lcp(c_\gamma,W^{\infty})=q_{k+1}+q_k-2$ and the Step-2 bound \eqref{eq:hbound} were re-checked at
+\emph{every} convergent level, both parities, on six slopes spanning the range of
+Corollary~\ref{cor:uncond} and crossing $\gs$. Words were generated at $300$ decimal digits, which
+for the lengths used exceeds the nearest-integer distance of $j\gamma$ by more than $200$ orders of
+magnitude; all heights, $c_W$, denominators and gcds are exact integers.
+
+\begin{center}\footnotesize
+\begin{tabular}{@{}lccccc@{}}
+\toprule
+slope $\gamma$ & $\gamma$ & $\Av$ & $\gamma<\gs$ & depth $=q_{k+1}+q_k-2$ & \eqref{eq:hbound} holds\\
+\midrule
+$\log_3 2$ (resonance)      & $0.6309298$ & $1$         & yes & all $k$ & all $k$\\
+$(\sqrt5-1)/2$              & $0.6180340$ & $1$         & yes & all $k$ & all $k$\\
+$\sqrt2-1$                  & $0.4142136$ & $1$         & yes & all $k$ & all $k$\\
+$\sqrt3-1=[0;1,2,1,2,\dots]$& $0.7320508$ & $1.1602731$ & yes & all $k$ & all $k$\\
+$(\sqrt{21}-3)/2=[0;1,3,1,3,\dots]$ & $0.7912878$ & $1.2541616$ & yes & all $k$ & all $k$\\
+$2\sqrt2-2=[0;1,4,1,4,\dots]$       & $0.8284271$ & $1.3130259$ & \emph{no} & all $k$ & all $k$\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\noindent The last slope lies above $\gs$ and is a control: \eqref{eq:T} still holds there, since
+its partial quotients give $\limsup_k q_{k+1}/q_k\ge4$ and hence $\ice\ge5>2\Av=2.626$, with a
+measured exponent $1+w$ reaching $4.44$ on the odd levels. This confirms that $\gs$ is sufficient
+and not necessary, as \S\ref{ss:aboveg} states. On the slopes with $\Av>1$ the exponent dips below
+$2$ at some individual even levels (e.g.\ $1.80$ and $1.95$ for $\sqrt3-1$); this is harmless, the
+hypothesis of Theorem~\ref{thm:main} being a limit superior over prefixes and not a condition at
+every level.
+
+\emph{The truncation propositions of \S\ref{sec:truncations}.} The determinant identity
+$P_NQ_{N+1}-P_{N+1}Q_N=+3^{N}2^{S_N}$ was confirmed in exact integer arithmetic for
+$N=1,\dots,120$, with $\vtwo(D_N)/\log_2|D_N|$ rising to $0.49974$ at $N=120$, against the limit
+$\frac12$ of Remark~\ref{rem:sunit}. For Proposition~\ref{prop:trunc}, $S_N-\log_2 Q_N$ was found in
+$(-1,0]$ at every $N$ tested, while $S_N-\log_2 H(\Xi_N)+\log_2 N$ stayed in $[0.83,1.68]$ for
+$N=3,5,10,40,160,640,2560$ --- bounded, as claimed. The crossover $C_N>3^{N}$ first occurs at $N=4$.
+
+\emph{Depth identity and heights.} For the prefixes of $c_\gamma$ at the convergent lengths,
+$\lcp(c_\gamma,W^{\infty})=q_{k+1}+q_k-2$ was confirmed at $46$ of $46$ levels across four slopes
+(golden $19$, $\sqrt2-1$ $11$, $[0;5,1,5,1,\dots]$ $9$, $\log_3 2$ $7$), the variant with $-1$
+failing at $0$ of $46$. The bound $c_W\le3\ell\max(2^{\ell},3^{k})$ and the bound \eqref{eq:hbound}
+each held at $46$ of $46$ levels, checked for these prefixes directly rather than by analogy.
+
+\emph{Trend of $\om$.} The certified lower bounds increase to the predicted limit
+$\ice/\Av-1$: for the golden slope $1.5654,1.5853,1.5977,1.6028,1.6102,1.6122,1.6151,1.6158,1.6169$
+at $k=12,\dots,20$ against the limit $\varphi=1.618034$; for $\sqrt2-1$ to $2.41407$ against
+$1+\sqrt2+1=2.414214$; for $[0;5,1,5,1,\dots]$ to $5.853$ against $5.854$; and at $\gamma=\log_3 2$
+all seven computed levels exceed $1$, reaching $23.274$.
+
+\emph{Boundary, both sides.} On noble slopes, where $\ice=1+\varphi$ exactly and the margin is
+smallest:
+\begin{center}
+\begin{tabular}{lcccl}
+\toprule
+$\gamma$ & $\Av$ & predicted limit & measured max & outcome \\
+\midrule
+$0.61803399$ & $1.000000$ & $1.618034$ & $1.616895$ & $\om>1$ \\
+$0.82200179$ & $1.302873$ & $1.009432$ & $1.009305$ & $\om>1$ (inside $\gs$) \\
+$0.84889772$ & $1.345503$ & $0.945766$ & $0.945573$ & $\om\le1$ (outside $\gs$) \\
+$0.89602865$ & $1.420205$ & $0.843419$ & $0.843273$ & $\om\le1$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\emph{Controls.} On rational targets $\PH(W_0^{\infty})$, with the target itself and all height-$1$
+shadows excluded, the worst exponent over all other prefix shadows was $0.25$, $0.60$, $1.00$,
+$1.00$ for four test words --- all $\le1$, as they must be, since for fixed rational $\xi$ and
+$r\ne\xi$ one has $|\xi-r|_2\ge1/(2H(\xi)H(r))$. On the quadratic irrational $\sqrt{17}\in\Zt$
+(computed by bitwise Hensel lifting to $2^{1400}$ and verified), an exhaustive search over all
+coprime $p/q$ with $q$ odd and $H\le1200$ gives, band by band, worst exponents
+$0.26$, $1.58$, $1.89$, $0.77$, $0.73$, $1.44$, $0.92$, $0.88$, $1.18$, $0.90$ for
+$H\in[2^{1},2^{11})$ --- each within the Liouville cap $1+\log_2 9/\log_2 H$ and decaying toward
+$1$. The contrast with the previous paragraph is the point of Lemma~\ref{lem:margin}: for an
+algebraic target the excess over $1$ \emph{is} the slack and vanishes, while for $\PH(c_\gamma)$ it
+converges to a positive constant.
+
+\emph{The parity dichotomy and the witness.} For $1c_\gamma$ the prefix power at the length-$q_n$
+prefix equals $1$ at every even $n$, confirmed at every even level of four slopes; an exhaustive
+sweep over every prefix length $\ell<900$ found the maximum prefix power attained at $\ell=q_n$ with
+$n$ odd and nowhere else. The witness of Example~\ref{ex:witness} was computed as reported there.
+
+\emph{Transfer and sign.} The identities \eqref{eq:affine} were verified exactly modulo $2^{400}$ at
+three slopes. The sign check of Remark~\ref{rem:xi} was performed modulo $2^{3000}$ with $1893$
+terms.
+
+\bibliographystyle{amsplain}
+\bibliography{refs}
+
+\end{document}

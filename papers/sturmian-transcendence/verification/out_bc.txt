@@ -1,0 +1,49 @@
+gamma* = (3+sqrt5)/(4 log2 3) = 0.82589776968183546440
+(1+phi)/2 = 1.30901699437494742410    log_3 2 = 0.63092975357145743709
+
+========================================================================================================
+(i) NOBLE slopes (all-ones CF tail => ice = 1+phi EXACTLY: the worst case)
+========================================================================================================
+  [0;1,1,...]        gamma=0.61803399  A<=1.000000  2A=2.00000  predicted limit (1+phi)/A-1 = 1.618034
+      last levels (k,l,depth,bitsH,omega_lo,omega_hi): (18,4181,10944,4185,1.61505,1.61568)  (19,6765,17709,6770,1.61581,1.61619)  (20,10946,28655,10950,1.61689,1.61713)
+      max omega_lo = 1.616895   =>  omega>1 : TRANSCENDENCE CERTIFIED
+  [0;1,4,1,1,...]    gamma=0.82200179  A<=1.302873  2A=2.60575  predicted limit (1+phi)/A-1 = 1.009432
+      last levels (k,l,depth,bitsH,omega_lo,omega_hi): (17,5545,14515,7225,1.00900,1.00927)  (18,8972,23487,11690,1.00915,1.00933)  (19,14517,38004,18914,1.00931,1.00941)
+      max omega_lo = 1.009305   =>  omega>1 : TRANSCENDENCE CERTIFIED
+  [0;1,5,1,1,...]    gamma=0.84889772  A<=1.345503  2A=2.69101  predicted limit (1+phi)/A-1 = 0.945766
+      last levels (k,l,depth,bitsH,omega_lo,omega_hi): (16,4037,10567,5432,0.94532,0.94568)  (17,6532,17099,8789,0.94550,0.94572)  (18,10569,27668,14221,0.94557,0.94571)
+      max omega_lo = 0.945573   =>  omega<=1 : METHOD GIVES NOTHING (expected above gamma*)
+  [0;1,8,1,1,...]    gamma=0.89602865  A<=1.420205  2A=2.84041  predicted limit (1+phi)/A-1 = 0.843419
+      last levels (k,l,depth,bitsH,omega_lo,omega_hi): (15,3626,9491,5150,0.84291,0.84327)  (16,5867,15358,8333,0.84303,0.84325)  (17,9493,24851,13482,0.84327,0.84341)
+      max omega_lo = 0.843273   =>  omega<=1 : METHOD GIVES NOTHING (expected above gamma*)
+
+========================================================================================================
+(ii) CONTROLS
+========================================================================================================
+  rational target Phi(110)=-5          : 398 shadows, max omega_UPPER = 0.25000 at (4, 5, 23)   OK (<=1+o(1))
+  rational target Phi(10100)=7/23        : 477 shadows, max omega_UPPER = 0.60000 at (8, 8, 41)   OK (<=1+o(1))
+  rational target Phi(1101001)=133/47      : 512 shadows, max omega_UPPER = 1.00000 at (3, 4, 5)   OK (<=1+o(1))
+  rational target Phi(100110101)=889/269     : 531 shadows, max omega_UPPER = 1.00000 at (3, 4, 5)   OK (<=1+o(1))
+  quadratic target sqrt(17) in Z_2 : worst omega by dyadic height band (exhaustive, H<=1200)
+     H in [2^ 1,2^ 2) : worst omega =  0.26186 (p/q=-3/1, v2=2)   Liouville cap ~4.1699  ok
+     H in [2^ 2,2^ 3) : worst omega =  1.58406 (p/q=-5/3, v2=6)   Liouville cap ~2.5850  ok
+     H in [2^ 3,2^ 4) : worst omega =  1.89065 (p/q=3/11, v2=10)   Liouville cap ~2.0566  ok
+     H in [2^ 4,2^ 5) : worst omega =  0.76852 (p/q=-23/1, v2=8)   Liouville cap ~1.7925  ok
+     H in [2^ 5,2^ 6) : worst omega =  0.72763 (p/q=-37/35, v2=9)   Liouville cap ~1.6340  ok
+     H in [2^ 6,2^ 7) : worst omega =  1.44050 (p/q=-59/125, v2=17)   Liouville cap ~1.5283  ok
+     H in [2^ 7,2^ 8) : worst omega =  0.91655 (p/q=155/227, v2=15)   Liouville cap ~1.4528  ok
+     H in [2^ 8,2^ 9) : worst omega =  0.87629 (p/q=369/329, v2=16)   Liouville cap ~1.3962  ok
+     H in [2^ 9,2^10) : worst omega =  1.17878 (p/q=797/533, v2=21)   Liouville cap ~1.3522  ok
+     H in [2^10,2^11) : worst omega =  0.89760 (p/q=1033/33, v2=19)   Liouville cap ~1.3170  ok
+
+========================================================================================================
+(iii) the claimed '1c_gamma collapses to omega = 1' on [0;M,1,M,1,...]
+========================================================================================================
+  M=4     1c_gamma: max omega_lo=1.206897  max omega_hi=1.666667  (predicted limsup = 1/M-ish = 0.250000)
+          levels (k,l,depth,E=depth/l,omega_lo): (1,4,8,2.00000,1.00000)  (2,5,5,1.00000,0.00000)  (3,24,52,2.16667,1.16667)  (4,29,29,1.00000,0.00000)  (5,140,308,2.20000,1.20000)  (6,169,169,1.00000,0.00000)
+  M=10    1c_gamma: max omega_lo=1.090909  max omega_hi=1.222222  (predicted limsup = 1/M-ish = 0.100000)
+          levels (k,l,depth,E=depth/l,omega_lo): (1,10,20,2.00000,1.00000)  (2,11,11,1.00000,0.00000)  (3,120,250,2.08333,1.08333)  (4,131,131,1.00000,0.00000)  (5,1430,2990,2.09091,1.09091)  (6,1561,1561,1.00000,0.00000)
+  M=40    1c_gamma: max omega_lo=1.023810  max omega_hi=1.051282  (predicted limsup = 1/M-ish = 0.025000)
+          levels (k,l,depth,E=depth/l,omega_lo): (1,40,80,2.00000,1.00000)  (2,41,41,1.00000,0.00000)  (3,1680,3400,2.02381,1.02381)
+  M=200   1c_gamma: max omega_lo=1.000000  max omega_hi=1.010050  (predicted limsup = 1/M-ish = 0.005000)
+          levels (k,l,depth,E=depth/l,omega_lo): (1,200,400,2.00000,1.00000)
