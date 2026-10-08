@@ -120,6 +120,76 @@ the critical-truncation question of §5 was first posed in
 
 Neither Pham's nor Cassidy's note is refereed, and no comparative claim is made about either.
 
+## Lean formalisation (stage 1 — logical skeleton)
+
+Branch `lean-formalization`, directory [`lean/`](lean).  **Lean 4 + Mathlib, pinned**:
+toolchain `leanprover/lean4:v4.34.0`, Mathlib `v4.34.0` (rev `5ed296525643`);
+`lean-toolchain` and `lake-manifest.json` are committed.
+
+### What is machine-checked
+
+Everything in the import closure of `Sturmian.lean` compiles with **no `sorry`** and, per
+[`AXIOM_AUDIT.txt`](lean/AXIOM_AUDIT.txt), depends on no axiom beyond the three standard
+Lean ones (`propext`, `Classical.choice`, `Quot.sound`) plus the single named axiom below.
+
+| result | statement | named axiom used |
+|---|---|---|
+| `Sturmian.H`, `finite_setOf_H_le`, `exists_H_gt_of_infinite` | the paper's height `H(r) = max(\|num\|, den)`; each height is attained finitely often, so an infinite set of rationals has unbounded height | none |
+| `Sturmian.liouville_two_adic` | **the 2-adic Liouville inequality**: for `ξ ≠ r` rational with odd denominators, `\|ξ−r\|₂ ≥ (\|num ξ\| + den ξ)⁻¹ · H(r)⁻¹` | **none — proved** |
+| `Sturmian.transcendental_of_approxExp` | infinitely many **distinct** rationals with `\|ξ−r\|₂ ≤ H(r)^(−μ)`, `μ > 2` ⟹ `ξ` transcendental over `ℚ` | Theorem R |
+| `Sturmian.ne_rat_of_ApproxExp` | the same hypothesis at `μ > 1` already excludes every rational with odd denominator | none |
+| `Sturmian.two_A_lt_one_add_phi` | **the arithmetic of Corollary 1.4**: `γ < γ*` ⟹ `2A(γ) < 1 + φ`, both branches of the `max` | none |
+| `Sturmian.approx_of_depth_height` | **exponent bookkeeping**, pointwise: the paper's depth bound `\|ξ−r\|₂ ≤ 2^(−eℓ)` (eq. 20, *no floor and no O(1) loss*) and height bound `log₂ H(r) < A·ℓ + log₂(3ℓ) + log₂3` (eq. 22) give `\|ξ−r\|₂ ≤ H(r)^(−μ)` whenever `μ·B ≤ eℓ` | none |
+
+### What is assumed
+
+**One axiom, [`Sturmian/Axioms.lean`](lean/Sturmian/Axioms.lean):**
+
+- `Sturmian.ridout_single_prime` — **Theorem R**, the single-prime form of Ridout's
+  theorem, i.e. Bugeaud–Kekeç, *On Mahler's classification of p-adic numbers*, Bull.
+  Austral. Math. Soc. **98** (2018), 203–211, **Theorem 1.3** (the paper's `BK18`,
+  printed reference [7]).  Its statement was checked **verbatim against the source** and
+  matches the paper's quotation with no hypothesis mismatch; the comparison table is in
+  [`AXIOMS.md`](lean/AXIOMS.md).  Status: *external published theorem*.
+
+**Not assumed, and not needed at stage 1:** the paper's Proposition 2.10 (irrationality,
+the author's prior unrefereed result).  `Sturmian.ne_rat_of_ApproxExp` derives irrationality
+from the proved Liouville inequality, for the skeleton's quantifier — infinitely many
+*distinct rationals*, which is the form Theorem R's hypothesis takes.  The paper's §2.4
+caution concerns the Koksma exponent `ω`, a different quantifier; see §3 of
+[`AXIOMS.md`](lean/AXIOMS.md).  Also not yet declared, because stage 1 never consumes them:
+BHZ's floor `ice(c_γ) ≥ 1+φ` (Prop 2.8) and the height bound (Prop 2.4).
+
+### What is NOT formalised
+
+Stages 2 and 3: `Φ` itself, the Bernstein–Lagarias isometry (Prop 2.1), the periodic-shadow
+formula (Prop 2.2), the transfer identity (eq. 12), the height bound (Prop 2.4), the
+Sturmian combinatorics, and `ice(c_γ) ≥ 1+φ` (Prop 2.8).  **Therefore the paper's Theorem
+1.3 and Corollary 1.4 are not yet machine-checked** — only the logical skeleton into which
+they fit.  Interfaces are recorded as `sorry` stubs in
+[`lean/Stubs/TODO.lean`](lean/Stubs/TODO.lean), which **`Sturmian.lean` does not import**.
+
+### Two discrepancies found while checking the axiom
+
+1. **Erratum in the paper's bibliography.** `paper/refs.bib` gives
+   `doi = {10.1017/S0004972718000345}` for `BK18`; that DOI is De Bondt–Sun in the same
+   volume.  The correct DOI is `10.1017/S0004972718000515`.  Author, journal, volume,
+   number and pages are correct.
+2. **Attribution in this README.** The "Related work and credit" section above attributes
+   Theorem R to *Badziahin–Kristensen*; the paper's `BK18` and printed reference [7] are
+   *Bugeaud–Kekeç*.
+
+Both are flagged for the author; no file outside `lean/` has been modified.
+
+### Build
+
+```
+cd lean
+lake exe cache get      # fetch the pinned Mathlib build
+lake build              # the stage-1 import closure
+lake env lean scripts/AxiomAudit.lean > AXIOM_AUDIT.txt
+```
+
 ## License
 
 Paper and documentation CC BY 4.0; code MIT. See the repository root.
