@@ -135,6 +135,19 @@ lemma cw_succ (m : ℕ) (v : Word) :
     rw [hmain]
     simp [h]
 
+/-- `k_m` is additive along a cut: the ones in `[0,a+b)` are those in `[0,a)` plus those in
+`[0,b)` of the shifted word. -/
+lemma ones_add (v : Word) (a : ℕ) : ∀ b, ones (a + b) v = ones a v + ones b (shiftIter a v) := by
+  intro b
+  induction b with
+  | zero => simp
+  | succ m ih =>
+    have hassoc : a + (m + 1) = (a + m) + 1 := by omega
+    rw [hassoc, ones_succ, ih, ones_succ, shiftIter_apply]
+    have hc : v (a + m) = v (m + a) := by rw [Nat.add_comm]
+    rw [hc]
+    omega
+
 /-! ### How `k_m` and `c_m` behave under prepending a letter
 
 These are the two identities the construction of `Φ` in `Sturmian/Construct.lean` needs. -/
