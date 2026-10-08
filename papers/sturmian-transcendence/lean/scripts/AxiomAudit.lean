@@ -3,12 +3,12 @@ import Sturmian
 /-! `#print axioms` on every reported result of stages 1 and 2.  The permitted output is
 the three standard Lean axioms (`propext`, `Classical.choice`, `Quot.sound`) plus the three
 named axioms declared in `Sturmian/Axioms.lean`:
-`ridout_single_prime`, `bhz_prefix_family`, `shadow_height_bound`. -/
+`ridout_single_prime`, `bhz_prefix_family`, `cw_le_three_mul_len_mul_max`. -/
 
 -- the three declared axioms
 #print axioms Sturmian.ridout_single_prime
 #print axioms Sturmian.bhz_prefix_family
-#print axioms Sturmian.shadow_height_bound
+#print axioms Sturmian.cw_le_three_mul_len_mul_max
 
 -- STAGE 1: Basic
 #print axioms Sturmian.H_pos
@@ -73,8 +73,26 @@ named axioms declared in `Sturmian/Axioms.lean`:
 #print axioms Sturmian.approx_cons_true
 #print axioms Sturmian.isBL_PhiBL
 
+-- STAGE 3: the Sturmian combinatorics (PROVED)
+#print axioms Sturmian.inc_nonneg
+#print axioms Sturmian.inc_le_one
+#print axioms Sturmian.ones_charWord
+#print axioms Sturmian.abs_ones_charWord_sub_lt_one
+#print axioms Sturmian.H_div_le
+#print axioms Sturmian.abs_den_lt_max
+#print axioms Sturmian.logb_max_pow
+#print axioms Sturmian.max_lt_A_mul
+#print axioms Sturmian.ones_add
+#print axioms Sturmian.shiftIter_mul_per
+#print axioms Sturmian.ones_mul_per
+#print axioms Sturmian.charWord_ne_per
+
+-- STAGE 3: Proposition 2.4 -- an AXIOM at stage 2, a THEOREM now
+#print axioms Sturmian.shadow_height_bound
+
 -- STAGE 2: the assembly
 #print axioms Sturmian.tendsto_errorTerm
+#print axioms Sturmian.tendsto_two_rpow_neg
 #print axioms Sturmian.isAlgebraic_affine
 #print axioms Sturmian.transcendental_of_affine
 #print axioms Sturmian.transcendental_cons_false

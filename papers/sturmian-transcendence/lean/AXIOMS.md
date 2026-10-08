@@ -3,8 +3,16 @@
 Every axiom in this development, its exact quoted statement, source, and status.
 `Sturmian/Axioms.lean` is the only file permitted to contain `axiom`.
 
-**Stage 1 declares exactly one axiom; stage 2 adds exactly two more.**  All three are
-listed below, with the `#print axioms` evidence in [`AXIOM_AUDIT.txt`](AXIOM_AUDIT.txt).
+**Stage 1 declares exactly one axiom; stage 2 adds two more; stage 3 turns one of those two
+into a theorem and narrows the other.**  The three that remain are listed below, with the
+`#print axioms` evidence in [`AXIOM_AUDIT.txt`](AXIOM_AUDIT.txt).
+
+**Stage-3 summary.**  Proposition 2.4 was an axiom; it is now the theorem
+`Sturmian.shadow_height_bound`, proved from the paper's own four-line argument, leaving only
+the numerator bound `c_W ≤ 3ℓ max(2^ℓ,3^k)` of `[DJirr, Lemma 10.4]` as §3's axiom.  The BHZ
+axiom asserted six clauses and now asserts three; the other three — `k_j ≥ 1`,
+`c_γ ≠ W_j^∞`, and the infinitude of the shadow set — are proved (§2's "NARROWED AT STAGE
+3").
 
 ---
 
@@ -130,7 +138,18 @@ and a factor of `c_γ`.  (ii) `0 < c_W` is **not** taken on faith: it is proved,
 `Sturmian.cw_pos`.  (iii) `H` and `A(γ)` are the paper's own normalisations
 (`Sturmian.H`, `Sturmian.A`); `log₂` is `Real.logb 2`.
 
-## 3a. Axioms the brief anticipated that turned out NOT to be needed
+## 3a. What stage 3 proved
+
+| was an axiom / hypothesis at stage 2 | now | where |
+|---|---|---|
+| **Proposition 2.4** (the height bound) | **THEOREM** | `Sturmian.shadow_height_bound`, from `H ≤ max(c_W,\|δ\|)`, `\|δ\| < max(2^ℓ,3^k)`, the balance bound and the logarithm bookkeeping — all proved — plus §3's numerator axiom |
+| balance, `\|k − γℓ\| < 1` ("every Sturmian word is balanced", the paper's §2.2, citing Lothaire) | **THEOREM** for prefixes | `Sturmian.abs_ones_charWord_sub_lt_one`, from the telescoping count `Sturmian.ones_charWord`: `k_ℓ(c_γ) = ⌊(ℓ+1)γ⌋` exactly |
+| `k_j ≥ 1` for large `j` (BHZ axiom clause) | **THEOREM** | inside `Sturmian.transcendental_of_prefix_family`, from `ones_charWord` and `ℓ_j → ∞` |
+| `c_γ ≠ W_j^∞` (BHZ axiom clause) | **THEOREM** | `Sturmian.charWord_ne_per` — the aperiodicity of `c_γ`, and **the only place `Irrational γ` is used** |
+| injectivity of `j ↦ W_j^∞` (BHZ axiom clause) | **ELIMINATED** | not needed: each shadow value is taken finitely often because the `j`-th shadow is approached to depth `e ℓ_j → ∞` |
+| `0 < c_W` | **THEOREM** (already at stage 2) | `Sturmian.cw_pos` |
+
+## 3b. Axioms the brief anticipated that turned out NOT to be needed
 
 **`Φ`'s existence is NOT an axiom.**  The brief allowed falling back to an axiom for the
 Bernstein–Lagarias map "only if blocked".  It was not needed: `Sturmian/Construct.lean`

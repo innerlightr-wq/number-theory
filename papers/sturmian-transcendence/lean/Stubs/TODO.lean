@@ -12,7 +12,16 @@ moved into the main development as PROVED results:
 * the periodic-shadow formula (Prop. 2.2) — `Sturmian.shadow_formula`;
 * the transfer identity (eq. 12) — `Sturmian.IsBL.transfer`.
 
-STAGE 3 remains: discharge the two stage-2 axioms of `Sturmian/Axioms.lean`.
+STAGE 3 IS DONE for the height bound and the Sturmian combinatorics.  No longer stubs:
+
+* the telescoping count `k_ℓ(c_γ) = ⌊(ℓ+1)γ⌋` — `Sturmian.ones_charWord`;
+* balance for prefixes — `Sturmian.abs_ones_charWord_sub_lt_one`;
+* **Proposition 2.4** — `Sturmian.shadow_height_bound`, now a theorem;
+* aperiodicity of `c_γ` — `Sturmian.charWord_ne_per`.
+
+WHAT REMAINS, and it is exactly the two axioms of `Sturmian/Axioms.lean` that are still
+there: the `ice` machinery behind the paper's Steps 1–2 (so that `bhz_prefix_family` can be
+reduced to Berthé–Holton–Zamboni's floor alone), and `[DJirr, Lemma 10.4]`.
 -/
 import Sturmian
 

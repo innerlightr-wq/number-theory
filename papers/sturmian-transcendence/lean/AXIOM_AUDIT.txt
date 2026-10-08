@@ -1,44 +1,63 @@
 # AXIOM_AUDIT.txt
 
-Generated 2026-10-08 02:41:01 UTC by:
+Generated 2026-10-08 11:28:31 UTC by:
     lake env lean scripts/AxiomAudit.lean
 
-Project:   papers/sturmian-transcendence/lean   (stages 1 and 2)
+Project:   papers/sturmian-transcendence/lean   (stages 1, 2 and 3)
 Toolchain: leanprover/lean4:v4.34.0
 Mathlib:   5ed2965256430c3649e86755f9576b54eca72435  (inputRev v4.34.0)
-Cold build: 38 s for 3214 jobs (pinned Mathlib build reused; see README)
-Source:    1815 lines of Lean across 10 files
+Cold build: 26 s for 3216 jobs (pinned Mathlib build reused; see README)
+Source:    2255 lines of Lean across 12 files
 
 PERMITTED output: the three standard Lean axioms (propext, Classical.choice,
 Quot.sound) plus the THREE named axioms declared in Sturmian/Axioms.lean:
-    Sturmian.ridout_single_prime   (stage 1; Ridout, via Bugeaud-Kekec Thm 1.3)
-    Sturmian.bhz_prefix_family     (stage 2; BHZ floor + the paper's Steps 1-2)
-    Sturmian.shadow_height_bound   (stage 2; the paper's Prop 2.4)
+    Sturmian.ridout_single_prime          Ridout, via Bugeaud-Kekec Thm 1.3
+                                          (external published theorem)
+    Sturmian.bhz_prefix_family            BHZ floor (Prop 2.8) + the paper's
+                                          Steps 1-2; THREE clauses after stage 3
+    Sturmian.cw_le_three_mul_len_mul_max  c_W <= 3 l max(2^l, 3^k)
+                                          ([DJirr, Lemma 10.4], author's prior work)
 
 VERDICT: PASS.
-  * results audited:                           61
+  * results audited:                           75
   * sorryAx occurrences:                        0
   * named axioms other than the three above:  none
-  * results depending on NO named axiom:       52
-  * results depending on a named axiom:         9  (listed below)
+  * results depending on NO named axiom:       65
+  * results depending on a named axiom:        10  (listed below)
 
-        R          Sturmian.transcendental_of_approxExp
-        R          Sturmian.transcendental_of_ApproxExp
-        R          Sturmian.transcendental_of_prefix_family
-        BHZ H R    Sturmian.transcendental_charWord
-        BHZ H R    Sturmian.transcendental_PhiBL_charWord
-        BHZ H R    Sturmian.transcendental_PhiBL_mechanical
+        R              Sturmian.transcendental_of_approxExp
+        R              Sturmian.transcendental_of_ApproxExp
+        DJ10.4         Sturmian.shadow_height_bound          <- Prop 2.4, a THEOREM now
+        DJ10.4 R       Sturmian.transcendental_of_prefix_family
+        BHZ DJ10.4 R   Sturmian.transcendental_charWord
+        BHZ DJ10.4 R   Sturmian.transcendental_PhiBL_charWord
+        BHZ DJ10.4 R   Sturmian.transcendental_PhiBL_mechanical
     (plus the three axioms themselves)
+
+WHAT CHANGED AT STAGE 3.
+  * Proposition 2.4 was an AXIOM at stage 2.  It is now a THEOREM
+    (Sturmian.shadow_height_bound), proved from the paper's own four-line argument.
+    Its only external input is the numerator bound above.
+  * The BHZ axiom asserted SIX clauses at stage 2 and asserts THREE now.  Three
+    clauses of the paper's Step 4 are proved instead:
+        k_j >= 1 for large j      -- from the telescoping count ones_charWord
+        c_gamma != W_j^infinity   -- charWord_ne_per, aperiodicity for irrational gamma
+        infinitude of the shadows -- each value is taken finitely often, so the
+                                     injectivity hypothesis is no longer needed at all
 
 NOTE.  The whole Bernstein-Lagarias core depends on NO named axiom: the isometry
 (Prop 2.1), the periodic-shadow formula (Prop 2.2), the transfer identity (eq. 12),
-the Liouville inequality, the Corollary 1.4 arithmetic, and the CONSTRUCTION of a
-map satisfying the Bernstein-Lagarias recursion (Sturmian.isBL_PhiBL) are all proved.
+the Liouville inequality, the Corollary 1.4 arithmetic, the CONSTRUCTION of a map
+satisfying the Bernstein-Lagarias recursion (Sturmian.isBL_PhiBL), the Sturmian
+balance count, and the aperiodicity of c_gamma.
 
 --------------------------------------------------------------------------------
 'Sturmian.ridout_single_prime' depends on axioms: [propext, Classical.choice, Quot.sound, Sturmian.ridout_single_prime]
 'Sturmian.bhz_prefix_family' depends on axioms: [propext, Classical.choice, Quot.sound, Sturmian.bhz_prefix_family]
-'Sturmian.shadow_height_bound' depends on axioms: [propext, Classical.choice, Quot.sound, Sturmian.shadow_height_bound]
+'Sturmian.cw_le_three_mul_len_mul_max' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound,
+ Sturmian.cw_le_three_mul_len_mul_max]
 'Sturmian.H_pos' depends on axioms: [propext]
 'Sturmian.finite_setOf_H_le' depends on axioms: [propext, Classical.choice, Quot.sound]
 'Sturmian.exists_H_gt_of_infinite' depends on axioms: [propext, Classical.choice, Quot.sound]
@@ -94,7 +113,24 @@ map satisfying the Bernstein-Lagarias recursion (Sturmian.isBL_PhiBL) are all pr
 'Sturmian.approx_cons_false' depends on axioms: [propext, Classical.choice, Quot.sound]
 'Sturmian.approx_cons_true' depends on axioms: [propext, Classical.choice, Quot.sound]
 'Sturmian.isBL_PhiBL' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.inc_nonneg' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.inc_le_one' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.ones_charWord' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.abs_ones_charWord_sub_lt_one' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.H_div_le' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.abs_den_lt_max' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.logb_max_pow' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.max_lt_A_mul' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.ones_add' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.shiftIter_mul_per' depends on axioms: [propext, Quot.sound]
+'Sturmian.ones_mul_per' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.charWord_ne_per' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.shadow_height_bound' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound,
+ Sturmian.cw_le_three_mul_len_mul_max]
 'Sturmian.tendsto_errorTerm' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.tendsto_two_rpow_neg' depends on axioms: [propext, Classical.choice, Quot.sound]
 'Sturmian.isAlgebraic_affine' depends on axioms: [propext, Classical.choice, Quot.sound]
 'Sturmian.transcendental_of_affine' depends on axioms: [propext, Classical.choice, Quot.sound]
 'Sturmian.transcendental_cons_false' depends on axioms: [propext, Classical.choice, Quot.sound]
@@ -102,23 +138,24 @@ map satisfying the Bernstein-Lagarias recursion (Sturmian.isBL_PhiBL) are all pr
 'Sturmian.transcendental_of_prefix_family' depends on axioms: [propext,
  Classical.choice,
  Quot.sound,
+ Sturmian.cw_le_three_mul_len_mul_max,
  Sturmian.ridout_single_prime]
 'Sturmian.transcendental_charWord' depends on axioms: [propext,
  Classical.choice,
  Quot.sound,
  Sturmian.bhz_prefix_family,
- Sturmian.ridout_single_prime,
- Sturmian.shadow_height_bound]
+ Sturmian.cw_le_three_mul_len_mul_max,
+ Sturmian.ridout_single_prime]
 'Sturmian.transcendental_PhiBL_charWord' depends on axioms: [propext,
  Classical.choice,
  Quot.sound,
  Sturmian.bhz_prefix_family,
- Sturmian.ridout_single_prime,
- Sturmian.shadow_height_bound]
+ Sturmian.cw_le_three_mul_len_mul_max,
+ Sturmian.ridout_single_prime]
 'Sturmian.transcendental_PhiBL_mechanical' depends on axioms: [propext,
  Classical.choice,
  Quot.sound,
  Sturmian.bhz_prefix_family,
- Sturmian.ridout_single_prime,
- Sturmian.shadow_height_bound]
+ Sturmian.cw_le_three_mul_len_mul_max,
+ Sturmian.ridout_single_prime]
 --------------------------------------------------------------------------------

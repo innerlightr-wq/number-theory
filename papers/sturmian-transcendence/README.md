@@ -120,11 +120,11 @@ the critical-truncation question of §5 was first posed in
 
 Neither Pham's nor Cassidy's note is refereed, and no comparative claim is made about either.
 
-## Lean formalisation (stages 1–2)
+## Lean formalisation (stages 1–3)
 
 Branch `lean-formalization`, directory [`lean/`](lean).  **Lean 4 + Mathlib, pinned**:
 toolchain `leanprover/lean4:v4.34.0`, Mathlib `v4.34.0` (rev `5ed2965256430c3649e86755f9576b54eca72435`);
-`lean-toolchain` and `lake-manifest.json` are committed.  1815 lines of Lean, 10 files,
+`lean-toolchain` and `lake-manifest.json` are committed.  2255 lines of Lean, 12 files,
 **no `sorry`** anywhere in the import closure of `Sturmian.lean`.
 
 ### What is machine-checked
@@ -146,11 +146,15 @@ toolchain `leanprover/lean4:v4.34.0`, Mathlib `v4.34.0` (rev `5ed2965256430c3649
 | `Sturmian.transcendental_of_approxExp` | infinitely many **distinct** rationals with `\|ξ−r\|₂ ≤ H(r)^(−μ)`, `μ > 2` ⟹ `ξ` transcendental over `ℚ` | Theorem R |
 | `Sturmian.ne_rat_of_ApproxExp` | the same hypothesis at `μ > 1` already excludes every rational with odd denominator | none |
 | `Sturmian.transcendental_cons_true`, `..._false` | **Step 6**: transcendence transfers along eq. (12), via `isAlgebraic_affine` (proved) | none |
-| `Sturmian.transcendental_of_prefix_family` | **Steps 3–6**: the prefix family of Steps 1–2 plus the height bound ⟹ `Φ(c)` transcendental | Theorem R |
+| **`Sturmian.ones_charWord`** | **the telescoping count**: the first `ℓ` letters of `c_γ` carry exactly `⌊(ℓ+1)γ⌋` ones | none |
+| **`Sturmian.abs_ones_charWord_sub_lt_one`** | **balance for prefixes**, `\|k − γℓ\| < 1` — the paper's §2.2 bound, *proved* rather than quoted from Lothaire | none |
+| **`Sturmian.shadow_height_bound`** | **Proposition 2.4** (the height of a shadow). **An axiom at stage 2; a theorem now**, from `H ≤ max(c_W,\|δ\|)`, `\|δ\| < max(2^ℓ,3^k)`, balance and the logarithm bookkeeping | `[DJirr, Lemma 10.4]` only |
+| **`Sturmian.charWord_ne_per`** | **`c_γ` is aperiodic** for irrational `γ` — the paper's Step-4 "impossible, `γ` being irrational", and **the only place irrationality is used** | none |
+| `Sturmian.transcendental_of_prefix_family` | **Steps 3–6** from the prefix family alone. Also derives `k_j ≥ 1`, the aperiodicity, the height bound, and the infinitude of the shadow set | Theorem R, `[DJirr 10.4]` |
 | `Sturmian.transcendental_PhiBL_charWord`, `..._mechanical` | **Corollary 1.4** for the constructed `Φ`: `Φ(c_γ)`, `Φ(1c_γ)`, `Φ(0c_γ)` transcendental for irrational `γ < γ*` | all three |
 
-`#print axioms` evidence: [`AXIOM_AUDIT.txt`](lean/AXIOM_AUDIT.txt) — **61 results audited,
-0 `sorryAx`, 52 depending on no named axiom, 9 on the three below, and nothing else.**
+`#print axioms` evidence: [`AXIOM_AUDIT.txt`](lean/AXIOM_AUDIT.txt) — **75 results audited,
+0 `sorryAx`, 65 depending on no named axiom, 10 on the three below, and nothing else.**
 
 ### What is assumed
 
@@ -161,26 +165,36 @@ paper's statement, the source, and a status label.  Full detail in
 | axiom | source | status |
 |---|---|---|
 | `ridout_single_prime` | **Theorem R** — Bugeaud–Kekeç, Bull. Austral. Math. Soc. **98** (2018), 203–211, **Thm 1.3** (the paper's `BK18`, printed ref. [7]). Checked **verbatim against the source**; hypothesis table in `AXIOMS.md` shows an exact match | *external published theorem* |
-| `bhz_prefix_family` | **Prop. 2.8** (`ice(c_γ) ≥ 1+φ`, Berthé–Holton–Zamboni, Acta Arith. **122** (2006), ref. [4]; **NOT CHECKED** directly) **combined with the paper's own Steps 1–2** | *external theorem + paper's own extraction, **not yet formalized*** |
-| `shadow_height_bound` | **Prop. 2.4** (the height of a shadow), which the paper **proves** in four lines from `[DJirr, Lemma 10.4]` and balance | ***PROVED IN THE PAPER, NOT YET FORMALIZED*** — to be replaced in stage 3 |
+| `bhz_prefix_family` | **Prop. 2.8** (`ice(c_γ) ≥ 1+φ`, Berthé–Holton–Zamboni, Acta Arith. **122** (2006), ref. [4]; **NOT CHECKED** directly) **combined with the paper's own Steps 1–2**. **Narrowed at stage 3 from six clauses to three**: only the lengths `ℓ_j ≥ 2`, their divergence, and the agreement of the first `⌈eℓ_j⌉` letters | *external theorem + paper's own extraction, **not yet formalized*** |
+| `cw_le_three_mul_len_mul_max` | the numerator bound `c_W ≤ 3ℓ max(2^ℓ,3^k)` of **`[DJirr, Lemma 10.4]`** — all that is left of Proposition 2.4, which is now a theorem | *author's prior result, unrefereed, **NOT CHECKED***  |
 
 **Not assumed, and not needed:** the existence of `Φ` (constructed); the isometry (proved);
-the shadow formula (proved); the transfer identity (proved); and the paper's Proposition
+the shadow formula (proved); the transfer identity (proved); Proposition 2.4 (proved);
+balance (proved); aperiodicity of `c_γ` (proved); `k_j ≥ 1` (proved); injectivity of
+`j ↦ W_j^∞` (**eliminated** — each shadow value is taken only finitely often, because the
+`j`-th shadow is approached to depth `e ℓ_j → ∞`); and the paper's Proposition
 2.10 — the author's prior unrefereed irrationality result — because
 `Sturmian.ne_rat_of_ApproxExp` derives irrationality from the proved Liouville inequality
 for the skeleton's quantifier (infinitely many *distinct rationals*).  The paper's §2.4
 caution concerns the Koksma exponent `ω`, a different quantifier; see §4 of
 [`AXIOMS.md`](lean/AXIOMS.md).
 
-### What is NOT formalised — stage 3
+### What is still NOT formalised
 
-`ice` itself, the Sturmian combinatorics behind Steps 1–2, and the proof of Prop. 2.4.
-Consequently **Theorem 1.3 and Corollary 1.4 are machine-checked only modulo
-`bhz_prefix_family` and `shadow_height_bound`.**  Everything between them and the
-conclusion — the isometry, eq. (3), the shadow formula, the distinctness, the exponent
-bookkeeping, Theorem R's application and the eq. (12) transfer — is proved.  Remaining
-interfaces are recorded as `sorry` stubs in [`lean/Stubs/TODO.lean`](lean/Stubs/TODO.lean),
-which **`Sturmian.lean` does not import**.
+Two things, and they are exactly the two non-Ridout axioms:
+
+1. **`ice` itself and the paper's Steps 1–2** — the limsup of prefix powers, the
+   primitive-root replacement, and the extraction of the prefix family from
+   `ice(c_γ) > 2A(γ)`.  Until that is done, `bhz_prefix_family` bundles Berthé–Holton–
+   Zamboni's floor (external, and expected to remain an axiom) with the paper's own
+   extraction.
+2. **`[DJirr, Lemma 10.4]`**, the numerator bound `c_W ≤ 3ℓ max(2^ℓ,3^k)` — the author's
+   prior, unrefereed work, and all that Proposition 2.4 still takes on faith.
+
+So **Theorem 1.3 and Corollary 1.4 are machine-checked modulo those two.**  Everything
+between them and the conclusion is proved.  Remaining interfaces are recorded as `sorry`
+stubs in [`lean/Stubs/TODO.lean`](lean/Stubs/TODO.lean), which **`Sturmian.lean` does not
+import**.
 
 ### Two discrepancies found while checking the axioms
 
@@ -210,7 +224,7 @@ Both are flagged for the author; no file outside `lean/` has been modified.
 ```
 cd lean
 lake exe cache get      # fetch the pinned Mathlib build
-lake build              # 3214 jobs; 38 s here with the Mathlib build already present
+lake build              # 3216 jobs; 26 s here with the Mathlib build already present
 lake env lean scripts/AxiomAudit.lean > AXIOM_AUDIT.txt
 ```
 
