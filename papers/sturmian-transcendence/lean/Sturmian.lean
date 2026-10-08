@@ -13,7 +13,7 @@ STAGE 4 — `Numerator` (`[DJirr, Lemma 10.4]`, and Proposition 2.4 assembled wi
 axiom), `Ice` (the initial critical exponent and the extraction of Steps 1–2), and
 `DefinitionAudit` (every definition against the paper's verbatim text, with sanity lemmas).
 
-STAGE 5 — the BHZ floor, PROVED: `Rotation` (the three-distance periodicity lemma for
+STAGE 5 (v1.1) — the BHZ floor, PROVED; `γ* < 1`; and `Φ` of every shift: `Rotation` (the three-distance periodicity lemma for
 `c_γ`), `Records` (best-approximation records, Fibonacci-type growth, the sharp inequality
 `max(x+1, 2+1/x) ≥ 1+φ`), `Floor` (`ice(c_γ) ≥ 1+φ`, and `ice(c_γ) > 2`), and `TierA` (the
 elementary `12/5` route, the irrationality of `log₃ 2`, and the headline slope).
@@ -22,8 +22,9 @@ elementary `12/5` route, the irrationality of `log₃ 2`, and the headline slope
 The Berthé–Holton–Zamboni floor `ice(c_γ) ≥ 1+φ` was an axiom through stage 4 and is now
 the theorem `Sturmian.one_add_phi_le_ice`; the constant is theirs and no novelty is claimed
 for the Lean proof, which is independent of their (inaccessible) paper.  **Every main
-theorem depends on `ridout_single_prime` and nothing else.**  See `AXIOMS.md` and
-`AXIOM_AUDIT.txt`.
+theorem depends on `ridout_single_prime` and nothing else.**  Corollary 1.4 is formalised in
+full, shifts included (`transcendental_PhiBL_shifts`, from the paper's eq. (3)).  See
+`AXIOMS.md`, `AXIOM_AUDIT.txt` and `STATEMENTS.md`.
 -/
 import Sturmian.Basic
 import Sturmian.Word

@@ -144,12 +144,54 @@ theorem, and it does not improve the constant: `1 + φ` is exactly what the shar
 inequality `max(x + 1, 2 + 1/x) ≥ 1 + φ` gives, and that inequality is an equality at
 `x = φ` (`Sturmian.max_eq_one_add_phi_at_phi`), so this route cannot do better.
 
-**The proof is independent of the BHZ paper.**  That is a statement about the Lean
-development, not a judgement about the source. The source was never accessible (see §9),
-so the proof had to be built from scratch; `Sturmian/Floor.lean` and
-`Sturmian/Records.lean` cite nothing but Dirichlet's theorem, which is in Mathlib.
-Consequently the **NOT CHECKED** source status recorded through stage 4 no longer affects
-any result: nothing in the development depends on the BHZ paper's text.
+### The paper's own route, and how the Lean proof relates to it
+
+**Corrected at v1.1.**  Revisions up to v1 described Proposition 2.8 as resting only on the
+paper's reading of an unnumbered sentence in BHZ §4.2.  **That was incomplete.**  The paper
+gives *two* routes, and the second is self-contained:
+
+1. **The citation.**  The paper reads Proposition 2.8 off BHZ §4.2 directly; the passage it
+   quotes is reproduced below.
+2. **Proposition 2.6 + Lemma 2.9.**  Proposition 2.6, cited to `\cite[\S4.2]{BHZ06}`, is the
+   exact formula
+   `ice(c_α) = limsup_k (q_{k+1}+q_k−2)/q_k = 1 + limsup_k q_{k+1}/q_k`.
+   Immediately after Proposition 2.8 the paper says, verbatim:
+
+   > "For completeness we record the elementary re-derivation of the floor; it is not a new
+   >  result."
+
+   > **Lemma 2.9 (Re-derivation of Proposition 2.8).**  For every irrational
+   > $\gamma=[0;a_1,a_2,\dots]$ one has $\limsup_k q_{k+1}/q_k\ge\varphi$, with equality if
+   > and only if $a_k=1$ for all large $k$.
+
+   with a four-line continued-fraction proof: `q_{k+1}/q_k = a_{k+1} + q_{k−1}/q_k > a_{k+1}`,
+   so if the limsup were `< φ < 2` then `a_{k+1} = 1` eventually, the ratios satisfy
+   `x_{k+1} = 1 + 1/x_k` and converge to `φ` — a contradiction.
+
+   So the arithmetic half of the floor is proved *in the paper*, and only the formula
+   (Proposition 2.6) is imported from BHZ.
+
+**The Lean proof follows neither route exactly.**  It formalises **neither** Proposition 2.6
+**nor** Lemma 2.9:
+
+* Proposition 2.6 is not formalised.  It equates `ice` with a continued-fraction limsup, and
+  Mathlib has no best-approximation property for convergents.
+* Lemma 2.9 is not formalised.  Its proof is a statement about the convergent recursion
+  `q_{k+1} = a_{k+1} q_k + q_{k−1}`, which is exactly what the missing Mathlib API would be
+  needed for.
+
+Instead `one_add_phi_le_ice` proves the **combination** of Proposition 2.6's lower bound and
+Lemma 2.9 in one step, with *records* in place of convergents: §9a below.  **No novelty is
+claimed** either way — the paper itself labels the elementary argument "not a new result",
+and the Lean proof is a formalisation of a known statement along a route convenient for
+Mathlib.
+
+**The BHZ source was never accessible** (§9e), so the Lean proof had to be built from
+scratch; `Sturmian/Floor.lean` and `Sturmian/Records.lean` cite nothing but Dirichlet's
+theorem.  Consequently the **NOT CHECKED** source status recorded through stage 4 no longer
+affects any result: nothing in the development depends on the BHZ paper's text.  What
+remains unverified is the paper's *citation of Proposition 2.6 and of Proposition 2.8*, not
+the mathematics.
 
 ### Historical record: what the axiom asserted, and what the paper cited
 
@@ -179,10 +221,12 @@ for the floor.  It says, verbatim:
 >  mean fixed on `\cite[p.~3]{BHZ06}`.  Eventually-all-ones therefore gives
 >  `\ice=1+\varphi`; otherwise `\ice>3>1+\varphi`."
 
-So Proposition 2.8 was the paper's own two-line **deduction** from an *unnumbered sentence*
-in BHZ §4.2.  A reader who wants to verify the paper's citation (as opposed to the
-mathematics, which is now machine-checked) must still check at the source: (a) the sentence
-following the proof of BHZ **Theorem 1.2**, and (b) that `θ = (1+√5)/2` on BHZ **p. 3**.
+So the *citation* route to Proposition 2.8 is a two-line deduction from an *unnumbered
+sentence* in BHZ §4.2 — but, per the correction above, it is not the paper's only route.  A
+reader who wants to verify the paper's citations (as opposed to the mathematics, which is
+now machine-checked) must still check at the source: (a) the sentence following the proof of
+BHZ **Theorem 1.2**, (b) that `θ = (1+√5)/2` on BHZ **p. 3**, and (c) the formula of
+Proposition 2.6, also cited to BHZ §4.2.
 
 ## 3. Axioms removed
 
@@ -349,8 +393,15 @@ ENNReal.ofReal (1 + phi) ≤ ice (charWord γ)      for every irrational γ ∈ 
 
 with `Sturmian.twelve_fifths_le_ice` and `Sturmian.two_lt_ice` (`ice(c_γ) > 2`) as
 corollaries.  All three depend on **no** axiom beyond Lean's three.  This is the paper's
-Proposition 2.8; the axiom `bhz_ice_floor` has been deleted.  Attribution and the
-no-novelty statement are in §2.
+Proposition 2.8; the axiom `bhz_ice_floor` has been deleted.
+
+**Relation to the paper's own proofs.**  The paper reaches the floor by Proposition 2.6 (the
+exact `ice` formula, cited to BHZ §4.2) together with its own Lemma 2.9, an elementary
+continued-fraction re-derivation that the paper labels "it is not a new result".  **The Lean
+proof formalises neither of those two statements** — Proposition 2.6 would need
+best-approximation for convergents, which Mathlib lacks, and Lemma 2.9's proof is about the
+convergent recursion for the same reason.  It proves their combination directly, from
+records.  Attribution and the no-novelty statement are in §2.
 
 **Why `2` was the number that mattered on the way.**  The chain needs an exponent `e` with
 `e > 2` *and* `e > 2A(γ)`.  For the headline slope `A(log₃ 2) = 1`, so `e > 2` is the whole

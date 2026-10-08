@@ -269,8 +269,9 @@ theorem transcendental_of_prefix_family (h : IsBL Φ) {γ : ℝ}
 external input is Ridout's theorem: the floor `ice(c_γ) ≥ 1 + φ` is
 `Sturmian.one_add_phi_le_ice`, a theorem, not an axiom. -/
 theorem transcendental_charWord (h : IsBL Φ) {γ : ℝ}
-    (hγ0 : 0 < γ) (hγ1 : γ < 1) (hirr : Irrational γ) (hγs : γ < gammaStar) :
+    (hγ0 : 0 < γ) (hirr : Irrational γ) (hγs : γ < gammaStar) :
     Transcendental ℚ ((Φ (charWord γ) : ℚ_[2])) := by
+  have hγ1 : γ < 1 := lt_one_of_lt_gammaStar hγs
   have h2A : 2 * A γ < 1 + phi := two_A_lt_one_add_phi hγs
   have h2φ : (2 : ℝ) < 1 + phi := by have := one_lt_phi; linarith
   have hmaxlt : max (2 * A γ) 2 < 1 + phi := max_lt h2A h2φ
@@ -294,6 +295,7 @@ theorem transcendental_charWord (h : IsBL Φ) {γ : ℝ}
     (fun j n hn => hagr j n hn)
   refine tendsto_atTop_mono (fun j => ?_) tendsto_natCast_atTop_atTop
   exact_mod_cast le_trans (le_max_left j 2) (hℓN j)
+
 
 /-! ## Step 6 — the transfer to `Φ(1c_γ)` and `Φ(0c_γ)`
 
@@ -337,20 +339,101 @@ theorem transcendental_cons_true (h : IsBL Φ) {c : Word}
     linear_combination (1 / 2 : ℚ_[2]) * hcg
   rw [hrw]; exact hc
 
+
+/-! ## Every shift, via the paper's eq. (3)
+
+Paper, Theorem 1.3, verbatim:
+
+> "Then $\PH(c_\gamma)$ is transcendental, and so are $\PH(1c_\gamma)$, $\PH(0c_\gamma)$ and
+>  $\PH(\sigma^k 1c_\gamma)$ for every $k\ge0$."
+
+Paper, Corollary 1.4, verbatim:
+
+> "For every irrational $\gamma<\gs$ the numbers $\PH(c_\gamma)$, $\PH(1c_\gamma)$,
+>  $\PH(0c_\gamma)$ and $\PH$ of every shift of these words are transcendental."
+
+`IsBL.affinegen` is the paper's eq. (3), `2^m Φ(σ^m v) = 3^{k_m(v)} Φ(v) + c_m(v)` — a
+relation with **rational** coefficients whose leading coefficient `3^{k_m(v)}/2^m` is never
+zero.  So transcendence propagates along every shift of every word at once, and all three
+families of the paper's claim follow from the single word `c_γ`. -/
+
+/-- The forward direction of `isAlgebraic_affine`: a rational-affine image of a
+transcendental number, with nonzero leading coefficient, is transcendental. -/
+lemma transcendental_affine {y : ℚ_[2]} (a b : ℚ) (ha : a ≠ 0)
+    (hy : Transcendental ℚ y) : Transcendental ℚ ((a : ℚ_[2]) * y + (b : ℚ_[2])) := by
+  intro hz
+  refine hy ?_
+  have hA := isAlgebraic_affine a⁻¹ (-(a⁻¹ * b)) (inv_ne_zero ha) hz
+  have ha' : ((a : ℚ_[2])) ≠ 0 := by exact_mod_cast ha
+  have hinv : ((a : ℚ_[2]))⁻¹ * (a : ℚ_[2]) = 1 := inv_mul_cancel₀ ha'
+  have heq : ((a⁻¹ : ℚ) : ℚ_[2]) * ((a : ℚ_[2]) * y + (b : ℚ_[2]))
+      + ((-(a⁻¹ * b) : ℚ) : ℚ_[2]) = y := by
+    push_cast
+    linear_combination y * hinv
+  rwa [heq] at hA
+
+/-- **Transcendence propagates along the shift.**  The paper's eq. (3), read as an affine
+relation over `ℚ`. -/
+theorem IsBL.transcendental_shiftIter (h : IsBL Φ) {v : Word}
+    (hv : Transcendental ℚ ((Φ v : ℚ_[2]))) (m : ℕ) :
+    Transcendental ℚ ((Φ (shiftIter m v) : ℚ_[2])) := by
+  have hgen := h.affinegen v m
+  have hQ : (2 : ℚ_[2]) ^ m * ((Φ (shiftIter m v) : ℚ_[2]))
+      = (3 : ℚ_[2]) ^ (ones m v) * ((Φ v : ℚ_[2])) + ((cw m v : ℤ) : ℚ_[2]) := by
+    have h0 := congrArg (fun x : ℤ_[2] => (x : ℚ_[2])) hgen
+    push_cast [coe_two_padicInt, coe_three_padicInt] at h0
+    exact h0
+  have hpow : ((2 : ℚ_[2]) ^ m) ≠ 0 := pow_ne_zero _ two_ne_zero
+  have hsolve : ((3 : ℚ_[2]) ^ (ones m v) * ((Φ v : ℚ_[2])) + ((cw m v : ℤ) : ℚ_[2]))
+      / (2 : ℚ_[2]) ^ m = ((Φ (shiftIter m v) : ℚ_[2])) := by
+    rw [← hQ]; field_simp
+  have ha : ((3 : ℚ) ^ (ones m v) / 2 ^ m) ≠ 0 := ne_of_gt (by positivity)
+  have hy := transcendental_affine ((3 : ℚ) ^ (ones m v) / 2 ^ m)
+    ((cw m v : ℚ) / 2 ^ m) ha hv
+  have heq : (((3 : ℚ) ^ (ones m v) / 2 ^ m : ℚ) : ℚ_[2]) * ((Φ v : ℚ_[2]))
+      + (((cw m v : ℚ) / 2 ^ m : ℚ) : ℚ_[2]) = ((Φ (shiftIter m v) : ℚ_[2])) := by
+    rw [← hsolve]
+    push_cast
+    ring
+  rwa [heq] at hy
+
 /-! ## The unconditional statements for the constructed `Φ` -/
 
-/-- Corollary 1.4 for the constructed Bernstein–Lagarias map, modulo Ridout's theorem. -/
+/-- Corollary 1.4 for the constructed Bernstein–Lagarias map, modulo Ridout's theorem.
+
+The hypothesis `γ < 1` of earlier revisions is gone: `gammaStar_lt_one` makes it redundant. -/
 theorem transcendental_PhiBL_charWord {γ : ℝ}
-    (hγ0 : 0 < γ) (hγ1 : γ < 1) (hirr : Irrational γ) (hγs : γ < gammaStar) :
+    (hγ0 : 0 < γ) (hirr : Irrational γ) (hγs : γ < gammaStar) :
     Transcendental ℚ ((PhiBL (charWord γ) : ℚ_[2])) :=
-  transcendental_charWord isBL_PhiBL hγ0 hγ1 hirr hγs
+  transcendental_charWord isBL_PhiBL hγ0 hirr hγs
 
 /-- …and for the two mechanical words at intercept `0`. -/
 theorem transcendental_PhiBL_mechanical {γ : ℝ}
-    (hγ0 : 0 < γ) (hγ1 : γ < 1) (hirr : Irrational γ) (hγs : γ < gammaStar) :
+    (hγ0 : 0 < γ) (hirr : Irrational γ) (hγs : γ < gammaStar) :
     Transcendental ℚ ((PhiBL (cons true (charWord γ)) : ℚ_[2])) ∧
     Transcendental ℚ ((PhiBL (cons false (charWord γ)) : ℚ_[2])) :=
-  ⟨transcendental_cons_true isBL_PhiBL (transcendental_PhiBL_charWord hγ0 hγ1 hirr hγs),
-   transcendental_cons_false isBL_PhiBL (transcendental_PhiBL_charWord hγ0 hγ1 hirr hγs)⟩
+  ⟨transcendental_cons_true isBL_PhiBL (transcendental_PhiBL_charWord hγ0 hirr hγs),
+   transcendental_cons_false isBL_PhiBL (transcendental_PhiBL_charWord hγ0 hirr hγs)⟩
+
+/-- **…and of every shift of all three words, which is Corollary 1.4 in full.**
+
+`σ^m c_γ`, `σ^m 1c_γ` and `σ^m 0c_γ` for every `m ≥ 0`.  Taking `m = 0` recovers the three
+statements above, so this single theorem is the whole of the paper's claim; `m = 1` of the
+second and third recovers `c_γ` again, since `σ(1c_γ) = σ(0c_γ) = c_γ`. -/
+theorem transcendental_PhiBL_shifts {γ : ℝ}
+    (hγ0 : 0 < γ) (hirr : Irrational γ) (hγs : γ < gammaStar) (m : ℕ) :
+    Transcendental ℚ ((PhiBL (shiftIter m (charWord γ)) : ℚ_[2])) ∧
+    Transcendental ℚ ((PhiBL (shiftIter m (cons true (charWord γ))) : ℚ_[2])) ∧
+    Transcendental ℚ ((PhiBL (shiftIter m (cons false (charWord γ))) : ℚ_[2])) := by
+  obtain ⟨h1, h0⟩ := transcendental_PhiBL_mechanical hγ0 hirr hγs
+  exact ⟨isBL_PhiBL.transcendental_shiftIter (transcendental_PhiBL_charWord hγ0 hirr hγs) m,
+    isBL_PhiBL.transcendental_shiftIter h1 m,
+    isBL_PhiBL.transcendental_shiftIter h0 m⟩
+
+/-- The paper's Theorem 1.3 clause `Φ(σ^k 1c_γ)`, isolated. -/
+theorem transcendental_PhiBL_shiftIter_mechanical {γ : ℝ}
+    (hγ0 : 0 < γ) (hirr : Irrational γ) (hγs : γ < gammaStar) (k : ℕ) :
+    Transcendental ℚ ((PhiBL (shiftIter k (cons true (charWord γ))) : ℚ_[2])) :=
+  (transcendental_PhiBL_shifts hγ0 hirr hγs k).2.1
 
 end Sturmian

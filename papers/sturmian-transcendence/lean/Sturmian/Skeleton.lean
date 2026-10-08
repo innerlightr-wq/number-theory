@@ -175,6 +175,39 @@ theorem two_A_lt_one_add_phi {γ : ℝ} (hγ : γ < gammaStar) : 2 * A γ < 1 + 
     have hring : 2 * (γ * log2three) = γ * (2 * log2three) := by ring
     linarith
 
+
+/-- `log₂ 3 > 4/3`, i.e. `2^4 < 3^3`.  The rational witness `4/3` is chosen to sit strictly
+between `(3+√5)/4 = 1.30901…` and `log₂ 3 = 1.58496…`, which is what `gammaStar_lt_one`
+needs. -/
+lemma four_thirds_lt_log2three : (4 : ℝ) / 3 < log2three := by
+  have hl2 : 0 < Real.log 2 := Real.log_pos (by norm_num)
+  have h27 : Real.log ((2 : ℝ) ^ (4 : ℕ)) < Real.log ((3 : ℝ) ^ (3 : ℕ)) :=
+    Real.log_lt_log (by norm_num) (by norm_num)
+  rw [Real.log_pow, Real.log_pow] at h27
+  rw [log2three, lt_div_iff₀ hl2]
+  push_cast at h27
+  linarith
+
+/-- `1 + φ < 2 log₂ 3`: numerically `2.618… < 3.169…`.  Proved through `4/3`, with no
+decimal expansion of either side. -/
+lemma one_add_phi_lt_two_mul_log2three : 1 + phi < 2 * log2three := by
+  have h5 : Real.sqrt 5 ^ 2 = 5 := Real.sq_sqrt (by norm_num)
+  have hnn : (0 : ℝ) ≤ Real.sqrt 5 := Real.sqrt_nonneg 5
+  have hs : Real.sqrt 5 < 7 / 3 := by nlinarith [h5, hnn]
+  have hp : 1 + phi < 8 / 3 := by rw [phi]; linarith
+  linarith [four_thirds_lt_log2three]
+
+/-- **`γ* < 1`.**  So `γ < γ*` already implies `γ < 1`, and the hypothesis `γ < 1` is
+redundant in every theorem that assumes `γ < γ*`. -/
+theorem gammaStar_lt_one : gammaStar < 1 := by
+  have hc : (0 : ℝ) < 2 * log2three := by linarith [log2three_pos]
+  rw [gammaStar, div_lt_one hc]
+  exact one_add_phi_lt_two_mul_log2three
+
+/-- The form used to drop the hypothesis. -/
+lemma lt_one_of_lt_gammaStar {γ : ℝ} (hγ : γ < gammaStar) : γ < 1 :=
+  lt_trans hγ gammaStar_lt_one
+
 /-! ## Item 6 — exponent bookkeeping, with the paper's exact error terms
 
 Paper, Step 2 eq. (`eq:depth`): `\lcp(c_\gamma,W_j^{\infty})\ge e\,\ell_j`, and the paper

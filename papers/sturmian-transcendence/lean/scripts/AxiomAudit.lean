@@ -112,6 +112,18 @@ removed at stage 5 and must not appear anywhere in this output. -/
 #print axioms Sturmian.transcendental_PhiBL_charWord
 #print axioms Sturmian.transcendental_PhiBL_mechanical
 
+-- v1.1: γ* < 1, so `γ < 1` is redundant alongside `γ < γ*`
+#print axioms Sturmian.four_thirds_lt_log2three
+#print axioms Sturmian.one_add_phi_lt_two_mul_log2three
+#print axioms Sturmian.gammaStar_lt_one
+#print axioms Sturmian.lt_one_of_lt_gammaStar
+
+-- v1.1: every shift, via the paper's eq. (3) (must list ridout_single_prime only)
+#print axioms Sturmian.transcendental_affine
+#print axioms Sturmian.IsBL.transcendental_shiftIter
+#print axioms Sturmian.transcendental_PhiBL_shifts
+#print axioms Sturmian.transcendental_PhiBL_shiftIter_mechanical
+
 -- STAGE 5: the three-distance periodicity lemma (PROVED)
 #print axioms Sturmian.nrm_eq_min
 #print axioms Sturmian.floor_add_off
@@ -157,3 +169,4 @@ removed at stage 5 and must not appear anywhere in this output. -/
 #print axioms Sturmian.logThreeTwo_lt_gammaTierA
 #print axioms Sturmian.logThreeTwo_lt_gammaStar
 #print axioms Sturmian.transcendental_PhiBL_logThreeTwo
+#print axioms Sturmian.transcendental_PhiBL_logThreeTwo_shifts
