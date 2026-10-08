@@ -120,6 +120,184 @@ the critical-truncation question of §5 was first posed in
 
 Neither Pham's nor Cassidy's note is refereed, and no comparative claim is made about either.
 
+## Lean formalisation (stages 1–5)
+
+Branch `lean-formalization`, directory [`lean/`](lean).  **Lean 4 + Mathlib, pinned**:
+toolchain `leanprover/lean4:v4.34.0`, Mathlib `v4.34.0` (rev `5ed2965256430c3649e86755f9576b54eca72435`);
+`lean-toolchain` and `lake-manifest.json` are committed.  3573 lines of Lean, 18 files,
+**no `sorry`** anywhere in the import closure of `Sturmian.lean`.
+
+> **ONE axiom: Ridout's theorem.**  Corollary 1.4 is machine-checked for every irrational
+> `γ < γ*` depending on a single external result — Ridout's theorem in Bugeaud–Kekeç's
+> single-prime form.  The Berthé–Holton–Zamboni floor `ice(c_γ) ≥ 1+φ`, an axiom through
+> stage 4, is now the **theorem** `Sturmian.one_add_phi_le_ice`.  The constant `1+φ` is
+> Berthé–Holton–Zamboni's (Acta Arith. **122** (2006), §4.2) and **no novelty is claimed**
+> for the Lean proof: it is a formalisation of a known result along a route that fits
+> inside Mathlib (Dirichlet's theorem, best-approximation records built from their
+> definition, and the sharp inequality `max(x+1, 2+1/x) ≥ 1+φ`).  It is independent of
+> their paper only because that paper was never accessible.
+>
+> **No irrationality result is used.**  The development does **not** depend on the author's
+> Proposition 2.10 (`[DJirr, Thm 10.1, Cor 10.5]`), nor on Cassidy's irrationality result,
+> nor on Pham's.  Irrationality enters only in proved form — the 2-adic Liouville
+> inequality; the aperiodicity of `c_γ` from the *hypothesis* `Irrational γ` on the slope;
+> and, for the headline slope, the irrationality of `log₃ 2` itself, proved here from
+> `2^b ≠ 3^a` (Mathlib has no irrationality statement for logarithms).
+
+### Dependency of each main theorem
+
+**Every main theorem depends on Ridout's theorem and nothing else.**
+
+| theorem | slopes | axioms |
+|---|---|---|
+| `transcendental_PhiBL_charWord`, `..._mechanical` | `0 < γ < γ* = 0.8258…` | **Ridout only** |
+| `transcendental_PhiBL_logThreeTwo` | `γ = log₃ 2` (headline) | **Ridout only** |
+| `transcendental_PhiBL_charWord_tierA`, `..._mechanical_tierA` (the elementary route) | `0 < γ < γ_A = 0.7571…` | **Ridout only** |
+| `one_add_phi_le_ice` (`ice(c_γ) ≥ 1+φ`), `two_lt_ice`, `twelve_fifths_le_ice` | every irrational `γ ∈ (0,1)` | **none** |
+
+The `γ_A` row is subsumed by the first and is kept deliberately: it records that the
+headline case never needed the constant `1+φ` at all, only `e > 2`, because `A(log₃2) = 1`.
+
+### What is machine-checked
+
+| result | statement | named axiom used |
+|---|---|---|
+| `Sturmian.H`, `finite_setOf_H_le` | the paper's `H(r) = max(\|num\|, den)`; each height is attained finitely often | none |
+| `Sturmian.liouville_two_adic` | **the 2-adic Liouville inequality**: `\|ξ−r\|₂ ≥ (\|num ξ\|+den ξ)⁻¹·H(r)⁻¹` for `ξ ≠ r` with odd denominators | none |
+| `Sturmian.two_A_lt_one_add_phi` | **the arithmetic of Corollary 1.4**: `γ < γ*` ⟹ `2A(γ) < 1+φ`, both branches of the `max` | none |
+| `Sturmian.approx_of_depth_height` | **exponent bookkeeping**, pointwise, with the paper's exact error terms (eq. 7 has *no floor and no O(1) loss*; eq. 9 is `A·ℓ + log₂(3ℓ) + log₂3`) | none |
+| `Sturmian.ones_succ`, `cw_succ`, `cw_cons_*_succ` | the recursions of the paper's `k_m(v)` and `c_m(v)`, **proved from the closed forms**, not substituted for them | none |
+| **`Sturmian.isBL_PhiBL`** | **`Φ` EXISTS**: `PhiBL` is constructed as the 2-adic limit of `−c_m(v)·3^(−k_m(v))` — eq. (3) solved for `Φ(v)` — and satisfies the Bernstein–Lagarias recursion | none |
+| **`Sturmian.IsBL.isometry`** | **Proposition 2.1**, the Bernstein–Lagarias isometry `\|Φ(v)−Φ(w)\|₂ = 2^(−lcp(v,w))`. The paper *cites* this; it is **proved here** from the recursion by induction on the `lcp` | none |
+| `Sturmian.IsBL.injective` | `Φ` is injective (Prop. 2.1's last clause) | none |
+| `Sturmian.IsBL.affinegen` | **the paper's eq. (3)**, `2^m Φ(σ^m v) = 3^{k_m(v)} Φ(v) + c_m(v)` | none |
+| **`Sturmian.shadow_formula`** | **Proposition 2.2**, `Φ(w^∞) = c_w/(2^ℓ − 3^k)`, with `2^ℓ ≠ 3^k` (`two_pow_ne_three_pow`), **odd denominator** (`shadowRat_den_odd`) and `c_w > 0` (`cw_pos`) | none |
+| **`Sturmian.IsBL.transfer`** | **the paper's eq. (12)**, `2Φ(c) = 3Φ(1c)+1 = Φ(0c)`, for every infinite word | none |
+| `Sturmian.shadowRat_inj_of_word_ne`, `shadowSet_infinite` | Step 4: distinct periodic words give distinct shadows, so an injective family gives an infinite set of rationals | none |
+| `Sturmian.transcendental_of_approxExp` | infinitely many **distinct** rationals with `\|ξ−r\|₂ ≤ H(r)^(−μ)`, `μ > 2` ⟹ `ξ` transcendental over `ℚ` | Theorem R |
+| `Sturmian.ne_rat_of_ApproxExp` | the same hypothesis at `μ > 1` already excludes every rational with odd denominator | none |
+| `Sturmian.transcendental_cons_true`, `..._false` | **Step 6**: transcendence transfers along eq. (12), via `isAlgebraic_affine` (proved) | none |
+| **`Sturmian.ones_charWord`** | **the telescoping count**: the first `ℓ` letters of `c_γ` carry exactly `⌊(ℓ+1)γ⌋` ones | none |
+| **`Sturmian.abs_ones_charWord_sub_lt_one`** | **balance for prefixes**, `\|k − γℓ\| < 1` — the paper's §2.2 bound, *proved* rather than quoted from Lothaire | none |
+| **`Sturmian.abs_balance_prefix`** | **sharp prefix balance** `\|ℓ·k_m − m·k_ℓ\| < ℓ`, the form `[DJirr, Lemma 10.4]` uses — two floor estimates, no standard words | none |
+| **`Sturmian.cw_le_of_balance`, `cw_le_prefix`** | **`[DJirr, Lemma 10.4]`**: `c_W ≤ 3ℓ·max(2^ℓ,3^k)`. Stated with the balance hypothesis the source's own proof uses; the source's real-power monotonicity step is replaced by an equivalent integer argument | none |
+| **`Sturmian.shadow_height_bound`** | **Proposition 2.4** (the height of a shadow). **An axiom at stage 2; now depends on NO axiom** | none |
+| **`Sturmian.ice`, `exists_prefix_power_of_lt_ice`** | the paper's **Definition 2.5** (limsup of prefix powers, in `ℝ≥0∞`) and its **Steps 1–2**: from `ice(c_γ) > e`, arbitrarily long prefixes repeating to power `≥ e`. **No primitive-root replacement needed** | none |
+| **`Sturmian.charWord_ne_per`** | **`c_γ` is aperiodic** for irrational `γ` — the paper's Step-4 "impossible, `γ` being irrational", and **the only place irrationality is used** | none |
+| `Sturmian.transcendental_of_prefix_family` | **Steps 3–6** from the prefix family alone. Also derives `k_j ≥ 1`, the aperiodicity, the height bound, and the infinitude of the shadow set | Theorem R |
+| `Sturmian.transcendental_PhiBL_charWord`, `..._mechanical` | **Corollary 1.4** for the constructed `Φ`: `Φ(c_γ)`, `Φ(1c_γ)`, `Φ(0c_γ)` transcendental for irrational `γ < γ*` | Theorem R |
+| **`Sturmian.per_eq_of_min`** | **the three-distance periodicity lemma**: if `q` minimises `‖jγ‖` over `1 ≤ j < Q`, the prefix of `c_γ` of length `Q+q−2` has period `q`. Proved from the two-floor form of `charWord`; no continued fractions | none |
+| **`Sturmian.gap_le`** | **the gap lemma**: three consecutive best-approximation records `p < r < s` with `‖rγ‖ < 1/4` satisfy `s ≥ r+p` (Fibonacci-type growth). Proved from record-ness alone — Mathlib has Dirichlet but **not** the best-approximation property of convergents | none |
+| **`Sturmian.one_add_phi_le_max`** | the sharp elementary inequality `max(x+1, 2+1/x) ≥ 1+φ` for `x > 0`, with **equality at `x = φ`** (`max_eq_one_add_phi_at_phi`) — so this route attains the constant and cannot beat it | none |
+| **`Sturmian.one_add_phi_le_ice`** | **the paper's Proposition 2.8, PROVED**: `ice(c_γ) ≥ 1+φ` for every irrational `γ ∈ (0,1)`. Formerly the axiom `bhz_ice_floor`. Constant due to Berthé–Holton–Zamboni; **no novelty claimed** | none |
+| `Sturmian.twelve_fifths_le_ice`, `two_lt_ice` | `ice(c_γ) ≥ 12/5 > 2`; the weaker constant, all the headline slope needs | none |
+| **`Sturmian.irrational_logThreeTwo`, `A_logThreeTwo`** | `log₃ 2` is irrational (from `2^b ≠ 3^a`), and `A(log₃ 2) = 1` | none |
+| **`Sturmian.transcendental_PhiBL_logThreeTwo`** | **the headline case**: `Φ(c_{log₃2})`, `Φ(1c_{log₃2})`, `Φ(0c_{log₃2})` transcendental, **on Ridout alone** | Theorem R |
+
+`#print axioms` evidence: [`AXIOM_AUDIT.txt`](lean/AXIOM_AUDIT.txt) — **115 results audited,
+0 `sorryAx`, 104 depending on no named axiom, 11 on Ridout's theorem, and nothing else.
+`bhz_ice_floor` appears nowhere in the output: the axiom no longer exists.**
+
+Every definition is audited against the paper's verbatim text, with a machine-checked sanity
+lemma, in [`Sturmian/DefinitionAudit.lean`](lean/Sturmian/DefinitionAudit.lean): `charWord`
+(checked letter by letter at `γ = 2/5`), `Φ` (`Φ(1^∞) = −1` derived twice, independently,
+from the recursion and from Proposition 2.2), `H`, `lcp`, `A(γ)`, `γ*` and `ice`.
+**No mismatch was found**; three conventions are flagged there and in `AXIOMS.md` §8.
+
+### What is assumed
+
+**One axiom, in [`Sturmian/Axioms.lean`](lean/Sturmian/Axioms.lean), with the paper's
+statement, the source, and a status label.  Full detail in
+[`AXIOMS.md`](lean/AXIOMS.md).**
+
+| axiom | source | status |
+|---|---|---|
+| `ridout_single_prime` | **Theorem R** — Bugeaud–Kekeç, Bull. Austral. Math. Soc. **98** (2018), 203–211, **Thm 1.3** (the paper's `BK18`, printed ref. [7]). Checked **verbatim against the source**; hypothesis table in `AXIOMS.md` §1 shows an exact match | *external published theorem* |
+**On the former BHZ axiom** (detail in `AXIOMS.md` §2). It asserted Proposition 2.8,
+`ice(c_γ) ≥ 1+φ`, citing Berthé–Holton–Zamboni §4.2, Acta Arith. **122** (2006), printed
+ref. [4]. The source was never retrieved — `doi:10.4064/aa122-4-1` returns HTTP 502, the
+impan, EuDML and bibliotekanauki routes each serve an unrelated document, and no preprint
+exists on arXiv or HAL — so the statement had to be proved rather than checked. It now is
+(`Sturmian.one_add_phi_le_ice`), and **the inaccessibility no longer affects any result**:
+nothing in the development depends on the BHZ paper's text. What remains unverified is the
+*citation*, not the mathematics: the paper obtains Proposition 2.8 as its own two-line
+deduction from an *unnumbered sentence* in BHZ §4.2 (after the proof of their Theorem 1.2)
+plus `θ = (1+√5)/2` on their p. 3, and those two items are still unchecked.
+
+**Not assumed, and not needed:** the Berthé–Holton–Zamboni floor (**proved**, stage 5);
+the existence of `Φ` (constructed); the isometry (proved);
+the shadow formula (proved); the transfer identity (proved); Proposition 2.4 (proved,
+axiom-free); `[DJirr, Lemma 10.4]` (proved); balance (proved); the sharp prefix balance
+(proved); aperiodicity of `c_γ` (proved); `k_j ≥ 1` (proved); the paper's Steps 1–2
+(proved); injectivity of `j ↦ W_j^∞` (**eliminated** — each shadow value is taken only
+finitely often, because the `j`-th shadow is approached to depth `e ℓ_j → ∞`); the
+primitive-root replacement and `[BHZ06, Prop. 3.2]` (**eliminated** — balance is proved
+directly for prefixes); and the paper's Proposition
+2.10 — the author's prior unrefereed irrationality result — because
+`Sturmian.ne_rat_of_ApproxExp` derives irrationality from the proved Liouville inequality
+for the skeleton's quantifier (infinitely many *distinct rationals*).  The paper's §2.4
+caution concerns the Koksma exponent `ω`, a different quantifier; see §4 of
+[`AXIOMS.md`](lean/AXIOMS.md).
+
+### What is still NOT formalised
+
+**Nothing of the paper's own argument, and exactly one external result.**  Theorem 1.3 and
+Corollary 1.4 are machine-checked modulo **Ridout's theorem** and nothing else.  Ridout's
+theorem is a result of another author and would be an axiom in any formalisation that does
+not also formalise its proof.
+
+Two things are deliberately *not* formalised:
+
+* **the equality case of Proposition 2.8** — `ice(c_γ) = 1+φ` iff the partial quotients are
+  eventually all `1`.  The axiom never asserted it and nothing uses it.  That the
+  inequality is sharp is recorded instead, as `max_eq_one_add_phi_at_phi`: the elementary
+  bound `max(x+1, 2+1/x) ≥ 1+φ` is an equality at `x = φ`, so this proof attains the
+  constant in the limit and cannot improve it.
+* **continued fractions.**  Mathlib has Dirichlet's theorem but not the
+  best-approximation property of convergents, so the records of `Sturmian/Records.lean` are
+  built from their definition.  The proofs are therefore continued-fraction-free, which is
+  a convenience of the formalisation rather than a mathematical point.
+
+The one item that is *not* closed to the same standard is the **BHZ source check**: that
+axiom is `NOT CHECKED` because the source is paywalled, and the paper's Proposition 2.8 is
+a deduction from an unnumbered sentence rather than a quotable theorem.  See `AXIOMS.md` §2
+for the two specific things to verify.
+
+Remaining interfaces are recorded as `sorry` stubs in
+[`lean/Stubs/TODO.lean`](lean/Stubs/TODO.lean), which **`Sturmian.lean` does not import**.
+
+### Two discrepancies found while checking the axioms
+
+1. **Erratum in the paper's bibliography.** `paper/refs.bib` gives
+   `doi = {10.1017/S0004972718000345}` for `BK18`; that DOI resolves (checked against
+   Crossref) to De Bondt–Sun, *Classification of cubic homogeneous polynomial maps with
+   Jacobian matrices of rank two*, same volume, pp. 89–101.  The correct DOI is
+   **`10.1017/S0004972718000515`**.  Author, journal, volume, number and pages are correct.
+2. **Attribution in this README.** The "Related work and credit" section above attributes
+   Theorem R to *Badziahin–Kristensen*; the paper's `BK18` and printed reference [7] are
+   *Bugeaud–Kekeç*.
+
+Both are flagged for the author; no file outside `lean/` has been modified.
+
+### Index conventions, recorded because they matter
+
+* The paper indexes the letters of `c_γ` from `j = 1`; `Sturmian.Word` is indexed from `0`,
+  so `charWord γ n` is the paper's `c_γ(n+1)`.
+* `Sturmian.ApproxExp` quantifies over infinitely many **distinct elements of `ℚ`**; the
+  paper's `ω` is the Koksma exponent, which quantifies over polynomials.  See the
+  NORMALISATION NOTE in [`Sturmian/Basic.lean`](lean/Sturmian/Basic.lean).
+* `c_m` and `k_m` read only the first `m` letters (`cw_congr`, `ones_congr`), which is why
+  `cw ℓ (w^∞)` is the paper's `c_w`.
+
+### Build
+
+```
+cd lean
+lake exe cache get      # fetch the pinned Mathlib build
+lake build              # 3219 jobs; 24 s here with the Mathlib build already present
+lake env lean scripts/AxiomAudit.lean > AXIOM_AUDIT.txt
+```
+
 ## License
 
 Paper and documentation CC BY 4.0; code MIT. See the repository root.

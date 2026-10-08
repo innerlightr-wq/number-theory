@@ -1,0 +1,145 @@
+'Sturmian.ridout_single_prime' depends on axioms: [propext, Classical.choice, Quot.sound, Sturmian.ridout_single_prime]
+'Sturmian.H_pos' depends on axioms: [propext]
+'Sturmian.finite_setOf_H_le' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.exists_H_gt_of_infinite' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.one_div_abs_le_padicNorm_int' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.padicNorm_two_int_odd' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.liouville_two_adic' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.liouville_two_adic_real' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.subsingleton_preimage' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.strictMono_H_pick' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.two_le_H_pick' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.transcendental_of_approxExp' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound,
+ Sturmian.ridout_single_prime]
+'Sturmian.not_approxExp_of_rat' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.transcendental_of_ApproxExp' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound,
+ Sturmian.ridout_single_prime]
+'Sturmian.ne_rat_of_ApproxExp' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.one_lt_phi' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.log2three_pos' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.two_A_lt_one_add_phi' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.approx_of_depth_height' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.ones_succ' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.cw_succ' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.ones_cons_false_succ' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.ones_cons_true_succ' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.cw_cons_false_succ' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.cw_cons_true_succ' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.lcp_shift' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.norm_sub_eq_of_norm_lt' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.norm_two' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.norm_three' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.IsBL.transfer' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.IsBL.norm_cons_true' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.IsBL.isometry' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.IsBL.injective' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.IsBL.affinegen' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.two_pow_ne_three_pow' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.den_odd' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.cw_pos' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.shadow_eq' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.shadow_formula' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.shadowRat_den_odd' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.shadowRat_inj_of_word_ne' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.shadowSet_infinite' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.isUnit_three' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.three_mul_inv3' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.norm_approx_succ_sub' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.cauchySeq_approx' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.norm_PhiBL_sub_approx' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.approx_cons_false' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.approx_cons_true' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.isBL_PhiBL' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.inc_nonneg' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.inc_le_one' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.ones_charWord' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.abs_ones_charWord_sub_lt_one' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.H_div_le' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.abs_den_lt_max' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.logb_max_pow' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.max_lt_A_mul' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.ones_add' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.shiftIter_mul_per' depends on axioms: [propext, Quot.sound]
+'Sturmian.ones_mul_per' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.charWord_ne_per' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.abs_balance_prefix' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.term_le_three_mul_max' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.cw_le_of_balance' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.cw_le_prefix' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.shadow_height_bound' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.agree_of_lt_prefixPower' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.exists_prefix_power_of_lt_ice' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.tendsto_errorTerm' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.tendsto_two_rpow_neg' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.isAlgebraic_affine' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.transcendental_of_affine' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.transcendental_cons_false' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.transcendental_cons_true' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.transcendental_of_prefix_family' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound,
+ Sturmian.ridout_single_prime]
+'Sturmian.transcendental_charWord' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound,
+ Sturmian.ridout_single_prime]
+'Sturmian.transcendental_PhiBL_charWord' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound,
+ Sturmian.ridout_single_prime]
+'Sturmian.transcendental_PhiBL_mechanical' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound,
+ Sturmian.ridout_single_prime]
+'Sturmian.nrm_eq_min' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.floor_add_off' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.charWord_add_eq' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.per_eq_of_min' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.nrmR_eq_min_abs' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.nrm_add' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.nrm_sub' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.exists_record_le' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.exists_record_gt' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.exists_isNextRec' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.record_min_lt_nextRec' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.off_mul_off_next_neg' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.lt_nrm_add' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.gap_le' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.exists_long_period' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.phi_sq' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.one_div_phi' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.one_add_phi_le_max' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.max_eq_one_add_phi_at_phi' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.exists_long_period_eps' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.le_lcp_of_agree' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.le_prefixPower' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.le_ice_of_lt_one_add_phi' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.one_add_phi_le_ice' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.twelve_fifths_le_ice' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.two_lt_ice' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.gammaTierA_lt_gammaStar' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.two_A_lt_twelve_fifths' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.transcendental_charWord_tierA' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound,
+ Sturmian.ridout_single_prime]
+'Sturmian.transcendental_PhiBL_charWord_tierA' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound,
+ Sturmian.ridout_single_prime]
+'Sturmian.transcendental_PhiBL_mechanical_tierA' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound,
+ Sturmian.ridout_single_prime]
+'Sturmian.A_logThreeTwo' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.irrational_logThreeTwo' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.logThreeTwo_lt_gammaTierA' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.logThreeTwo_lt_gammaStar' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.transcendental_PhiBL_logThreeTwo' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound,
+ Sturmian.ridout_single_prime]
