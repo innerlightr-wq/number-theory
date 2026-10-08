@@ -3,12 +3,11 @@ import Sturmian
 /-! `#print axioms` on every reported result of stages 1 and 2.  The permitted output is
 the three standard Lean axioms (`propext`, `Classical.choice`, `Quot.sound`) plus the three
 named axioms declared in `Sturmian/Axioms.lean`:
-`ridout_single_prime`, `bhz_prefix_family`, `cw_le_three_mul_len_mul_max`. -/
+`ridout_single_prime` and `bhz_ice_floor`. -/
 
 -- the three declared axioms
 #print axioms Sturmian.ridout_single_prime
-#print axioms Sturmian.bhz_prefix_family
-#print axioms Sturmian.cw_le_three_mul_len_mul_max
+#print axioms Sturmian.bhz_ice_floor
 
 -- STAGE 1: Basic
 #print axioms Sturmian.H_pos
@@ -87,8 +86,20 @@ named axioms declared in `Sturmian/Axioms.lean`:
 #print axioms Sturmian.ones_mul_per
 #print axioms Sturmian.charWord_ne_per
 
--- STAGE 3: Proposition 2.4 -- an AXIOM at stage 2, a THEOREM now
+-- STAGE 3: the sharp prefix balance
+#print axioms Sturmian.abs_balance_prefix
+
+-- STAGE 4: [DJirr, Lemma 10.4] -- an AXIOM at stage 3, a THEOREM now
+#print axioms Sturmian.term_le_three_mul_max
+#print axioms Sturmian.cw_le_of_balance
+#print axioms Sturmian.cw_le_prefix
+
+-- STAGE 4: Proposition 2.4 -- an AXIOM at stage 2, now depends on NO axiom
 #print axioms Sturmian.shadow_height_bound
+
+-- STAGE 4: ice and the extraction of Steps 1-2 (PROVED)
+#print axioms Sturmian.agree_of_lt_prefixPower
+#print axioms Sturmian.exists_prefix_power_of_lt_ice
 
 -- STAGE 2: the assembly
 #print axioms Sturmian.tendsto_errorTerm

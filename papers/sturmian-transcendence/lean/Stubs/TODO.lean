@@ -1,57 +1,56 @@
 /-
-# TODO — stage 3
+# TODO — what is left
 
 **This file is NOT imported by `Sturmian.lean` and nothing reported as proved depends on
 it.**  Everything here is `sorry`.
 
-STAGES 1 AND 2 ARE DONE.  In particular the following are **no longer** stubs and have
-moved into the main development as PROVED results:
+STAGES 1–4 ARE DONE.  Theorem 1.3 and Corollary 1.4 are machine-checked modulo exactly
+**two** axioms, both results of other authors: Ridout's theorem (in Bugeaud–Kekeç's
+single-prime form, source checked verbatim) and the Berthé–Holton–Zamboni floor
+`ice(c_γ) ≥ 1+φ`.  Everything of the paper's own argument is proved, including:
 
-* `Φ` itself — constructed, `Sturmian.PhiBL` / `Sturmian.isBL_PhiBL`;
-* the Bernstein–Lagarias isometry (Prop. 2.1) — `Sturmian.IsBL.isometry`;
-* the periodic-shadow formula (Prop. 2.2) — `Sturmian.shadow_formula`;
-* the transfer identity (eq. 12) — `Sturmian.IsBL.transfer`.
+* `Φ` itself — constructed (`Sturmian.PhiBL`, `Sturmian.isBL_PhiBL`);
+* the Bernstein–Lagarias isometry, Prop. 2.1 — `Sturmian.IsBL.isometry`;
+* eq. (3) — `Sturmian.IsBL.affinegen`;
+* the periodic-shadow formula, Prop. 2.2 — `Sturmian.shadow_formula`;
+* the transfer identity, eq. (12) — `Sturmian.IsBL.transfer`;
+* the telescoping count and balance — `Sturmian.ones_charWord`,
+  `Sturmian.abs_ones_charWord_sub_lt_one`, `Sturmian.abs_balance_prefix`;
+* `[DJirr, Lemma 10.4]` — `Sturmian.cw_le_of_balance`, `Sturmian.cw_le_prefix`;
+* Prop. 2.4, the height of a shadow — `Sturmian.shadow_height_bound`, **axiom-free**;
+* aperiodicity of `c_γ` — `Sturmian.charWord_ne_per`;
+* `ice` and the paper's Steps 1–2 — `Sturmian.ice`,
+  `Sturmian.exists_prefix_power_of_lt_ice`.
 
-STAGE 3 IS DONE for the height bound and the Sturmian combinatorics.  No longer stubs:
-
-* the telescoping count `k_ℓ(c_γ) = ⌊(ℓ+1)γ⌋` — `Sturmian.ones_charWord`;
-* balance for prefixes — `Sturmian.abs_ones_charWord_sub_lt_one`;
-* **Proposition 2.4** — `Sturmian.shadow_height_bound`, now a theorem;
-* aperiodicity of `c_γ` — `Sturmian.charWord_ne_per`.
-
-WHAT REMAINS, and it is exactly the two axioms of `Sturmian/Axioms.lean` that are still
-there: the `ice` machinery behind the paper's Steps 1–2 (so that `bhz_prefix_family` can be
-reduced to Berthé–Holton–Zamboni's floor alone), and `[DJirr, Lemma 10.4]`.
+WHAT REMAINS is listed below.  None of it is needed for the main theorem; the first item is
+the only one that would reduce the axiom count further.
 -/
 import Sturmian
 
 namespace Sturmian.Stubs
 
-/-- STAGE 3 — the initial critical exponent of Definition 2.5: the prefix power of `W` in
-`ω` is `lcp(ω, W^∞)/|W|`, and `ice ω` is the limsup of the prefix powers of the prefixes
-`ω[0,n)`.  Needed to state the paper's Theorem 1.3 criterion `ice(c_γ) > 2A(γ)` directly,
-rather than through `Sturmian.bhz_prefix_family`. -/
-noncomputable def ice : Word → ℝ := sorry
+/-- REMAINS, and the only thing that would reduce the axiom count — a formal proof of the
+Berthé–Holton–Zamboni floor `ice(c_γ) ≥ 1 + φ` (the paper's Prop. 2.8, `[BHZ06, §4.2]`),
+which would replace `Sturmian.bhz_ice_floor`.  This is someone else's theorem; formalising
+it means formalising BHZ §4.2, including their `ice` formula (their Theorem 1.2 and the
+sentence after its proof).  **Before that, the source itself needs checking: it is paywalled
+and was NOT CHECKED here — see `AXIOMS.md` §2.** -/
+theorem bhz_floor : True := sorry
 
-/-- STAGE 3 — the paper's Proposition 2.6 (`\cite[\S4.2]{BHZ06}`): the `ice` formula
-`ice(c_α) = 1 + limsup q_{k+1}/q_k`. -/
+/-- REMAINS (not needed) — the paper's Prop. 2.6, `[BHZ06, §4.2]`: the `ice` formula
+`ice(c_α) = 1 + limsup q_{k+1}/q_k`.  Would let the paper's **Theorem 1.2** (the
+quantitative form, `ω₁⁽²⁾ ≥ ice/A − 1`) be stated in continued-fraction terms. -/
 theorem ice_formula : True := sorry
 
-/-- STAGE 3 — the paper's Proposition 2.8 (`\cite[\S4.2]{BHZ06}`): `ice(c_γ) ≥ 1 + φ`.
-Discharging this plus Steps 1–2 replaces `Sturmian.bhz_prefix_family`. -/
-theorem ice_floor : True := sorry
-
-/-- STAGE 3 — the paper's Proposition 2.3 (`\cite[Proposition 3.2]{BHZ06}`): a Sturmian
-sequence beginning in `W^r`, `r ≥ 2`, `|W| ≥ 2`, `W` primitive, has `W` a conjugate of a
-standard word, hence `W^∞` balanced. -/
+/-- REMAINS (not needed) — the paper's Prop. 2.3, `[BHZ06, Proposition 3.2]`: a Sturmian
+sequence beginning in `W^r` with `r ≥ 2`, `|W| ≥ 2`, `W` primitive has `W` a conjugate of a
+standard word.  **Eliminated from the development at stage 4**: balance for prefixes of
+`c_γ` is proved directly, so no primitive-root replacement is performed and this is never
+invoked. -/
 theorem conjugate_of_standard : True := sorry
 
-/-- STAGE 3 — the paper's Proposition 2.4, the height of a shadow.  Discharging this
-replaces `Sturmian.shadow_height_bound`.  The paper proves it in four lines from
-`\cite[Lemma 10.4]{DJirr}` and balance. -/
-theorem height_bound : True := sorry
-
-/-- STAGE 3 — Steps 1–2: extraction of the primitive-prefix family from `ice(c_γ) > 2A(γ)`. -/
-theorem prefix_family_extraction : True := sorry
+/-- REMAINS (not needed) — the paper's Theorems 6.1 and 7.3, the Liouville alternative and
+the effective irrationality measure.  These are complements, not part of Theorem 1.3. -/
+theorem complements : True := sorry
 
 end Sturmian.Stubs

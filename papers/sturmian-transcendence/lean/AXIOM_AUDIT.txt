@@ -1,63 +1,64 @@
 # AXIOM_AUDIT.txt
 
-Generated 2026-10-08 11:28:31 UTC by:
+Generated 2026-10-08 11:46:56 UTC by:
     lake env lean scripts/AxiomAudit.lean
 
-Project:   papers/sturmian-transcendence/lean   (stages 1, 2 and 3)
+Project:   papers/sturmian-transcendence/lean   (stages 1-4)
 Toolchain: leanprover/lean4:v4.34.0
 Mathlib:   5ed2965256430c3649e86755f9576b54eca72435  (inputRev v4.34.0)
-Cold build: 26 s for 3216 jobs (pinned Mathlib build reused; see README)
-Source:    2255 lines of Lean across 12 files
+Cold build: 24 s for 3219 jobs (pinned Mathlib build reused; see README)
+Source:    2720 lines of Lean across 14 files
 
 PERMITTED output: the three standard Lean axioms (propext, Classical.choice,
-Quot.sound) plus the THREE named axioms declared in Sturmian/Axioms.lean:
-    Sturmian.ridout_single_prime          Ridout, via Bugeaud-Kekec Thm 1.3
-                                          (external published theorem)
-    Sturmian.bhz_prefix_family            BHZ floor (Prop 2.8) + the paper's
-                                          Steps 1-2; THREE clauses after stage 3
-    Sturmian.cw_le_three_mul_len_mul_max  c_W <= 3 l max(2^l, 3^k)
-                                          ([DJirr, Lemma 10.4], author's prior work)
+Quot.sound) plus the TWO named axioms declared in Sturmian/Axioms.lean:
+    Sturmian.ridout_single_prime   Ridout's theorem in the single-prime form of
+                                   Bugeaud-Kekec Thm 1.3.  EXTERNAL PUBLISHED
+                                   THEOREM, checked VERBATIM against the source.
+    Sturmian.bhz_ice_floor         ice(c_gamma) >= 1 + phi.  EXTERNAL, from
+                                   Berthe-Holton-Zamboni section 4.2.  SOURCE NOT
+                                   CHECKED -- paywalled, see AXIOMS.md section 2.
 
 VERDICT: PASS.
-  * results audited:                           75
+  * results audited:                           80
   * sorryAx occurrences:                        0
-  * named axioms other than the three above:  none
-  * results depending on NO named axiom:       65
-  * results depending on a named axiom:        10  (listed below)
+  * named axioms other than the two above:    none
+  * results depending on NO named axiom:       72
+  * results depending on a named axiom:         8  (listed below)
 
-        R              Sturmian.transcendental_of_approxExp
-        R              Sturmian.transcendental_of_ApproxExp
-        DJ10.4         Sturmian.shadow_height_bound          <- Prop 2.4, a THEOREM now
-        DJ10.4 R       Sturmian.transcendental_of_prefix_family
-        BHZ DJ10.4 R   Sturmian.transcendental_charWord
-        BHZ DJ10.4 R   Sturmian.transcendental_PhiBL_charWord
-        BHZ DJ10.4 R   Sturmian.transcendental_PhiBL_mechanical
-    (plus the three axioms themselves)
+        R        Sturmian.transcendental_of_approxExp
+        R        Sturmian.transcendental_of_ApproxExp
+        R        Sturmian.transcendental_of_prefix_family
+        BHZ R    Sturmian.transcendental_charWord
+        BHZ R    Sturmian.transcendental_PhiBL_charWord
+        BHZ R    Sturmian.transcendental_PhiBL_mechanical
+    (plus the two axioms themselves)
 
-WHAT CHANGED AT STAGE 3.
-  * Proposition 2.4 was an AXIOM at stage 2.  It is now a THEOREM
-    (Sturmian.shadow_height_bound), proved from the paper's own four-line argument.
-    Its only external input is the numerator bound above.
-  * The BHZ axiom asserted SIX clauses at stage 2 and asserts THREE now.  Three
-    clauses of the paper's Step 4 are proved instead:
-        k_j >= 1 for large j      -- from the telescoping count ones_charWord
-        c_gamma != W_j^infinity   -- charWord_ne_per, aperiodicity for irrational gamma
-        infinitude of the shadows -- each value is taken finitely often, so the
-                                     injectivity hypothesis is no longer needed at all
+WHAT CHANGED AT STAGE 4.
+  * [DJirr, Lemma 10.4] is formalised (Sturmian.cw_le_of_balance, cw_le_prefix), so
+    its axiom is GONE and PROPOSITION 2.4 (Sturmian.shadow_height_bound) now depends
+    on NO axiom at all.
+  * ice is formalised (Sturmian.ice, a limsup of prefix powers in ENNReal) and the
+    paper's Steps 1-2 are proved (Sturmian.exists_prefix_power_of_lt_ice), so the BHZ
+    axiom is reduced from six clauses (stage 2), to three (stage 3), to the FLOOR
+    ALONE.  No primitive-root replacement was needed; see AXIOMS.md section 2.
+  * Definition audit: Sturmian/DefinitionAudit.lean puts each of charWord, Phi, H,
+    lcp, A(gamma), gamma* and ice beside the paper's verbatim text and proves a
+    sanity lemma for each.  NO MISMATCH FOUND; three conventions flagged.
 
-NOTE.  The whole Bernstein-Lagarias core depends on NO named axiom: the isometry
-(Prop 2.1), the periodic-shadow formula (Prop 2.2), the transfer identity (eq. 12),
-the Liouville inequality, the Corollary 1.4 arithmetic, the CONSTRUCTION of a map
-satisfying the Bernstein-Lagarias recursion (Sturmian.isBL_PhiBL), the Sturmian
-balance count, and the aperiodicity of c_gamma.
+NO IRRATIONALITY RESULT IS USED.
+  Neither axiom is an irrationality statement.  The development does NOT depend on
+  the author's Proposition 2.10 / [DJirr, Thm 10.1, Cor 10.5], nor on Cassidy's, nor
+  on Pham's.  Irrationality enters only twice, both PROVED:
+    Sturmian.liouville_two_adic   the 2-adic Liouville inequality, whence
+    Sturmian.ne_rat_of_ApproxExp  no rational with odd denominator has the
+                                  approximation property, already at mu > 1;
+    Sturmian.charWord_ne_per      c_gamma is aperiodic, from the HYPOTHESIS
+                                  Irrational gamma on the slope -- a hypothesis
+                                  about gamma, not an imported theorem about Phi.
 
 --------------------------------------------------------------------------------
 'Sturmian.ridout_single_prime' depends on axioms: [propext, Classical.choice, Quot.sound, Sturmian.ridout_single_prime]
-'Sturmian.bhz_prefix_family' depends on axioms: [propext, Classical.choice, Quot.sound, Sturmian.bhz_prefix_family]
-'Sturmian.cw_le_three_mul_len_mul_max' depends on axioms: [propext,
- Classical.choice,
- Quot.sound,
- Sturmian.cw_le_three_mul_len_mul_max]
+'Sturmian.bhz_ice_floor' depends on axioms: [propext, Classical.choice, Quot.sound, Sturmian.bhz_ice_floor]
 'Sturmian.H_pos' depends on axioms: [propext]
 'Sturmian.finite_setOf_H_le' depends on axioms: [propext, Classical.choice, Quot.sound]
 'Sturmian.exists_H_gt_of_infinite' depends on axioms: [propext, Classical.choice, Quot.sound]
@@ -125,10 +126,13 @@ balance count, and the aperiodicity of c_gamma.
 'Sturmian.shiftIter_mul_per' depends on axioms: [propext, Quot.sound]
 'Sturmian.ones_mul_per' depends on axioms: [propext, Classical.choice, Quot.sound]
 'Sturmian.charWord_ne_per' depends on axioms: [propext, Classical.choice, Quot.sound]
-'Sturmian.shadow_height_bound' depends on axioms: [propext,
- Classical.choice,
- Quot.sound,
- Sturmian.cw_le_three_mul_len_mul_max]
+'Sturmian.abs_balance_prefix' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.term_le_three_mul_max' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.cw_le_of_balance' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.cw_le_prefix' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.shadow_height_bound' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.agree_of_lt_prefixPower' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.exists_prefix_power_of_lt_ice' depends on axioms: [propext, Classical.choice, Quot.sound]
 'Sturmian.tendsto_errorTerm' depends on axioms: [propext, Classical.choice, Quot.sound]
 'Sturmian.tendsto_two_rpow_neg' depends on axioms: [propext, Classical.choice, Quot.sound]
 'Sturmian.isAlgebraic_affine' depends on axioms: [propext, Classical.choice, Quot.sound]
@@ -138,24 +142,20 @@ balance count, and the aperiodicity of c_gamma.
 'Sturmian.transcendental_of_prefix_family' depends on axioms: [propext,
  Classical.choice,
  Quot.sound,
- Sturmian.cw_le_three_mul_len_mul_max,
  Sturmian.ridout_single_prime]
 'Sturmian.transcendental_charWord' depends on axioms: [propext,
  Classical.choice,
  Quot.sound,
- Sturmian.bhz_prefix_family,
- Sturmian.cw_le_three_mul_len_mul_max,
+ Sturmian.bhz_ice_floor,
  Sturmian.ridout_single_prime]
 'Sturmian.transcendental_PhiBL_charWord' depends on axioms: [propext,
  Classical.choice,
  Quot.sound,
- Sturmian.bhz_prefix_family,
- Sturmian.cw_le_three_mul_len_mul_max,
+ Sturmian.bhz_ice_floor,
  Sturmian.ridout_single_prime]
 'Sturmian.transcendental_PhiBL_mechanical' depends on axioms: [propext,
  Classical.choice,
  Quot.sound,
- Sturmian.bhz_prefix_family,
- Sturmian.cw_le_three_mul_len_mul_max,
+ Sturmian.bhz_ice_floor,
  Sturmian.ridout_single_prime]
 --------------------------------------------------------------------------------
