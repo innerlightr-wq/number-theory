@@ -1,5 +1,4 @@
 'Sturmian.ridout_single_prime' depends on axioms: [propext, Classical.choice, Quot.sound, Sturmian.ridout_single_prime]
-'Sturmian.bhz_ice_floor' depends on axioms: [propext, Classical.choice, Quot.sound, Sturmian.bhz_ice_floor]
 'Sturmian.H_pos' depends on axioms: [propext]
 'Sturmian.finite_setOf_H_le' depends on axioms: [propext, Classical.choice, Quot.sound]
 'Sturmian.exists_H_gt_of_infinite' depends on axioms: [propext, Classical.choice, Quot.sound]
@@ -87,17 +86,14 @@
 'Sturmian.transcendental_charWord' depends on axioms: [propext,
  Classical.choice,
  Quot.sound,
- Sturmian.bhz_ice_floor,
  Sturmian.ridout_single_prime]
 'Sturmian.transcendental_PhiBL_charWord' depends on axioms: [propext,
  Classical.choice,
  Quot.sound,
- Sturmian.bhz_ice_floor,
  Sturmian.ridout_single_prime]
 'Sturmian.transcendental_PhiBL_mechanical' depends on axioms: [propext,
  Classical.choice,
  Quot.sound,
- Sturmian.bhz_ice_floor,
  Sturmian.ridout_single_prime]
 'Sturmian.nrm_eq_min' depends on axioms: [propext, Classical.choice, Quot.sound]
 'Sturmian.floor_add_off' depends on axioms: [propext, Classical.choice, Quot.sound]
@@ -114,8 +110,15 @@
 'Sturmian.lt_nrm_add' depends on axioms: [propext, Classical.choice, Quot.sound]
 'Sturmian.gap_le' depends on axioms: [propext, Classical.choice, Quot.sound]
 'Sturmian.exists_long_period' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.phi_sq' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.one_div_phi' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.one_add_phi_le_max' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.max_eq_one_add_phi_at_phi' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.exists_long_period_eps' depends on axioms: [propext, Classical.choice, Quot.sound]
 'Sturmian.le_lcp_of_agree' depends on axioms: [propext, Classical.choice, Quot.sound]
 'Sturmian.le_prefixPower' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.le_ice_of_lt_one_add_phi' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.one_add_phi_le_ice' depends on axioms: [propext, Classical.choice, Quot.sound]
 'Sturmian.twelve_fifths_le_ice' depends on axioms: [propext, Classical.choice, Quot.sound]
 'Sturmian.two_lt_ice' depends on axioms: [propext, Classical.choice, Quot.sound]
 'Sturmian.gammaTierA_lt_gammaStar' depends on axioms: [propext, Classical.choice, Quot.sound]
@@ -135,6 +138,7 @@
 'Sturmian.A_logThreeTwo' depends on axioms: [propext, Classical.choice, Quot.sound]
 'Sturmian.irrational_logThreeTwo' depends on axioms: [propext, Classical.choice, Quot.sound]
 'Sturmian.logThreeTwo_lt_gammaTierA' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.logThreeTwo_lt_gammaStar' depends on axioms: [propext, Classical.choice, Quot.sound]
 'Sturmian.transcendental_PhiBL_logThreeTwo' depends on axioms: [propext,
  Classical.choice,
  Quot.sound,

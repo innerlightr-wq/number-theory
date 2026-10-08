@@ -7,7 +7,10 @@ and the paper's citation key.
 
 STAGE 1 declares exactly one axiom: Theorem R.
 STAGE 2 added two more; STAGE 3 turned one into a theorem and narrowed the other;
-STAGE 4 removed the numerator-bound axiom entirely.  **Two axioms remain.**
+STAGE 4 removed the numerator-bound axiom entirely; STAGE 5 proved the
+Berthé–Holton–Zamboni floor and removed that axiom too.
+
+**ONE axiom remains: Theorem R (Ridout).**
 -/
 import Sturmian.Basic
 import Sturmian.Shadow
@@ -88,26 +91,29 @@ axiom ridout_single_prime {p : ℕ} [Fact p.Prime]
     (hlt : ∀ n, ‖ξ - (x n : ℚ_[p])‖ < (H (x n) : ℝ) ^ (-2 - ε)) :
     Transcendental ℚ ξ
 
-/-! ## Axiom BHZ — the prefix-power family of Steps 1–2
+/-! ## Axiom BHZ — REMOVED AT STAGE 5
 
-**Status: EXTERNAL PUBLISHED THEOREM (the floor) COMBINED WITH THE PAPER'S OWN STEPS 1–2
-(the extraction), NOT YET FORMALIZED.**  To be discharged in stage 3.
-
-**The external ingredient** is the paper's Proposition 2.8 (`{Floor; \cite[\S4.2]{BHZ06}}`),
-verbatim:
+**`bhz_ice_floor` no longer exists.**  It asserted the paper's Proposition 2.8
+(`{Floor; \cite[\S4.2]{BHZ06}}`), verbatim:
 
 > "For every irrational $\gamma$,
 >  $$\ice(c_\gamma)\;\ge\;1+\varphi=\varphi^{2}=\frac{3+\sqrt5}{2}=2.6180339887\ldots,$$
 >  with equality if and only if $a_k=1$ for all large $k$."
 
-together with the paper's Definition 2.5 (`\cite[\S2]{BHZ06}`) of `ice` and its remark
+The inequality is now the theorem `Sturmian.one_add_phi_le_ice` in
+`Sturmian/Floor.lean`.  (The equality clause was never asserted and is not used.)
 
-> "Because the prefix power is defined as the largest *real* such $p$, we have
->  $\lcp(\omega,W^{\infty})=p\,|W|$ *exactly*: no floor and no $O(1)$ is lost".
+**Attribution is unchanged.**  The constant `1 + φ` is Berthé–Holton–Zamboni's — Valérie
+Berthé, Charles Holton, Luca Q. Zamboni, *Initial powers of Sturmian sequences*, Acta
+Arith. **122** (2006), no. 4, 315–347, §4.2 — and **no novelty is claimed** for the Lean
+proof, which is simply a route that could be carried out inside Mathlib: Dirichlet's
+theorem, best-approximation records built from their definition (Mathlib has no
+best-approximation property for continued-fraction convergents), the gap lemma
+`s ≥ r + p` for consecutive records, and the sharp elementary inequality
+`max(x + 1, 2 + 1/x) ≥ 1 + φ`.  The source paper remained inaccessible throughout and the
+Lean proof does not depend on it; see `AXIOMS.md` §2 and §9.
 
-**REDUCED AT STAGE 4 TO THE FLOOR ALONE.**  At stage 2 this axiom asserted six clauses, at
-stage 3 three, and it now asserts only the Berthé–Holton–Zamboni floor.  Everything the
-paper's Steps 1–2 and Step 4 add is proved:
+Everything the paper's Steps 1–2 and Step 4 add was already proved at stage 4:
 
 * the extraction itself — `Sturmian.exists_prefix_power_of_lt_ice`, directly from the
   definition of `ice` as a limit superior (`Sturmian/Ice.lean`);
@@ -120,30 +126,7 @@ paper's Steps 1–2 and Step 4 add is proved:
 * `k_j ≥ 1` for large `j` — from the telescoping count `Sturmian.ones_charWord`;
 * `c_γ ≠ W_j^∞` — `Sturmian.charWord_ne_per`;
 * injectivity of `j ↦ W_j^∞` — eliminated (finite fibres).
-
-**SOURCE STATUS: NOT CHECKED — the source could not be retrieved.**  Acta Arithmetica
-**122** (2006), no. 4, 315–347 is paywalled; `doi:10.4064/aa122-4-1` returned HTTP 502 and
-the impan, EuDML and bibliotekanauki routes served unrelated documents.  So the
-paper-versus-source comparison that was done for Theorem R **could not be done here**.
-
-**AND NOTE WHAT THE PAPER ITSELF CITES.**  Proposition 2.8 is not quoted from a numbered
-theorem of `BHZ06`.  The paper says:
-
-> "This is `\cite[\S4.2]{BHZ06}`: in the sentence following the proof of their
->  Theorem~1.2 they state that `\ice(\omega)\le3` if and only if all but finitely many
->  `a_k` equal `1`, in which case `\ice(\omega)=1+\theta`, where `\theta=(1+\sqrt5)/2` is
->  the golden mean fixed on `\cite[p.~3]{BHZ06}`."
-
-So the floor is the paper's own two-line **deduction** from an unnumbered sentence in
-BHZ's §4.2, not a verbatim BHZ statement.  There is no theorem number to quote.  The two
-things a reader must check at the source are: (i) the sentence after the proof of BHZ
-Theorem 1.2, and (ii) `θ = (1+√5)/2` on BHZ p. 3.
-
-The depth is stated below as *agreement of the first `⌈e ℓ_j⌉` letters*, which is
-`lcp ≥ e ℓ_j` without naming `lcp`, and so needs no side condition.  `ice` itself is **not**
-formalized, which is exactly why this is an axiom rather than a theorem. -/
-axiom bhz_ice_floor {γ : ℝ} (hγ0 : 0 < γ) (hγ1 : γ < 1) (hirr : Irrational γ) :
-    ENNReal.ofReal (1 + phi) ≤ ice (charWord γ)
+-/
 
 /-! ## Axioms removed at stage 4
 

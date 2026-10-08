@@ -23,6 +23,7 @@ import Sturmian.Numerator
 import Sturmian.Ice
 import Sturmian.Aperiodic
 import Sturmian.Construct
+import Sturmian.Floor
 import Mathlib.Analysis.SpecialFunctions.Log.Deriv
 
 namespace Sturmian
@@ -264,8 +265,9 @@ theorem transcendental_of_prefix_family (h : IsBL Φ) {γ : ℝ}
 
 /-! ## The paper's Corollary 1.4, modulo stage 3 -/
 
-/-- **The paper's Corollary 1.4** for the characteristic word, assembled from the three
-axioms and everything proved in stages 1–3. -/
+/-- **The paper's Corollary 1.4** for the characteristic word.  After stage 5 the only
+external input is Ridout's theorem: the floor `ice(c_γ) ≥ 1 + φ` is
+`Sturmian.one_add_phi_le_ice`, a theorem, not an axiom. -/
 theorem transcendental_charWord (h : IsBL Φ) {γ : ℝ}
     (hγ0 : 0 < γ) (hγ1 : γ < 1) (hirr : Irrational γ) (hγs : γ < gammaStar) :
     Transcendental ℚ ((Φ (charWord γ) : ℚ_[2])) := by
@@ -283,7 +285,7 @@ theorem transcendental_charWord (h : IsBL Φ) {γ : ℝ}
   have he0 : (0 : ℝ) ≤ e := by linarith
   have hphi0 : (0 : ℝ) ≤ 1 + phi := by have := one_lt_phi; linarith
   have hlt : ENNReal.ofReal e < ice (charWord γ) := by
-    refine lt_of_lt_of_le ?_ (bhz_ice_floor hγ0 hγ1 hirr)
+    refine lt_of_lt_of_le ?_ (one_add_phi_le_ice hγ0 hγ1 hirr)
     exact (ENNReal.ofReal_lt_ofReal_iff_of_nonneg he0).mpr heφ
   choose ℓ hℓN hℓpos hagr using
     fun j : ℕ => exists_prefix_power_of_lt_ice (ω := charWord γ) he0 hlt (max j 2)
@@ -337,7 +339,7 @@ theorem transcendental_cons_true (h : IsBL Φ) {c : Word}
 
 /-! ## The unconditional statements for the constructed `Φ` -/
 
-/-- Corollary 1.4 for the constructed Bernstein–Lagarias map, modulo the three axioms. -/
+/-- Corollary 1.4 for the constructed Bernstein–Lagarias map, modulo Ridout's theorem. -/
 theorem transcendental_PhiBL_charWord {γ : ℝ}
     (hγ0 : 0 < γ) (hγ1 : γ < 1) (hirr : Irrational γ) (hγs : γ < gammaStar) :
     Transcendental ℚ ((PhiBL (charWord γ) : ℚ_[2])) :=

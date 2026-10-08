@@ -124,16 +124,18 @@ Neither Pham's nor Cassidy's note is refereed, and no comparative claim is made 
 
 Branch `lean-formalization`, directory [`lean/`](lean).  **Lean 4 + Mathlib, pinned**:
 toolchain `leanprover/lean4:v4.34.0`, Mathlib `v4.34.0` (rev `5ed2965256430c3649e86755f9576b54eca72435`);
-`lean-toolchain` and `lake-manifest.json` are committed.  3441 lines of Lean, 17 files,
+`lean-toolchain` and `lake-manifest.json` are committed.  3573 lines of Lean, 18 files,
 **no `sorry`** anywhere in the import closure of `Sturmian.lean`.
 
-> **The headline case is machine-checked on Ridout's theorem alone.**  `Φ(c_{log₃2})`,
-> `Φ(1c_{log₃2})` and `Φ(0c_{log₃2})` are transcendental over `ℚ`, depending on **one**
-> external result: Ridout's theorem in Bugeaud–Kekeç's single-prime form.  The
-> Berthé–Holton–Zamboni floor is **not** used there, because stage 5 **proves**
-> `ice(c_γ) ≥ 12/5` for every irrational `γ ∈ (0,1)` — and `A(log₃ 2) = 1`, so `e > 2` is
-> the whole requirement.  The floor axiom survives only for the slope band
-> `γ ∈ [γ_A, γ*)`, where `γ_A = 6/(5 log₂ 3) = 0.7571…` and `γ* = 0.8258…`.
+> **ONE axiom: Ridout's theorem.**  Corollary 1.4 is machine-checked for every irrational
+> `γ < γ*` depending on a single external result — Ridout's theorem in Bugeaud–Kekeç's
+> single-prime form.  The Berthé–Holton–Zamboni floor `ice(c_γ) ≥ 1+φ`, an axiom through
+> stage 4, is now the **theorem** `Sturmian.one_add_phi_le_ice`.  The constant `1+φ` is
+> Berthé–Holton–Zamboni's (Acta Arith. **122** (2006), §4.2) and **no novelty is claimed**
+> for the Lean proof: it is a formalisation of a known result along a route that fits
+> inside Mathlib (Dirichlet's theorem, best-approximation records built from their
+> definition, and the sharp inequality `max(x+1, 2+1/x) ≥ 1+φ`).  It is independent of
+> their paper only because that paper was never accessible.
 >
 > **No irrationality result is used.**  The development does **not** depend on the author's
 > Proposition 2.10 (`[DJirr, Thm 10.1, Cor 10.5]`), nor on Cassidy's irrationality result,
@@ -144,12 +146,17 @@ toolchain `leanprover/lean4:v4.34.0`, Mathlib `v4.34.0` (rev `5ed2965256430c3649
 
 ### Dependency of each main theorem
 
+**Every main theorem depends on Ridout's theorem and nothing else.**
+
 | theorem | slopes | axioms |
 |---|---|---|
+| `transcendental_PhiBL_charWord`, `..._mechanical` | `0 < γ < γ* = 0.8258…` | **Ridout only** |
 | `transcendental_PhiBL_logThreeTwo` | `γ = log₃ 2` (headline) | **Ridout only** |
-| `transcendental_PhiBL_charWord_tierA`, `..._mechanical_tierA` | `0 < γ < γ_A = 0.7571…` | **Ridout only** |
-| `transcendental_PhiBL_charWord`, `..._mechanical` | `0 < γ < γ* = 0.8258…` | Ridout **and** the BHZ floor |
-| `two_lt_ice` (`ice(c_γ) > 2`), `twelve_fifths_le_ice` | every irrational `γ ∈ (0,1)` | **none** |
+| `transcendental_PhiBL_charWord_tierA`, `..._mechanical_tierA` (the elementary route) | `0 < γ < γ_A = 0.7571…` | **Ridout only** |
+| `one_add_phi_le_ice` (`ice(c_γ) ≥ 1+φ`), `two_lt_ice`, `twelve_fifths_le_ice` | every irrational `γ ∈ (0,1)` | **none** |
+
+The `γ_A` row is subsumed by the first and is kept deliberately: it records that the
+headline case never needed the constant `1+φ` at all, only `e > 2`, because `A(log₃2) = 1`.
 
 ### What is machine-checked
 
@@ -177,17 +184,19 @@ toolchain `leanprover/lean4:v4.34.0`, Mathlib `v4.34.0` (rev `5ed2965256430c3649
 | **`Sturmian.shadow_height_bound`** | **Proposition 2.4** (the height of a shadow). **An axiom at stage 2; now depends on NO axiom** | none |
 | **`Sturmian.ice`, `exists_prefix_power_of_lt_ice`** | the paper's **Definition 2.5** (limsup of prefix powers, in `ℝ≥0∞`) and its **Steps 1–2**: from `ice(c_γ) > e`, arbitrarily long prefixes repeating to power `≥ e`. **No primitive-root replacement needed** | none |
 | **`Sturmian.charWord_ne_per`** | **`c_γ` is aperiodic** for irrational `γ` — the paper's Step-4 "impossible, `γ` being irrational", and **the only place irrationality is used** | none |
-| `Sturmian.transcendental_of_prefix_family` | **Steps 3–6** from the prefix family alone. Also derives `k_j ≥ 1`, the aperiodicity, the height bound, and the infinitude of the shadow set | Theorem R, `[DJirr 10.4]` |
-| `Sturmian.transcendental_PhiBL_charWord`, `..._mechanical` | **Corollary 1.4** for the constructed `Φ`: `Φ(c_γ)`, `Φ(1c_γ)`, `Φ(0c_γ)` transcendental for irrational `γ < γ*` | both |
+| `Sturmian.transcendental_of_prefix_family` | **Steps 3–6** from the prefix family alone. Also derives `k_j ≥ 1`, the aperiodicity, the height bound, and the infinitude of the shadow set | Theorem R |
+| `Sturmian.transcendental_PhiBL_charWord`, `..._mechanical` | **Corollary 1.4** for the constructed `Φ`: `Φ(c_γ)`, `Φ(1c_γ)`, `Φ(0c_γ)` transcendental for irrational `γ < γ*` | Theorem R |
 | **`Sturmian.per_eq_of_min`** | **the three-distance periodicity lemma**: if `q` minimises `‖jγ‖` over `1 ≤ j < Q`, the prefix of `c_γ` of length `Q+q−2` has period `q`. Proved from the two-floor form of `charWord`; no continued fractions | none |
 | **`Sturmian.gap_le`** | **the gap lemma**: three consecutive best-approximation records `p < r < s` with `‖rγ‖ < 1/4` satisfy `s ≥ r+p` (Fibonacci-type growth). Proved from record-ness alone — Mathlib has Dirichlet but **not** the best-approximation property of convergents | none |
-| **`Sturmian.twelve_fifths_le_ice`, `two_lt_ice`** | **the paper's Proposition 2.8, proved at `12/5`**: `ice(c_γ) ≥ 12/5 > 2` for every irrational `γ ∈ (0,1)` | none |
+| **`Sturmian.one_add_phi_le_max`** | the sharp elementary inequality `max(x+1, 2+1/x) ≥ 1+φ` for `x > 0`, with **equality at `x = φ`** (`max_eq_one_add_phi_at_phi`) — so this route attains the constant and cannot beat it | none |
+| **`Sturmian.one_add_phi_le_ice`** | **the paper's Proposition 2.8, PROVED**: `ice(c_γ) ≥ 1+φ` for every irrational `γ ∈ (0,1)`. Formerly the axiom `bhz_ice_floor`. Constant due to Berthé–Holton–Zamboni; **no novelty claimed** | none |
+| `Sturmian.twelve_fifths_le_ice`, `two_lt_ice` | `ice(c_γ) ≥ 12/5 > 2`; the weaker constant, all the headline slope needs | none |
 | **`Sturmian.irrational_logThreeTwo`, `A_logThreeTwo`** | `log₃ 2` is irrational (from `2^b ≠ 3^a`), and `A(log₃ 2) = 1` | none |
 | **`Sturmian.transcendental_PhiBL_logThreeTwo`** | **the headline case**: `Φ(c_{log₃2})`, `Φ(1c_{log₃2})`, `Φ(0c_{log₃2})` transcendental, **on Ridout alone** | Theorem R |
 
-`#print axioms` evidence: [`AXIOM_AUDIT.txt`](lean/AXIOM_AUDIT.txt) — **108 results audited,
-0 `sorryAx`, 96 depending on no named axiom, 12 on the two below, and nothing else.  Exactly
-three of the 108 use the BHZ floor**, all of them the general-`γ < γ*` statements.
+`#print axioms` evidence: [`AXIOM_AUDIT.txt`](lean/AXIOM_AUDIT.txt) — **115 results audited,
+0 `sorryAx`, 104 depending on no named axiom, 11 on Ridout's theorem, and nothing else.
+`bhz_ice_floor` appears nowhere in the output: the axiom no longer exists.**
 
 Every definition is audited against the paper's verbatim text, with a machine-checked sanity
 lemma, in [`Sturmian/DefinitionAudit.lean`](lean/Sturmian/DefinitionAudit.lean): `charWord`
@@ -197,25 +206,26 @@ from the recursion and from Proposition 2.2), `H`, `lcp`, `A(γ)`, `γ*` and `ic
 
 ### What is assumed
 
-**Two axioms, both in [`Sturmian/Axioms.lean`](lean/Sturmian/Axioms.lean), each with the
-paper's statement, the source, and a status label.  Full detail in
+**One axiom, in [`Sturmian/Axioms.lean`](lean/Sturmian/Axioms.lean), with the paper's
+statement, the source, and a status label.  Full detail in
 [`AXIOMS.md`](lean/AXIOMS.md).**
 
 | axiom | source | status |
 |---|---|---|
 | `ridout_single_prime` | **Theorem R** — Bugeaud–Kekeç, Bull. Austral. Math. Soc. **98** (2018), 203–211, **Thm 1.3** (the paper's `BK18`, printed ref. [7]). Checked **verbatim against the source**; hypothesis table in `AXIOMS.md` §1 shows an exact match | *external published theorem* |
-| `bhz_ice_floor` | **Prop. 2.8**, `ice(c_γ) ≥ 1+φ` — Berthé–Holton–Zamboni §4.2, Acta Arith. **122** (2006), printed ref. [4] | *external;* **SOURCE NOT CHECKED** *— inaccessible*; after stage 5 **used only for `γ ∈ [γ_A, γ*)`** |
+**On the former BHZ axiom** (detail in `AXIOMS.md` §2). It asserted Proposition 2.8,
+`ice(c_γ) ≥ 1+φ`, citing Berthé–Holton–Zamboni §4.2, Acta Arith. **122** (2006), printed
+ref. [4]. The source was never retrieved — `doi:10.4064/aa122-4-1` returns HTTP 502, the
+impan, EuDML and bibliotekanauki routes each serve an unrelated document, and no preprint
+exists on arXiv or HAL — so the statement had to be proved rather than checked. It now is
+(`Sturmian.one_add_phi_le_ice`), and **the inaccessibility no longer affects any result**:
+nothing in the development depends on the BHZ paper's text. What remains unverified is the
+*citation*, not the mathematics: the paper obtains Proposition 2.8 as its own two-line
+deduction from an *unnumbered sentence* in BHZ §4.2 (after the proof of their Theorem 1.2)
+plus `θ = (1+√5)/2` on their p. 3, and those two items are still unchecked.
 
-**On the BHZ axiom, two things worth knowing** (detail in `AXIOMS.md` §2). The source could
-not be retrieved: `doi:10.4064/aa122-4-1` returns HTTP 502, and the impan, EuDML and
-bibliotekanauki routes each serve an unrelated document. And **there is no numbered BHZ
-theorem to quote**: the paper obtains Proposition 2.8 as its own two-line deduction from an
-*unnumbered sentence* in BHZ §4.2 (the sentence after the proof of their Theorem 1.2) plus
-`θ = (1+√5)/2` on their p. 3. So this axiom currently carries the paper's *reading* of the
-source rather than the source itself; the two items a reader with access must verify are
-named in `AXIOMS.md` §2.
-
-**Not assumed, and not needed:** the existence of `Φ` (constructed); the isometry (proved);
+**Not assumed, and not needed:** the Berthé–Holton–Zamboni floor (**proved**, stage 5);
+the existence of `Φ` (constructed); the isometry (proved);
 the shadow formula (proved); the transfer identity (proved); Proposition 2.4 (proved,
 axiom-free); `[DJirr, Lemma 10.4]` (proved); balance (proved); the sharp prefix balance
 (proved); aperiodicity of `c_γ` (proved); `k_j ≥ 1` (proved); the paper's Steps 1–2
@@ -231,19 +241,22 @@ caution concerns the Koksma exponent `ω`, a different quantifier; see §4 of
 
 ### What is still NOT formalised
 
-**Nothing of the paper's own argument.**  Theorem 1.3 and Corollary 1.4 are machine-checked
-modulo external inputs that are results of other authors, and would be axioms in any
-formalisation that does not also formalise their proofs.
+**Nothing of the paper's own argument, and exactly one external result.**  Theorem 1.3 and
+Corollary 1.4 are machine-checked modulo **Ridout's theorem** and nothing else.  Ridout's
+theorem is a result of another author and would be an axiom in any formalisation that does
+not also formalise its proof.
 
-For the **headline slope** `γ = log₃ 2`, and more generally for every `γ < γ_A`, that list
-is **one item**: Ridout's theorem.  For `γ ∈ [γ_A, γ*)` the Berthé–Holton–Zamboni floor is
-still needed, and the whole remaining gap is the gap between the constant proved here,
-`12/5 = 2.4`, and the constant the axiom asserts, `1 + φ = 2.618…`.  The two bounds the
-stage-5 dichotomy balances, `max(r/p + 1, 2 + p/r)`, meet exactly at `1 + φ`, so the
-constant is reached asymptotically; `12/5` is what survives after the finite-record
-corrections `−2/p` and `−2/r` are discharged at `p ≥ 20`.  Closing that gap — carrying the
-corrections to the limit rather than discharging them at a threshold — would remove the
-axiom entirely.  **Not attempted.**
+Two things are deliberately *not* formalised:
+
+* **the equality case of Proposition 2.8** — `ice(c_γ) = 1+φ` iff the partial quotients are
+  eventually all `1`.  The axiom never asserted it and nothing uses it.  That the
+  inequality is sharp is recorded instead, as `max_eq_one_add_phi_at_phi`: the elementary
+  bound `max(x+1, 2+1/x) ≥ 1+φ` is an equality at `x = φ`, so this proof attains the
+  constant in the limit and cannot improve it.
+* **continued fractions.**  Mathlib has Dirichlet's theorem but not the
+  best-approximation property of convergents, so the records of `Sturmian/Records.lean` are
+  built from their definition.  The proofs are therefore continued-fraction-free, which is
+  a convenience of the formalisation rather than a mathematical point.
 
 The one item that is *not* closed to the same standard is the **BHZ source check**: that
 axiom is `NOT CHECKED` because the source is paywalled, and the paper's Proposition 2.8 is

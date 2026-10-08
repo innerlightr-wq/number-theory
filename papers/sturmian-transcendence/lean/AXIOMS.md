@@ -3,34 +3,36 @@
 Every axiom in this development, its exact quoted statement, source, and status.
 `Sturmian/Axioms.lean` is the only file permitted to contain `axiom`.
 
-**TWO axioms are declared; after stage 5 the headline case uses only one.**  Stage 1
-declared one; stage 2 added two; stage 3 turned one of those into a theorem and narrowed
-the other; stage 4 removed the remaining non-Ridout non-BHZ axiom entirely and reduced the
-BHZ axiom to the floor alone; **stage 5 proved a weaker floor outright**, so
-`bhz_ice_floor` is now needed only on the slope band `γ ∈ [γ_A, γ*)`.  `#print axioms`
-evidence: [`AXIOM_AUDIT.txt`](AXIOM_AUDIT.txt).
+**ONE axiom remains: Theorem R (Ridout).**  Stage 1 declared one; stage 2 added two;
+stage 3 turned one of those into a theorem and narrowed the other; stage 4 removed the
+remaining non-Ridout non-BHZ axiom entirely and reduced the BHZ axiom to the floor alone;
+stage 5 proved a weaker floor outright (Tier A) and then **proved the floor itself**
+(Tier B), so **`bhz_ice_floor` no longer exists**.  `#print axioms` evidence:
+[`AXIOM_AUDIT.txt`](AXIOM_AUDIT.txt).
 
 | | axiom | status |
 |---|---|---|
 | §1 | `ridout_single_prime` | external published theorem, **source checked verbatim** |
-| §2 | `bhz_ice_floor` | external (Berthé–Holton–Zamboni §4.2), **source NOT CHECKED — inaccessible**; after stage 5 **used only for `γ ∈ [γ_A, γ*)`** |
 
 ### Which main theorem depends on what
 
+**Every main theorem depends on `ridout_single_prime` and nothing else.**
+
 | theorem | slopes | axioms it depends on |
 |---|---|---|
+| `transcendental_charWord`, `transcendental_PhiBL_charWord`, `transcendental_PhiBL_mechanical` | `0 < γ < γ* = 0.8258…` | **`ridout_single_prime` only** |
 | `transcendental_PhiBL_logThreeTwo` (headline, `γ = log₃ 2`) | one slope | **`ridout_single_prime` only** |
-| `transcendental_charWord_tierA`, `transcendental_PhiBL_charWord_tierA`, `transcendental_PhiBL_mechanical_tierA` | `0 < γ < γ_A = 6/(5 log₂ 3) = 0.7571…` | **`ridout_single_prime` only** |
-| `transcendental_charWord`, `transcendental_PhiBL_charWord`, `transcendental_PhiBL_mechanical` | `0 < γ < γ* = 0.8258…` | `ridout_single_prime` **and** `bhz_ice_floor` |
-| `two_lt_ice`, `twelve_fifths_le_ice` (`ice(c_γ) > 2`, `ice(c_γ) ≥ 12/5`) | every irrational `γ ∈ (0,1)` | **none** |
+| `transcendental_charWord_tierA` and its two companions (the elementary route) | `0 < γ < γ_A = 6/(5 log₂ 3) = 0.7571…` | **`ridout_single_prime` only** |
+| `one_add_phi_le_ice` (`ice(c_γ) ≥ 1+φ`), `two_lt_ice`, `twelve_fifths_le_ice` | every irrational `γ ∈ (0,1)` | **none** |
 
-`γ_A < γ*` is proved (`Sturmian.gammaTierA_lt_gammaStar`); the whole gap between the two
-thresholds is the gap between the proved exponent `12/5 = 2.4` and the axiom's
-`1 + φ = 2.618…`.  The headline slope is covered because `A(log₃ 2) = 1`
-(`Sturmian.A_logThreeTwo`), so it needs only `e > 2`.
+The Tier-A theorems at `γ_A` are now subsumed by the general ones, and are retained
+deliberately: they record that the headline case never needed the constant `1 + φ` at all,
+only `e > 2`, because `A(log₃ 2) = 1` (`Sturmian.A_logThreeTwo`).  `γ_A < γ*` is proved
+(`Sturmian.gammaTierA_lt_gammaStar`).
 
-**NO IRRATIONALITY RESULT IS USED.**  Neither axiom is an irrationality statement, and the
-development depends on **none** of the three irrationality results in the literature — not
+**NO IRRATIONALITY RESULT IS USED.**  The one remaining axiom is not an irrationality
+statement, and the development depends on **none** of the three irrationality results in
+the literature — not
 the author's Proposition 2.10 (`[DJirr, Theorem 10.1 and Corollary 10.5]`), not Cassidy's,
 not Pham's.  Irrationality enters only in proved form: the 2-adic Liouville inequality
 `Sturmian.liouville_two_adic`, whence `Sturmian.ne_rat_of_ApproxExp` (no rational with odd
@@ -43,12 +45,13 @@ See §5.
 (`Sturmian.shadow_height_bound`) now depends on **no** axiom; and `ice` plus the paper's
 Steps 1–2 are formalised, so the BHZ axiom is the floor alone.
 
-**Stage-5 summary.**  `ice(c_γ) ≥ 12/5` is **proved**, for every irrational `γ ∈ (0,1)`,
-with no continued-fraction theory and no appeal to BHZ — see §9.  This is strictly weaker
-than the axiom's `1 + φ = 2.618…`, but strong enough for every slope with `2A(γ) < 12/5`,
-and in particular for the headline slope `γ = log₃ 2`, whose irrationality is also proved
-here (`Sturmian.irrational_logThreeTwo`; Mathlib has no irrationality statement for
-logarithms).
+**Stage-5 summary.**  `ice(c_γ) ≥ 1 + φ` is **proved**, for every irrational `γ ∈ (0,1)`,
+with no continued-fraction theory and no appeal to the Berthé–Holton–Zamboni paper — see
+§9.  The axiom `bhz_ice_floor` was therefore deleted. The constant `1 + φ` is
+Berthé–Holton–Zamboni's and **no novelty is claimed** for the Lean proof; it is a
+formalisation of a known result by a route that fits inside Mathlib.  The irrationality of
+the headline slope `log₃ 2` is also proved here (`Sturmian.irrational_logThreeTwo`;
+Mathlib has no irrationality statement for logarithms).
 
 ---
 
@@ -113,11 +116,14 @@ rather than elided:
 
 ---
 
-## 2. `Sturmian.bhz_ice_floor` — the Berthé–Holton–Zamboni floor
+## 2. `Sturmian.bhz_ice_floor` — REMOVED at stage 5 (Tier B)
 
-**Status: EXTERNAL.  SOURCE NOT CHECKED.**  Expected to remain an axiom.
+**Status: PROVED.  The axiom has been deleted from `Sturmian/Axioms.lean`.**  Its content is
+now the theorem `Sturmian.one_add_phi_le_ice` in `Sturmian/Floor.lean`:
 
-**Lean:** `ENNReal.ofReal (1 + phi) ≤ ice (charWord γ)` for irrational `γ ∈ (0,1)`.
+```
+ENNReal.ofReal (1 + phi) ≤ ice (charWord γ)      for irrational γ ∈ (0,1)
+```
 
 **As the paper states it** (Proposition 2.8, `{Floor; \cite[\S4.2]{BHZ06}}`), verbatim:
 
@@ -125,39 +131,31 @@ rather than elided:
 > $$\ice(c_\gamma)\;\ge\;1+\varphi=\varphi^{2}=\frac{3+\sqrt5}{2}=2.6180339887\ldots,$$
 > with equality if and only if $a_k=1$ for all large $k$.
 
-(The Lean axiom asserts only the inequality; the equality clause is not used.)
+The Lean theorem is the inequality.  **The equality clause is not formalised** and is not
+used anywhere.
 
-### Source comparison — COULD NOT BE DONE, and there is no theorem number to quote
+### Attribution, stated plainly
 
-The brief asked for a paper-versus-source comparison like the one done for Theorem R, and
-to stop if they differ.  **Neither was possible, for two independent reasons.**
+The constant `1 + φ` is due to **Valérie Berthé, Charles Holton and Luca Q. Zamboni**,
+*Initial powers of Sturmian sequences*, Acta Arithmetica **122** (2006), no. 4, 315–347,
+§4.2 — the paper's printed reference **[4]**.  **No novelty is claimed for the Lean proof.**
+It is a formalisation of a known result along a route that fits inside Mathlib, not a new
+theorem, and it does not improve the constant: `1 + φ` is exactly what the sharp elementary
+inequality `max(x + 1, 2 + 1/x) ≥ 1 + φ` gives, and that inequality is an equality at
+`x = φ` (`Sturmian.max_eq_one_add_phi_at_phi`), so this route cannot do better.
 
-**(i) The source is inaccessible.**  Valérie Berthé, Charles Holton and Luca Q. Zamboni,
-*Initial powers of Sturmian sequences*, Acta Arithmetica **122** (2006), no. 4, 315–347 —
-the paper's printed reference **[4]** — is paywalled.  `doi:10.4064/aa122-4-1` returned
-HTTP 502; the impan, EuDML and bibliotekanauki routes each served an unrelated document.
-So the statement is taken **exactly as the paper quotes it**, and is marked **NOT CHECKED**.
+**The proof is independent of the BHZ paper.**  That is a statement about the Lean
+development, not a judgement about the source. The source was never accessible (see §9),
+so the proof had to be built from scratch; `Sturmian/Floor.lean` and
+`Sturmian/Records.lean` cite nothing but Dirichlet's theorem, which is in Mathlib.
+Consequently the **NOT CHECKED** source status recorded through stage 4 no longer affects
+any result: nothing in the development depends on the BHZ paper's text.
 
-**(ii) There is no numbered BHZ theorem to quote.**  The paper does not cite a numbered
-result for the floor.  It says, verbatim:
+### Historical record: what the axiom asserted, and what the paper cited
 
-> "This is `\cite[\S4.2]{BHZ06}`: in the sentence following the proof of their Theorem~1.2
->  they state that `\ice(\omega)\le3` if and only if all but finitely many `a_k` equal
->  `1`, in which case `\ice(\omega)=1+\theta`, where `\theta=(1+\sqrt5)/2` is the golden
->  mean fixed on `\cite[p.~3]{BHZ06}`.  Eventually-all-ones therefore gives
->  `\ice=1+\varphi`; otherwise `\ice>3>1+\varphi`."
-
-So Proposition 2.8 is the paper's own **two-line deduction** from an *unnumbered sentence*
-in BHZ §4.2, not a verbatim BHZ statement.  **The two things a reader must verify at the
-source are:** (a) the sentence following the proof of BHZ **Theorem 1.2**, asserting
-`ice(ω) ≤ 3` iff all but finitely many `a_k` equal 1, in which case `ice(ω) = 1+θ`; and
-(b) that `θ = (1+√5)/2` on BHZ **p. 3**.  Until someone with access checks (a) and (b),
-this axiom carries the paper's reading of the source and not the source itself.
-
-### What stage 4 removed from this axiom
-
-At stage 2 it asserted **six** clauses, at stage 3 **three**, and now the floor alone.
-Everything the paper's Steps 1–2 and Step 4 add is proved:
+At stage 2 the axiom asserted **six** clauses, at stage 3 **three**, at stage 4 the floor
+alone, and at stage 5 nothing.  Everything the paper's Steps 1–2 and Step 4 add was proved
+at stage 4:
 
 * **the extraction** — `Sturmian.exists_prefix_power_of_lt_ice`, directly from the
   definition of `ice` as a limit superior (`Sturmian/Ice.lean`);
@@ -172,10 +170,24 @@ Everything the paper's Steps 1–2 and Step 4 add is proved:
 * `c_γ ≠ W_j^∞` — `Sturmian.charWord_ne_per`;
 * injectivity of `j ↦ W_j^∞` — eliminated.
 
+It is also worth keeping on record that **the paper does not cite a numbered BHZ theorem**
+for the floor.  It says, verbatim:
+
+> "This is `\cite[\S4.2]{BHZ06}`: in the sentence following the proof of their Theorem~1.2
+>  they state that `\ice(\omega)\le3` if and only if all but finitely many `a_k` equal
+>  `1`, in which case `\ice(\omega)=1+\theta`, where `\theta=(1+\sqrt5)/2` is the golden
+>  mean fixed on `\cite[p.~3]{BHZ06}`.  Eventually-all-ones therefore gives
+>  `\ice=1+\varphi`; otherwise `\ice>3>1+\varphi`."
+
+So Proposition 2.8 was the paper's own two-line **deduction** from an *unnumbered sentence*
+in BHZ §4.2.  A reader who wants to verify the paper's citation (as opposed to the
+mathematics, which is now machine-checked) must still check at the source: (a) the sentence
+following the proof of BHZ **Theorem 1.2**, and (b) that `θ = (1+√5)/2` on BHZ **p. 3**.
+
 ## 3. Axioms removed
 
-**`shadow_height_bound` (stage 2) and `cw_le_three_mul_len_mul_max` (stage 3) are both
-gone.**
+**`shadow_height_bound` (stage 2), `cw_le_three_mul_len_mul_max` (stage 3) and
+`bhz_ice_floor` (stage 5) are all gone.**  `bhz_ice_floor` is §2 above; the other two:
 
 Proposition 2.4 was an axiom at stage 2.  Stage 3 made it a theorem modulo the numerator
 bound `c_W ≤ 3ℓ max(2^ℓ,3^k)` of `[DJirr, Lemma 10.4]`.  Stage 4 formalised that bound, so
@@ -198,10 +210,11 @@ quoted verbatim at the head of that file.  Two points recorded there:
   `3^{(a−1)ℓ}2^{iℓ} ≤ (3^k)^{ℓ−i−1}(2^ℓ)^i ≤ M^{ℓ−1}`, pure integer arithmetic.  Same
   statement, same constant `3`.
 
-## 4. What stages 3 and 4 proved
+## 4. What stages 3, 4 and 5 proved
 
 | was an axiom / hypothesis at stage 2 | now | where |
 |---|---|---|
+| **the BHZ floor** `ice(c_γ) ≥ 1+φ` | **THEOREM** (stage 5) | `Sturmian.one_add_phi_le_ice` — records, the gap lemma `s ≥ r+p`, and `max(x+1,2+1/x) ≥ 1+φ`; constant due to Berthé–Holton–Zamboni, no novelty claimed |
 | **Proposition 2.4** (the height bound) | **THEOREM, axiom-free** | `Sturmian.shadow_height_bound`, from `H ≤ max(c_W,\|δ\|)`, `\|δ\| < max(2^ℓ,3^k)`, the balance bound and the logarithm bookkeeping — all proved — plus §3's numerator axiom |
 | balance, `\|k − γℓ\| < 1` ("every Sturmian word is balanced", the paper's §2.2, citing Lothaire) | **THEOREM** for prefixes | `Sturmian.abs_ones_charWord_sub_lt_one`, from the telescoping count `Sturmian.ones_charWord`: `k_ℓ(c_γ) = ⌊(ℓ+1)γ⌋` exactly |
 | `k_j ≥ 1` for large `j` (BHZ axiom clause) | **THEOREM** | inside `Sturmian.transcendental_of_prefix_family`, from `ones_charWord` and `ℓ_j → ∞` |
@@ -326,23 +339,25 @@ lemma for each.  **No mismatch was found.**  Three conventions needed an explici
 
 ---
 
-## 9. Stage 5 — the floor, proved at `12/5`
+## 9. Stage 5 — the floor, PROVED
 
-**What is proved.**  `Sturmian.twelve_fifths_le_ice`:
+**What is proved.**  `Sturmian.one_add_phi_le_ice`:
 
 ```
-ENNReal.ofReal (12 / 5) ≤ ice (charWord γ)      for every irrational γ ∈ (0,1)
+ENNReal.ofReal (1 + phi) ≤ ice (charWord γ)      for every irrational γ ∈ (0,1)
 ```
 
-and hence `Sturmian.two_lt_ice`: `2 < ice (charWord γ)`.  Both depend on **no** axiom
-beyond Lean's three.  This is the paper's Proposition 2.8 with `1 + φ = 2.618…` replaced by
-`12/5 = 2.4`.
+with `Sturmian.twelve_fifths_le_ice` and `Sturmian.two_lt_ice` (`ice(c_γ) > 2`) as
+corollaries.  All three depend on **no** axiom beyond Lean's three.  This is the paper's
+Proposition 2.8; the axiom `bhz_ice_floor` has been deleted.  Attribution and the
+no-novelty statement are in §2.
 
-**Why `2` is the number that matters.**  The chain needs an exponent `e` with `e > 2` *and*
-`e > 2A(γ)`.  For the headline slope `A(log₃ 2) = 1`, so `e > 2` is the whole requirement,
-and `12/5` clears it. The axiom is therefore not needed for the headline case at all.
+**Why `2` was the number that mattered on the way.**  The chain needs an exponent `e` with
+`e > 2` *and* `e > 2A(γ)`.  For the headline slope `A(log₃ 2) = 1`, so `e > 2` is the whole
+requirement — which is why Tier A's weaker constant `12/5` already sufficed there, before
+the full floor was available.  Both routes are kept; see §9c.
 
-### How it is proved — no continued fractions
+### 9a. How the floor is proved — no continued fractions
 
 Mathlib has Dirichlet's theorem (`Real.exists_nat_abs_mul_sub_round_le`) but **not** the
 best-approximation property of continued-fraction convergents, so the argument is built
@@ -357,7 +372,8 @@ from the definition of a *record* instead.
    positive index.  `exists_record_le` (least minimiser) and `exists_record_gt` (Dirichlet)
    give that records exist below every index and are unbounded with quality `→ 0`;
    `record_min_lt_nextRec` upgrades record-ness to the hypothesis `per_eq_of_min` wants —
-   a record minimises up to the **next** record, not merely up to itself.
+   a record minimises up to the **next** record, not merely up to itself.  `IsRecord` is
+   not decidable, so the successor is the predicate `IsNextRec`, never a function.
 3. **The sign claim.**  `off_mul_off_next_neg`: consecutive records lie on **opposite
    sides** of the nearest integer.  Otherwise `r − p` would be a strictly better index than
    `p`, forcing a record strictly between `p` and `r`.
@@ -367,22 +383,39 @@ from the definition of a *record* instead.
    the displacements add, and `‖rγ‖ < 1/4` keeps the sum away from the far integer.  If it
    falls on `p`'s side, then `p − t` is an index below `p`, so record-ness of `p` forces
    `‖tγ‖ > 2‖pγ‖ > 2‖rγ‖`, and the cancellation still leaves more than `‖rγ‖`.
-5. **The dichotomy.**  `exists_long_period`: with `x = r/p`, the record `p` repeats to power
-   `x + 1 − 2/p` and the record `r` to power `2 + 1/x − 2/r`.  Taking `x ≥ 3/2` or
-   `x < 3/2` gives `12/5` in either case once `p ≥ 20`, which `exists_record_gt` supplies.
-   Records are unbounded, so this happens arbitrarily far out.
-6. **`Sturmian/TierA.lean`** turns the prefix family into `ice ≥ 12/5` and feeds it to
-   `transcendental_of_prefix_family`.
+5. **The elementary inequality.**  `one_add_phi_le_max`: for `x > 0`,
+   `max(x + 1, 2 + 1/x) ≥ 1 + φ`.  Proof: if `x ≥ φ` the first term already exceeds
+   `1 + φ`; if `x < φ` then `1/x > 1/φ = φ − 1` (`one_div_phi`, from `φ² = φ + 1`), so the
+   second does.  It is **sharp**: `max_eq_one_add_phi_at_phi` gives equality at `x = φ`.
+6. **The quantitative form.**  `exists_long_period_eps`: with `x = r/p` for consecutive
+   records, `per_eq_of_min` gives a prefix power `x + 1 − 2/p` at `p`, and `gap_le` plus
+   `per_eq_of_min` give `2 + 1/x − 2/r` at `r`.  Both corrections are at most `2/p`, and
+   `exists_record_gt` supplies records with `p > 2/ε`, so for every `ε > 0` the power
+   `1 + φ − ε` is reached arbitrarily far out.
+7. **`Sturmian/Floor.lean` — the limsup.**  `le_prefixPower` turns agreement into a prefix
+   power (via `le_lcp_of_agree`, the converse of `eq_of_lt_lcp`);
+   `le_ice_of_lt_one_add_phi` applies `Filter.le_limsup_of_frequently_le` at each
+   `c < 1 + φ`; and `one_add_phi_le_ice` passes to the supremum, by contradiction through
+   `ENNReal.ofReal_toReal` and a midpoint.
 
-### What `12/5` costs, exactly
+### 9b. Why the constant cannot be improved along this route
 
-The same two bounds, `max(x + 1, 2 + 1/x)`, are minimised at `x = φ`, where both equal
-`1 + φ`.  So this route reaches the BHZ constant **asymptotically**; `12/5` is what survives
-after the `−2/p` and `−2/r` corrections are absorbed at a finite record `p ≥ 20`.  Removing
-the axiom entirely (Tier B) means carrying those corrections to the limit instead of
-discharging them at a fixed threshold.  **Not attempted at this stage.**
+The two bounds the dichotomy balances meet exactly at `x = φ`, where both equal `1 + φ`
+(`max_eq_one_add_phi_at_phi`).  So `1 + φ` is not an artefact of a lossy estimate — it is
+the exact value of `min_{x>0} max(x + 1, 2 + 1/x)`, and this proof attains it in the limit.
+A slope whose partial quotients are eventually all `1`, i.e. `γ` equivalent to `1/φ`,
+realises it; the paper's Proposition 2.8 records exactly that as its equality case (not
+formalised here).
 
-### Numerical check before the proof
+### 9c. The elementary route is kept
+
+`Sturmian/TierA.lean` retains the short proof at the weaker constant `12/5`: one record,
+one dichotomy, no `ε` and no limsup.  It is now subsumed by the general theorem, and is
+kept because it records how little the headline case actually needs — `γ_A = 6/(5 log₂3)`,
+`2A(γ) < 12/5`, and `A(log₃ 2) = 1`.  It also contains `irrational_logThreeTwo`, proved
+from `2^b ≠ 3^a` because Mathlib has no irrationality statement for logarithms.
+
+### 9d. Numerical check before the proof
 
 The identity the proof rests on, `L(q_n) = q_{n+1} + q_n − 2` for the length of the longest
 `q_n`-periodic prefix, was checked first: exact on all named slopes and on 386 of 400 random
@@ -390,10 +423,10 @@ irrationals. The 14 exceptions are all at the terminal convergent of an exact ra
 where the word is genuinely periodic forever and `L` is capped by the computed length — i.e.
 outside the irrationality hypothesis. Smallest maximal prefix power over all 386 usable
 slopes: `4.371981`. The tight case is `γ = 1/φ` (all partial quotients `1`), approaching
-`1 + φ = 2.618034` from below — consistent with `12/5` being provable and `1 + φ` not being
-attained at any finite record.
+`1 + φ = 2.618034` from below — which is exactly the sharpness recorded in §9b, and is why
+`12/5` is provable at a fixed finite record while `1 + φ` needs the `ε`-argument.
 
-### Stage-5 BHZ source search — still NOT CHECKED
+### 9e. BHZ source search — still NOT CHECKED, and now immaterial
 
 Three further attempts were made to reach Berthé–Holton–Zamboni, *Initial powers of Sturmian
 sequences*, Acta Arith. **122** (2006), 315–347, beyond the stage-4 attempts recorded in §2:
@@ -404,6 +437,7 @@ sequences*, Acta Arith. **122** (2006), 315–347, beyond the stage-4 attempts r
 | arXiv **1510.00279** followed as a secondary source | cites BHZ but does not restate the §4.2 sentence |
 | arXiv **2103.08351** followed as a secondary source | likewise |
 
-So the axiom's text is still the paper's quotation of the source and **not** the source
-itself, and the two things a reader must verify at the source are unchanged — see §2.  This
-is now of reduced consequence: the headline case does not use the axiom.
+The source was never retrieved.  **This no longer affects any result**, because nothing in
+the development depends on the BHZ paper's text: the floor is proved from Dirichlet's
+theorem and the record machinery.  What remains unverified is the paper's *citation* —
+items (a) and (b) in §2 — not its mathematics.

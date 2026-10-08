@@ -1,13 +1,12 @@
 import Sturmian
 
 /-! `#print axioms` on every reported result of stages 1 and 2.  The permitted output is
-the three standard Lean axioms (`propext`, `Classical.choice`, `Quot.sound`) plus the three
-named axioms declared in `Sturmian/Axioms.lean`:
-`ridout_single_prime` and `bhz_ice_floor`. -/
+the three standard Lean axioms (`propext`, `Classical.choice`, `Quot.sound`) plus the ONE
+named axiom declared in `Sturmian/Axioms.lean`: `ridout_single_prime`.  `bhz_ice_floor` was
+removed at stage 5 and must not appear anywhere in this output. -/
 
--- the three declared axioms
+-- the one declared axiom
 #print axioms Sturmian.ridout_single_prime
-#print axioms Sturmian.bhz_ice_floor
 
 -- STAGE 1: Basic
 #print axioms Sturmian.H_pos
@@ -132,11 +131,20 @@ named axioms declared in `Sturmian/Axioms.lean`:
 #print axioms Sturmian.gap_le
 #print axioms Sturmian.exists_long_period
 
--- STAGE 5, TIER A: must NOT list bhz_ice_floor
+-- STAGE 5, TIER B: the floor itself, now a THEOREM (must depend on NO named axiom)
+#print axioms Sturmian.phi_sq
+#print axioms Sturmian.one_div_phi
+#print axioms Sturmian.one_add_phi_le_max
+#print axioms Sturmian.max_eq_one_add_phi_at_phi
+#print axioms Sturmian.exists_long_period_eps
 #print axioms Sturmian.le_lcp_of_agree
 #print axioms Sturmian.le_prefixPower
+#print axioms Sturmian.le_ice_of_lt_one_add_phi
+#print axioms Sturmian.one_add_phi_le_ice
 #print axioms Sturmian.twelve_fifths_le_ice
 #print axioms Sturmian.two_lt_ice
+
+-- STAGE 5, TIER A: the elementary route
 #print axioms Sturmian.gammaTierA_lt_gammaStar
 #print axioms Sturmian.two_A_lt_twelve_fifths
 #print axioms Sturmian.transcendental_charWord_tierA
@@ -147,4 +155,5 @@ named axioms declared in `Sturmian/Axioms.lean`:
 #print axioms Sturmian.A_logThreeTwo
 #print axioms Sturmian.irrational_logThreeTwo
 #print axioms Sturmian.logThreeTwo_lt_gammaTierA
+#print axioms Sturmian.logThreeTwo_lt_gammaStar
 #print axioms Sturmian.transcendental_PhiBL_logThreeTwo

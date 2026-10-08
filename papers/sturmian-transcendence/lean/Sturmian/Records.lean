@@ -12,6 +12,7 @@ record below `r + p`.  Equivalently, records grow at least like Fibonacci, which
 makes `limsup r_{i+1}/r_i ≥ 3/2` and hence `ice(c_γ) ≥ 5/2 > 2`.
 -/
 import Sturmian.Rotation
+import Sturmian.Skeleton
 import Mathlib.NumberTheory.DiophantineApproximation.Basic
 
 namespace Sturmian
@@ -355,47 +356,122 @@ theorem gap_le {γ : ℝ} (hirr : Irrational γ) {p r s : ℕ} (hp : IsRecord γ
   rw [show r + (s - r) = s by omega] at hworse
   exact absurd (hsrec.lt (le_trans hp.1 (le_of_lt hpr)) hrs) (not_lt.mpr (le_of_lt hworse))
 
-/-! ## Tier A: a prefix power above `12/5`
+/-! ## The golden ratio, and the elementary inequality behind the floor -/
 
-Combining the gap lemma with `per_eq_of_min` at two consecutive records gives a uniform
-prefix power `12/5 = 2.4`.  The dichotomy is the `max(r/p, 2 + p/r)` one: if `r/p ≥ 3/2`
-the record `p` already repeats to power `5/2 - 2/p`, and otherwise the record `r` repeats to
-power `2 + p/r - 2/r > 8/3 - 2/r`.
+/-- `φ² = φ + 1`. -/
+lemma phi_sq : phi ^ 2 = phi + 1 := by
+  rw [phi]
+  linear_combination (1 / 4 : ℝ) * Real.sq_sqrt (show (0 : ℝ) ≤ 5 by norm_num)
 
-(Pushing the same two inequalities to their common value gives `1 + φ = 2.618…`, the
-Berthé–Holton–Zamboni floor; `12/5` is all the headline case needs and is what is proved
-here.) -/
+lemma phi_pos : 0 < phi := lt_trans zero_lt_one one_lt_phi
 
-/-- **Tier A.**  Arbitrarily far out, `c_γ` begins with a `12/5`-th power of its own prefix. -/
-theorem exists_long_period {γ : ℝ} (hirr : Irrational γ) (N : ℕ) :
-    ∃ q L : ℕ, N ≤ q ∧ 2 ≤ q ∧ (12 / 5 : ℝ) * (q : ℝ) ≤ (L : ℝ) ∧
+/-- `1/φ = φ − 1`. -/
+lemma one_div_phi : 1 / phi = phi - 1 := by
+  rw [div_eq_iff (ne_of_gt phi_pos)]
+  linear_combination -phi_sq
+
+/-- **The elementary inequality behind the floor.**  For every `x > 0`,
+`max(x + 1, 2 + 1/x) ≥ 1 + φ`, with equality exactly at `x = φ`.
+
+The two arguments of the `max` are the prefix powers available at two consecutive records
+whose ratio is `x = r/p`; see `exists_long_period_eps`, which is this inequality with the
+finite-record corrections carried along. -/
+theorem one_add_phi_le_max {x : ℝ} (hx : 0 < x) : 1 + phi ≤ max (x + 1) (2 + 1 / x) := by
+  by_cases h : phi ≤ x
+  · refine le_trans ?_ (le_max_left (x + 1) (2 + 1 / x))
+    linarith
+  · push_neg at h
+    refine le_trans ?_ (le_max_right (x + 1) (2 + 1 / x))
+    have hinv : phi - 1 < 1 / x := by
+      rw [lt_div_iff₀ hx]
+      nlinarith [phi_sq, mul_pos (sub_pos.mpr one_lt_phi) (sub_pos.mpr h)]
+    linarith
+
+/-- Equality at `x = φ`: the inequality above is sharp, so no choice of split point can do
+better than `1 + φ`. -/
+lemma max_eq_one_add_phi_at_phi : max (phi + 1) (2 + 1 / phi) = 1 + phi := by
+  rw [one_div_phi, max_eq_left (by linarith)]; ring
+
+/-! ## The prefix power at two consecutive records
+
+Combining the gap lemma with `per_eq_of_min` at two consecutive records `p < r` gives, with
+`x = r/p`, a prefix power `x + 1 − 2/p` at `p` and a prefix power `2 + 1/x − 2/r` at `r`.
+By `one_add_phi_le_max` the larger of the two leading terms is at least `1 + φ`; the
+corrections are both at most `2/p`, and `exists_record_gt` supplies records with `p`
+arbitrarily large, so for every `ε > 0` the power `1 + φ − ε` is reached arbitrarily far
+out.
+
+The constant `1 + φ` is Berthé–Holton–Zamboni's (Acta Arith. **122** (2006), §4.2, the
+paper's Proposition 2.8).  The proof below is independent of their paper — it uses only
+Dirichlet's theorem and the record machinery above — and no novelty is claimed for the
+result. -/
+
+/-- **The floor, in prefix-power form.**  For every `ε > 0` and every `N`, there is a length
+`q ≥ N` whose prefix repeats in `c_γ` to power at least `1 + φ − ε`. -/
+theorem exists_long_period_eps {γ : ℝ} (hirr : Irrational γ) (N : ℕ) {ε : ℝ} (hε : 0 < ε) :
+    ∃ q L : ℕ, N ≤ q ∧ 2 ≤ q ∧ (1 + phi - ε) * (q : ℝ) ≤ (L : ℝ) ∧
       ∀ m : ℕ, m < L → charWord γ m = per q (charWord γ) m := by
   obtain ⟨p, hpN, hprec, hpsmall⟩ :=
-    exists_record_gt hirr (max N 20) (ε := 1 / 4) (by norm_num)
+    exists_record_gt hirr (max N (max 2 ⌈2 / ε⌉₊)) (ε := 1 / 4) (by norm_num)
   obtain ⟨r, hnext⟩ := exists_isNextRec hirr p
   obtain ⟨s, hnext2⟩ := exists_isNextRec hirr r
   have hpr : p < r := hnext.1
   have hrrec : IsRecord γ r := hnext.2.1
-  have hrs : r < s := hnext2.1
-  have hp20 : 20 ≤ p := by omega
+  have hp2 : 2 ≤ p := by omega
   have hpN' : N ≤ p := by omega
   have hrsmall : nrm γ r < 1 / 4 := lt_trans (hrrec.lt hprec.1 hpr) hpsmall
   have hgap : r + p ≤ s := gap_le hirr hprec hnext hnext2 hrsmall
-  by_cases hdich : 3 * p ≤ 2 * r
-  -- the record `p` repeats to power `(r + p - 2)/p ≥ 5/2 - 2/p ≥ 12/5`
-  · refine ⟨p, r + p - 2, hpN', by omega, ?_, ?_⟩
-    · have hnat : 12 * p ≤ 5 * (r + p - 2) := by omega
-      have : (12 : ℝ) * (p : ℝ) ≤ 5 * ((r + p - 2 : ℕ) : ℝ) := by exact_mod_cast hnat
-      linarith
+  -- `p` is large enough that the corrections `2/p` and `2/r` are each below `ε`
+  have hceil : ⌈2 / ε⌉₊ < p := by omega
+  have hεp : 2 ≤ ε * (p : ℝ) := by
+    have h1 : (2 : ℝ) / ε ≤ (p : ℝ) :=
+      le_trans (Nat.le_ceil _) (by exact_mod_cast le_of_lt hceil)
+    rw [div_le_iff₀ hε] at h1
+    linarith
+  have hεr : 2 ≤ ε * (r : ℝ) := by
+    have : (p : ℝ) ≤ (r : ℝ) := by exact_mod_cast le_of_lt hpr
+    nlinarith [hεp, hε]
+  have hppos : (0 : ℝ) < (p : ℝ) := by positivity
+  by_cases hdich : phi * (p : ℝ) ≤ (r : ℝ)
+  -- `r/p ≥ φ`: the record `p` already repeats to power `φ + 1 − 2/p`
+  · refine ⟨p, r + p - 2, hpN', hp2, ?_, ?_⟩
+    · have hcast : (((r + p - 2 : ℕ)) : ℝ) = (r : ℝ) + (p : ℝ) - 2 := by
+        rw [Nat.cast_sub (by omega : 2 ≤ r + p)]; push_cast; ring
+      rw [hcast]; nlinarith [hdich, hεp]
     · exact per_eq_of_min hirr hprec.1 (by omega) (record_min_lt_nextRec hprec hnext)
-  -- otherwise the record `r` repeats to power `(s + r - 2)/r ≥ 8/3 - 2/r ≥ 12/5`
+  -- `r/p < φ`, i.e. `p > r/φ = r(φ−1)`: the record `r` repeats to power `2 + 1/x − 2/r`
   · push_neg at hdich
+    have hpgt : (r : ℝ) * (phi - 1) < (p : ℝ) := by
+      have h1 : (r : ℝ) / phi < (p : ℝ) := by
+        rw [div_lt_iff₀ phi_pos]; linarith [hdich]
+      have h2 : (r : ℝ) / phi = (r : ℝ) * (phi - 1) := by
+        rw [← one_div_phi]; ring
+      linarith [h1, h2 ▸ h1]
     refine ⟨r, 2 * r + p - 2, by omega, by omega, ?_, ?_⟩
-    · have hnat : 12 * r ≤ 5 * (2 * r + p - 2) := by omega
-      have : (12 : ℝ) * (r : ℝ) ≤ 5 * ((2 * r + p - 2 : ℕ) : ℝ) := by exact_mod_cast hnat
-      linarith
+    · have hcast : (((2 * r + p - 2 : ℕ)) : ℝ) = 2 * (r : ℝ) + (p : ℝ) - 2 := by
+        rw [Nat.cast_sub (by omega : 2 ≤ 2 * r + p)]; push_cast; ring
+      rw [hcast]; nlinarith [hpgt, hεr]
     · intro m hm
       exact per_eq_of_min hirr hrrec.1 (by omega) (record_min_lt_nextRec hrrec hnext2) m
         (by omega)
+
+/-- `φ > 8/5`: enough to place `12/5` strictly below `1 + φ`. -/
+lemma eight_fifths_lt_phi_aux : (8 : ℝ) / 5 < phi := by
+  have h5 : Real.sqrt 5 ^ 2 = 5 := Real.sq_sqrt (by norm_num)
+  have hnn : (0 : ℝ) ≤ Real.sqrt 5 := Real.sqrt_nonneg 5
+  have h : (11 : ℝ) / 5 < Real.sqrt 5 := by nlinarith [h5, hnn]
+  rw [phi]; linarith
+
+/-- The concrete instance used for the elementary route: a prefix power of `12/5 = 2.4`,
+which is all the headline slope `γ = log₃ 2` needs.  Immediate from
+`exists_long_period_eps` at `ε = 1 + φ − 12/5`. -/
+theorem exists_long_period {γ : ℝ} (hirr : Irrational γ) (N : ℕ) :
+    ∃ q L : ℕ, N ≤ q ∧ 2 ≤ q ∧ (12 / 5 : ℝ) * (q : ℝ) ≤ (L : ℝ) ∧
+      ∀ m : ℕ, m < L → charWord γ m = per q (charWord γ) m := by
+  have hpos : (0 : ℝ) < 1 + phi - 12 / 5 := by
+    linarith [eight_fifths_lt_phi_aux]
+  obtain ⟨q, L, h1, h2, h3, h4⟩ := exists_long_period_eps hirr N hpos
+  exact ⟨q, L, h1, h2, by linarith [h3], h4⟩
+
 
 end Sturmian
