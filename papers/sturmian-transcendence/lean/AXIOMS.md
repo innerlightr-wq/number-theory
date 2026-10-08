@@ -3,7 +3,8 @@
 Every axiom in this development, its exact quoted statement, source, and status.
 `Sturmian/Axioms.lean` is the only file permitted to contain `axiom`.
 
-**Stage 1 declares exactly one axiom.**
+**Stage 1 declares exactly one axiom; stage 2 adds exactly two more.**  All three are
+listed below, with the `#print axioms` evidence in [`AXIOM_AUDIT.txt`](AXIOM_AUDIT.txt).
 
 ---
 
@@ -68,29 +69,84 @@ rather than elided:
 
 ---
 
-## 2. Axioms declared but NOT YET NEEDED at stage 1
+## 2. `Sturmian.bhz_prefix_family` — the prefix-power family of Steps 1–2
 
-**None.**  The brief anticipated declaring BHZ (`ice(c_γ) ≥ 1+φ`, paper Prop 2.8) and the
-height bound (paper Prop 2.4) as labelled axioms.  Stage 1 does not reach the point where
-either is consumed: its results are the abstract approximation lemma, the Liouville
-inequality, the combination, the Corollary 1.4 arithmetic, and the pointwise exponent
-bookkeeping — none of which mentions `ice` or a shadow height.  **They are therefore not
-declared**, so that `#print axioms` cannot list an axiom that no reported theorem uses.
-They will be added in stage 2/3 when first consumed, with the labels the brief specifies:
+**Status: EXTERNAL PUBLISHED THEOREM (the floor) COMBINED WITH THE PAPER'S OWN STEPS 1–2
+(the extraction), NOT YET FORMALIZED.**  Added at stage 2; to be discharged in stage 3.
 
-- **BHZ** — `ice(c_γ) ≥ 1 + φ`, paper Prop 2.8, `\cite[\S4.2]{BHZ06}`
-  (Berthé–Holton–Zamboni, *Initial powers of Sturmian sequences*, Acta Arith. **122**
-  (2006), 315–347) — status: *external published theorem*.
-- **Height bound** — paper Prop 2.4, in the exact form
-  `log₂ H(R_j) < A(γ)·ℓ_j + log₂(3ℓ_j) + log₂ 3` — status: *PROVED IN THE PAPER, NOT YET
-  FORMALIZED — to be replaced by a proof in stage 3*.
-- **Prop 2.10** (irrationality, `\cite[Theorem 10.1 and Corollary 10.5]{DJirr}`) —
-  status: *author's prior result, unrefereed*.  **Stage 1 shows this is not needed for the
-  skeleton**; see §3.
+**Paper's citation key:** `BHZ06`, used as `\cite[\S4.2]{BHZ06}`.
 
----
+**The external ingredient** is the paper's Proposition 2.8, verbatim:
 
-## 3. Why the paper's Proposition 2.10 is not an axiom here
+> `\begin{proposition}[{Floor; \cite[\S4.2]{BHZ06}}]`
+> For every irrational $\gamma$,
+> $$\ice(c_\gamma)\;\ge\;1+\varphi=\varphi^{2}=\frac{3+\sqrt5}{2}=2.6180339887\ldots,$$
+> with equality if and only if $a_k=1$ for all large $k$.
+
+(Source: Berthé, Holton and Zamboni, *Initial powers of Sturmian sequences*, Acta Arith.
+**122** (2006), no. 4, 315–347 — the paper's printed reference **[4]**.  **NOT CHECKED**
+directly: the source was not retrieved, and the statement is taken as the paper quotes it.)
+
+together with the paper's Definition 2.5 (`\cite[\S2]{BHZ06}`) and its remark
+
+> "Because the prefix power is defined as the largest *real* such $p$, we have
+>  $\lcp(\omega,W^{\infty})=p\,|W|$ *exactly*: no floor and no $O(1)$ is lost in passing
+>  between $\ice$ and approximation depth."
+
+**The paper's own part** is Step 1 ("fix a real `e` with `max(2A(γ),2) < e < ice(c_γ)`") and
+Step 2 ("choose an infinite sequence `W_1, W_2, …` of **primitive** prefixes of `c_γ` with
+`ℓ_j := |W_j| → ∞`, `ℓ_j ≥ 2`, and `lcp(c_γ, W_j^∞) ≥ e ℓ_j`"), plus Step 4's observations
+that `k_j ≥ 1` for large `ℓ_j` and that the shadows are pairwise distinct and distinct from
+the target.
+
+**Deviation recorded.**  `ice` is **not** formalized, which is precisely why this is an
+axiom and not a theorem.  The depth is stated as *agreement of the first `⌈eℓ_j⌉ ` letters*
+— `∀ n, (n : ℝ) < e * ℓ j → c_γ n = (W j)^∞ n` — which is `lcp ≥ e ℓ_j` without naming
+`lcp`, and therefore carries no side condition.  `Sturmian.transcendental_of_prefix_family`
+derives `e ℓ_j ≤ lcp` from it (`hdepth`), so nothing is lost.
+
+## 3. `Sturmian.shadow_height_bound` — the height of a shadow (Prop. 2.4)
+
+**Status: PROVED IN THE PAPER, NOT YET FORMALIZED — to be replaced by a proof in stage 3.**
+
+The paper's Proposition 2.4, verbatim:
+
+> `\begin{proposition}[{Height of a shadow; \cite[Lemma 10.4]{DJirr}, resting on
+> \cite[Lemma 43]{LS21}}]`
+> Let $W$ be a conjugate of a standard word, $|W|=\ell$, with $k\ge1$ ones, and suppose
+> $W$ is a factor of a Sturmian word of slope $\gamma$. Then
+> $0<c_W\le3\ell\max(2^{\ell},3^{k})$ and
+> $$\log_2 H\bigl(\PH(W^{\infty})\bigr)\;<\;\Av\,\ell+\log_2(3\ell)+\log_2 3 .$$
+
+The paper gives a four-line proof of it from `\cite[Lemma 10.4]{DJirr}` (the author's prior
+work, which supplies `c_W ≤ 3ℓ max(2^ℓ,3^k)`) and balance.  It is **proved in the paper**;
+it is an axiom here only because stage 3 has not been done.
+
+**Deviations recorded.**  (i) The two hypotheses "conjugate of a standard word" and "factor
+of a Sturmian word of slope `γ`" are expressed by the formalizable facts the paper itself
+uses to obtain them: `|W| ≥ 2`, `k ≥ 1`, and `c_γ` **begins in `W²`** — whence `W` is a
+conjugate of a standard word by the paper's Proposition 2.3 (`\cite[Proposition 3.2]{BHZ06}`)
+and a factor of `c_γ`.  (ii) `0 < c_W` is **not** taken on faith: it is proved, as
+`Sturmian.cw_pos`.  (iii) `H` and `A(γ)` are the paper's own normalisations
+(`Sturmian.H`, `Sturmian.A`); `log₂` is `Real.logb 2`.
+
+## 3a. Axioms the brief anticipated that turned out NOT to be needed
+
+**`Φ`'s existence is NOT an axiom.**  The brief allowed falling back to an axiom for the
+Bernstein–Lagarias map "only if blocked".  It was not needed: `Sturmian/Construct.lean`
+**constructs** `Sturmian.PhiBL` as the `2`-adic limit of `−c_m(v)·3^(−k_m(v))` — which is
+the paper's own eq. (3) solved for `Φ(v)` — and `Sturmian.isBL_PhiBL` proves it satisfies
+the recursion.  So the interface `Sturmian.IsBL` is inhabited unconditionally.
+
+**The isometry (Prop. 2.1) is NOT an axiom.**  The paper *cites* it (`\cite{BL96}`); per the
+brief it is proved here anyway, `Sturmian.IsBL.isometry`, by induction on the `lcp` from
+`IsBL` alone.  Likewise `Sturmian.IsBL.injective`, the periodic-shadow formula
+`Sturmian.shadow_formula` (Prop. 2.2) with its odd denominator and `2^ℓ ≠ 3^k`, and the
+transfer identity `Sturmian.IsBL.transfer` (eq. 12).
+
+**Proposition 2.10 (irrationality) is NOT an axiom** — see §4.
+
+## 4. Why the paper's Proposition 2.10 is not an axiom here
 
 The paper, §2.4, immediately after Theorem R:
 
@@ -133,7 +189,7 @@ correct caution.
 
 ---
 
-## 4. Erratum found while checking Axiom R
+## 5. Erratum found while checking Axiom R
 
 `paper/refs.bib` gives, for `BK18`:
 
@@ -152,7 +208,7 @@ Author, journal, volume, number and page range in `refs.bib` are all **correct**
 DOI string is wrong.  Since the paper is deposited (concept DOI 10.5281/zenodo.23210794),
 this is an erratum for the author to decide about; **no file outside `lean/` was changed.**
 
-## 5. A second, separate discrepancy — in the repository README, not the paper
+## 6. A second, separate discrepancy — in the repository README, not the paper
 
 `papers/sturmian-transcendence/README.md`, under "Related work and credit", says:
 

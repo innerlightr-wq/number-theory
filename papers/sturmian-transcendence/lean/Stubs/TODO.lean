@@ -1,41 +1,48 @@
 /-
-# TODO — stages 2 and 3
+# TODO — stage 3
 
 **This file is NOT imported by `Sturmian.lean` and nothing reported as proved depends on
-it.**  It records the shape of the statements the later stages must supply, so that the
-stage-1 interfaces are visible.  Everything here is `sorry`.
+it.**  Everything here is `sorry`.
 
-STAGE 2 (the 2-adic core): Φ on infinite binary words; the Bernstein–Lagarias isometry
-(paper Prop 2.1); the periodic-shadow formula (paper Prop 2.2); the transfer identity
-(paper eq. (12)); and the fact that the periodic shadows are distinct rationals with odd
-denominators, which is what `Sturmian.transcendental_of_approxExp` consumes.
+STAGES 1 AND 2 ARE DONE.  In particular the following are **no longer** stubs and have
+moved into the main development as PROVED results:
 
-STAGE 3 (deferred, DO NOT START): the height bound (paper Prop 2.4), the Sturmian
-combinatorics, and `ice(c_γ) ≥ 1 + φ` (paper Prop 2.8).
+* `Φ` itself — constructed, `Sturmian.PhiBL` / `Sturmian.isBL_PhiBL`;
+* the Bernstein–Lagarias isometry (Prop. 2.1) — `Sturmian.IsBL.isometry`;
+* the periodic-shadow formula (Prop. 2.2) — `Sturmian.shadow_formula`;
+* the transfer identity (eq. 12) — `Sturmian.IsBL.transfer`.
+
+STAGE 3 remains: discharge the two stage-2 axioms of `Sturmian/Axioms.lean`.
 -/
 import Sturmian
 
 namespace Sturmian.Stubs
 
-/-- STAGE 2.1 — `Φ` on infinite binary words, valued in `ℤ_[2]` (paper §1.1, eq. (1)–(2)). -/
-def Phi : (ℕ → Fin 2) → ℤ_[2] := sorry
+/-- STAGE 3 — the initial critical exponent of Definition 2.5: the prefix power of `W` in
+`ω` is `lcp(ω, W^∞)/|W|`, and `ice ω` is the limsup of the prefix powers of the prefixes
+`ω[0,n)`.  Needed to state the paper's Theorem 1.3 criterion `ice(c_γ) > 2A(γ)` directly,
+rather than through `Sturmian.bhz_prefix_family`. -/
+noncomputable def ice : Word → ℝ := sorry
 
-/-- STAGE 2.2 — the Bernstein–Lagarias isometry (paper Prop 2.1):
-`v₂(Φ(v) − Φ(w)) = lcp(v, w)`. -/
-theorem bernstein_lagarias_isometry : True := sorry
+/-- STAGE 3 — the paper's Proposition 2.6 (`\cite[\S4.2]{BHZ06}`): the `ice` formula
+`ice(c_α) = 1 + limsup q_{k+1}/q_k`. -/
+theorem ice_formula : True := sorry
 
-/-- STAGE 2.3 — the periodic-shadow formula (paper Prop 2.2): `Φ(W^∞)` is rational with
-denominator `2^ℓ − 3^k`. -/
-theorem periodic_shadow : True := sorry
+/-- STAGE 3 — the paper's Proposition 2.8 (`\cite[\S4.2]{BHZ06}`): `ice(c_γ) ≥ 1 + φ`.
+Discharging this plus Steps 1–2 replaces `Sturmian.bhz_prefix_family`. -/
+theorem ice_floor : True := sorry
 
-/-- STAGE 2.4 — the transfer identity (paper eq. (12)):
-`2Φ(c) = 3Φ(1c) + 1 = Φ(0c)`. -/
-theorem transfer_identity : True := sorry
+/-- STAGE 3 — the paper's Proposition 2.3 (`\cite[Proposition 3.2]{BHZ06}`): a Sturmian
+sequence beginning in `W^r`, `r ≥ 2`, `|W| ≥ 2`, `W` primitive, has `W` a conjugate of a
+standard word, hence `W^∞` balanced. -/
+theorem conjugate_of_standard : True := sorry
 
-/-- STAGE 3 — the height bound (paper Prop 2.4). -/
+/-- STAGE 3 — the paper's Proposition 2.4, the height of a shadow.  Discharging this
+replaces `Sturmian.shadow_height_bound`.  The paper proves it in four lines from
+`\cite[Lemma 10.4]{DJirr}` and balance. -/
 theorem height_bound : True := sorry
 
-/-- STAGE 3 — the initial-critical-exponent floor (paper Prop 2.8, [BHZ06]). -/
-theorem ice_floor : True := sorry
+/-- STAGE 3 — Steps 1–2: extraction of the primitive-prefix family from `ice(c_γ) > 2A(γ)`. -/
+theorem prefix_family_extraction : True := sorry
 
 end Sturmian.Stubs
