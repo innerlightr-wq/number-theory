@@ -1,0 +1,49 @@
+# AXIOM_AUDIT.txt
+
+Generated 2026-10-08 00:41:40 UTC by:
+    lake env lean scripts/AxiomAudit.lean
+
+Project:   papers/sturmian-transcendence/lean
+Toolchain: leanprover/lean4:v4.34.0
+Mathlib:   5ed2965256430c3649e86755f9576b54eca72435  (inputRev v4.34.0)
+
+PERMITTED output: the three standard Lean axioms (propext, Classical.choice,
+Quot.sound) plus the single named axiom Sturmian.ridout_single_prime declared in
+Sturmian/Axioms.lean.  No sorryAx appears anywhere below.
+
+--------------------------------------------------------------------------------
+'Sturmian.ridout_single_prime' depends on axioms: [propext, Classical.choice, Quot.sound, Sturmian.ridout_single_prime]
+'Sturmian.H_pos' depends on axioms: [propext]
+'Sturmian.finite_setOf_H_le' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.exists_H_gt_of_infinite' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.one_div_abs_le_padicNorm_int' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.padicNorm_two_int_odd' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.liouville_two_adic' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.liouville_two_adic_real' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.subsingleton_preimage' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.strictMono_H_pick' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.two_le_H_pick' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.transcendental_of_approxExp' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound,
+ Sturmian.ridout_single_prime]
+'Sturmian.not_approxExp_of_rat' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.transcendental_of_ApproxExp' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound,
+ Sturmian.ridout_single_prime]
+'Sturmian.ne_rat_of_ApproxExp' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.one_lt_phi' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.log2three_pos' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.two_A_lt_one_add_phi' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.approx_of_depth_height' depends on axioms: [propext, Classical.choice, Quot.sound]
+--------------------------------------------------------------------------------
+
+VERDICT: PASS.
+  * sorryAx occurrences: 0
+  * named axioms other than Sturmian.ridout_single_prime: none
+  * Sturmian.ridout_single_prime is used by exactly two results:
+        Sturmian.transcendental_of_approxExp
+        Sturmian.transcendental_of_ApproxExp
+    Every other stage-1 result, including the whole Liouville chain and the
+    Corollary 1.4 arithmetic, depends on no named axiom.
