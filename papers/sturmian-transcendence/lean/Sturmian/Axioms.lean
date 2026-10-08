@@ -106,9 +106,21 @@ together with the paper's Definition 2.5 (`\cite[\S2]{BHZ06}`) of `ice` and its 
 
 **The paper's own part** is Step 1 ("fix a real `e` with `max(2A(γ),2) < e < ice(c_γ)`") and
 Step 2 ("choose an infinite sequence `W_1, W_2, …` of **primitive** prefixes of `c_γ` with
-`ℓ_j := |W_j| → ∞`, `ℓ_j ≥ 2`, and `lcp(c_γ, W_j^∞) ≥ e ℓ_j`"), plus Step 4's observations
-that `k_j ≥ 1` for large `ℓ_j` and that the shadows are pairwise distinct and distinct from
-the target.
+`ℓ_j := |W_j| → ∞`, `ℓ_j ≥ 2`, and `lcp(c_γ, W_j^∞) ≥ e ℓ_j`").
+
+**NARROWED AT STAGE 3.**  At stage 2 this axiom also asserted three further clauses of the
+paper's Step 4.  All three are now **proved** and have been removed from it:
+
+* `k_j ≥ 1` for large `j` — proved from the telescoping count
+  `Sturmian.ones_charWord` (`k_ℓ(c_γ) = ⌊(ℓ+1)γ⌋`) together with `ℓ_j → ∞`;
+* `c_γ ≠ W_j^∞` — proved as `Sturmian.charWord_ne_per`, the aperiodicity of `c_γ` for
+  irrational `γ`, which is the one place irrationality is used;
+* injectivity of `j ↦ W_j^∞` — no longer needed at all: the infinitude of the shadow set is
+  derived instead from the fact that each shadow is approached to depth `e ℓ_j → ∞`, so each
+  value is taken only finitely often (`transcendental_of_prefix_family`).
+
+What remains is only: the lengths are at least `2`, they tend to infinity, and the first
+`⌈e ℓ_j⌉` letters agree.
 
 The depth is stated below as *agreement of the first `⌈e ℓ_j⌉` letters*, which is
 `lcp ≥ e ℓ_j` without naming `lcp`, and so needs no side condition.  `ice` itself is **not**
@@ -117,36 +129,44 @@ axiom bhz_prefix_family {γ : ℝ} (hγ0 : 0 < γ) (hγ1 : γ < 1) (hirr : Irrat
     {e : ℝ} (he2 : 2 < e) (heφ : e < 1 + phi) :
     ∃ (ℓ : ℕ → ℕ) (W : ℕ → Word),
       (∀ j, 2 ≤ ℓ j) ∧
-      (∀ j, 1 ≤ ones (ℓ j) (W j)) ∧
       Filter.Tendsto (fun j => (ℓ j : ℝ)) Filter.atTop Filter.atTop ∧
-      Function.Injective (fun j => per (ℓ j) (W j)) ∧
-      (∀ j, charWord γ ≠ per (ℓ j) (W j)) ∧
       (∀ j (n : ℕ), (n : ℝ) < e * (ℓ j : ℝ) → charWord γ n = per (ℓ j) (W j) n)
 
-/-! ## Axiom 2.4 — the height of a shadow
+/-! ## Axiom DJ10.4 — the numerator bound of the paper's Proposition 2.4
 
-**Status: PROVED IN THE PAPER, NOT YET FORMALIZED — to be replaced by a proof in stage 3.**
+**Status: AUTHOR'S PRIOR RESULT, NOT YET FORMALIZED.**  Added at stage 3, where it replaced
+the coarser `shadow_height_bound` axiom of stage 2: **Proposition 2.4 is now a theorem**
+(`Sturmian.shadow_height_bound` in `Sturmian/Height.lean`), proved from the paper's own
+four-line argument plus this one input.
 
-The paper's Proposition 2.4 (`{Height of a shadow; \cite[Lemma 10.4]{DJirr}, resting on
-\cite[Lemma 43]{LS21}}`), verbatim:
+The paper's Proposition 2.4 reads
 
-> "Let $W$ be a conjugate of a standard word, $|W|=\ell$, with $k\ge1$ ones, and suppose
->  $W$ is a factor of a Sturmian word of slope $\gamma$. Then
->  $0<c_W\le3\ell\max(2^{\ell},3^{k})$ and
->  $$\log_2 H\bigl(\PH(W^{\infty})\bigr)\;<\;\Av\,\ell+\log_2(3\ell)+\log_2 3 .$$"
+> `\begin{proposition}[{Height of a shadow; \cite[Lemma 10.4]{DJirr}, resting on
+> \cite[Lemma 43]{LS21}}]`
+> Let $W$ be a conjugate of a standard word, $|W|=\ell$, with $k\ge1$ ones, and suppose
+> $W$ is a factor of a Sturmian word of slope $\gamma$. Then
+> $0<c_W\le3\ell\max(2^{\ell},3^{k})$ and
+> $$\log_2 H\bigl(\PH(W^{\infty})\bigr)\;<\;\Av\,\ell+\log_2(3\ell)+\log_2 3 .$$
 
-The two hypotheses "conjugate of a standard word" and "factor of a Sturmian word of slope
-`γ`" are expressed below by the formalizable facts the paper uses to obtain them: `W` is
-primitive of length `≥ 2` with `k ≥ 1` ones and `c_γ` **begins in `W²`**, whence `W` is a
-conjugate of a standard word by the paper's Proposition 2.3 (`\cite[Proposition 3.2]{BHZ06}`)
-and `W` is a factor of `c_γ`.  The conclusion is quoted exactly, with `H` and `A(γ)` in the
-paper's normalisations (`Sturmian.H`, `Sturmian.A`).
+and its proof identifies exactly which part is external:
 
-`0 < c_W` is **not** taken on faith: it is proved as `Sturmian.cw_pos`. -/
-axiom shadow_height_bound {γ : ℝ} (hγ0 : 0 < γ) (hγ1 : γ < 1) (ℓ : ℕ) (W : Word)
+> "and $c_W\le3\ell\max(2^{\ell},3^{k})$ by \cite[Lemma 10.4]{DJirr}, whose input is that
+>  $W^{\infty}$ is balanced, so that $|k_{i+1}(W)-(i+1)k/\ell|<1$."
+
+**That numerator bound is all this axiom asserts.**  `0 < c_W` is **proved**
+(`Sturmian.cw_pos`), the conclusion of Proposition 2.4 is **proved**
+(`Sturmian.shadow_height_bound`), and the balance bound `|k − γℓ| < 1` the proof also needs
+is **proved** for prefixes (`Sturmian.abs_ones_charWord_sub_lt_one`), by telescoping, rather
+than quoted.
+
+Source: `DJirr` = the author's *The 3x+1 conjugacy map sends every Sturmian word to an
+irrational 2-adic integer*, doi:10.5281/zenodo.23108370, Lemma 10.4 — **unrefereed**, and
+**NOT CHECKED** here.  Hypotheses are expressed as in stage 2: `|W| ≥ 2`, `k ≥ 1`, and
+`c_γ` begins in `W²` (whence `W` is a conjugate of a standard word by the paper's
+Proposition 2.3, and a factor of `c_γ`). -/
+axiom cw_le_three_mul_len_mul_max {γ : ℝ} (hγ0 : 0 < γ) (hγ1 : γ < 1) (ℓ : ℕ) (W : Word)
     (hℓ : 2 ≤ ℓ) (hk : 1 ≤ ones ℓ W)
     (hpref : ∀ n : ℕ, (n : ℝ) < 2 * (ℓ : ℝ) → charWord γ n = per ℓ W n) :
-    Real.logb 2 (H (shadowRat ℓ W))
-      < A γ * (ℓ : ℝ) + Real.logb 2 (3 * (ℓ : ℝ)) + Real.logb 2 3
+    cw ℓ W ≤ 3 * (ℓ : ℤ) * max ((2 : ℤ) ^ ℓ) (3 ^ (ones ℓ W))
 
 end Sturmian
