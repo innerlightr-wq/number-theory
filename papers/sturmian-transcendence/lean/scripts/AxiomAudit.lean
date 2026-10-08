@@ -112,3 +112,39 @@ named axioms declared in `Sturmian/Axioms.lean`:
 #print axioms Sturmian.transcendental_charWord
 #print axioms Sturmian.transcendental_PhiBL_charWord
 #print axioms Sturmian.transcendental_PhiBL_mechanical
+
+-- STAGE 5: the three-distance periodicity lemma (PROVED)
+#print axioms Sturmian.nrm_eq_min
+#print axioms Sturmian.floor_add_off
+#print axioms Sturmian.charWord_add_eq
+#print axioms Sturmian.per_eq_of_min
+
+-- STAGE 5: records, without continued fractions (PROVED)
+#print axioms Sturmian.nrmR_eq_min_abs
+#print axioms Sturmian.nrm_add
+#print axioms Sturmian.nrm_sub
+#print axioms Sturmian.exists_record_le
+#print axioms Sturmian.exists_record_gt
+#print axioms Sturmian.exists_isNextRec
+#print axioms Sturmian.record_min_lt_nextRec
+#print axioms Sturmian.off_mul_off_next_neg
+#print axioms Sturmian.lt_nrm_add
+#print axioms Sturmian.gap_le
+#print axioms Sturmian.exists_long_period
+
+-- STAGE 5, TIER A: must NOT list bhz_ice_floor
+#print axioms Sturmian.le_lcp_of_agree
+#print axioms Sturmian.le_prefixPower
+#print axioms Sturmian.twelve_fifths_le_ice
+#print axioms Sturmian.two_lt_ice
+#print axioms Sturmian.gammaTierA_lt_gammaStar
+#print axioms Sturmian.two_A_lt_twelve_fifths
+#print axioms Sturmian.transcendental_charWord_tierA
+#print axioms Sturmian.transcendental_PhiBL_charWord_tierA
+#print axioms Sturmian.transcendental_PhiBL_mechanical_tierA
+
+-- STAGE 5, TIER A: the headline slope (must NOT list bhz_ice_floor)
+#print axioms Sturmian.A_logThreeTwo
+#print axioms Sturmian.irrational_logThreeTwo
+#print axioms Sturmian.logThreeTwo_lt_gammaTierA
+#print axioms Sturmian.transcendental_PhiBL_logThreeTwo

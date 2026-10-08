@@ -3,15 +3,31 @@
 Every axiom in this development, its exact quoted statement, source, and status.
 `Sturmian/Axioms.lean` is the only file permitted to contain `axiom`.
 
-**TWO axioms remain.**  Stage 1 declared one; stage 2 added two; stage 3 turned one of
-those into a theorem and narrowed the other; stage 4 removed the remaining non-Ridout
-non-BHZ axiom entirely and reduced the BHZ axiom to the floor alone.  `#print axioms`
+**TWO axioms are declared; after stage 5 the headline case uses only one.**  Stage 1
+declared one; stage 2 added two; stage 3 turned one of those into a theorem and narrowed
+the other; stage 4 removed the remaining non-Ridout non-BHZ axiom entirely and reduced the
+BHZ axiom to the floor alone; **stage 5 proved a weaker floor outright**, so
+`bhz_ice_floor` is now needed only on the slope band `γ ∈ [γ_A, γ*)`.  `#print axioms`
 evidence: [`AXIOM_AUDIT.txt`](AXIOM_AUDIT.txt).
 
 | | axiom | status |
 |---|---|---|
 | §1 | `ridout_single_prime` | external published theorem, **source checked verbatim** |
-| §2 | `bhz_ice_floor` | external (Berthé–Holton–Zamboni §4.2), **source NOT CHECKED — paywalled** |
+| §2 | `bhz_ice_floor` | external (Berthé–Holton–Zamboni §4.2), **source NOT CHECKED — inaccessible**; after stage 5 **used only for `γ ∈ [γ_A, γ*)`** |
+
+### Which main theorem depends on what
+
+| theorem | slopes | axioms it depends on |
+|---|---|---|
+| `transcendental_PhiBL_logThreeTwo` (headline, `γ = log₃ 2`) | one slope | **`ridout_single_prime` only** |
+| `transcendental_charWord_tierA`, `transcendental_PhiBL_charWord_tierA`, `transcendental_PhiBL_mechanical_tierA` | `0 < γ < γ_A = 6/(5 log₂ 3) = 0.7571…` | **`ridout_single_prime` only** |
+| `transcendental_charWord`, `transcendental_PhiBL_charWord`, `transcendental_PhiBL_mechanical` | `0 < γ < γ* = 0.8258…` | `ridout_single_prime` **and** `bhz_ice_floor` |
+| `two_lt_ice`, `twelve_fifths_le_ice` (`ice(c_γ) > 2`, `ice(c_γ) ≥ 12/5`) | every irrational `γ ∈ (0,1)` | **none** |
+
+`γ_A < γ*` is proved (`Sturmian.gammaTierA_lt_gammaStar`); the whole gap between the two
+thresholds is the gap between the proved exponent `12/5 = 2.4` and the axiom's
+`1 + φ = 2.618…`.  The headline slope is covered because `A(log₃ 2) = 1`
+(`Sturmian.A_logThreeTwo`), so it needs only `e > 2`.
 
 **NO IRRATIONALITY RESULT IS USED.**  Neither axiom is an irrationality statement, and the
 development depends on **none** of the three irrationality results in the literature — not
@@ -26,6 +42,13 @@ See §5.
 **Stage-4 summary.**  `[DJirr, Lemma 10.4]` is formalised, so Proposition 2.4
 (`Sturmian.shadow_height_bound`) now depends on **no** axiom; and `ice` plus the paper's
 Steps 1–2 are formalised, so the BHZ axiom is the floor alone.
+
+**Stage-5 summary.**  `ice(c_γ) ≥ 12/5` is **proved**, for every irrational `γ ∈ (0,1)`,
+with no continued-fraction theory and no appeal to BHZ — see §9.  This is strictly weaker
+than the axiom's `1 + φ = 2.618…`, but strong enough for every slope with `2A(γ) < 12/5`,
+and in particular for the headline slope `γ = log₃ 2`, whose irrationality is also proved
+here (`Sturmian.irrational_logThreeTwo`; Mathlib has no irrationality statement for
+logarithms).
 
 ---
 
@@ -300,3 +323,87 @@ lemma for each.  **No mismatch was found.**  Three conventions needed an explici
 3. **`log2three` is `logb 2 3`.**  `log2three = Real.log 3 / Real.log 2`, identified with
    `Real.logb 2 3` wherever both appear.  Sanity check: the paper's two closed forms for
    `γ*` agree, and `1+φ = φ² = (3+√5)/2`.
+
+---
+
+## 9. Stage 5 — the floor, proved at `12/5`
+
+**What is proved.**  `Sturmian.twelve_fifths_le_ice`:
+
+```
+ENNReal.ofReal (12 / 5) ≤ ice (charWord γ)      for every irrational γ ∈ (0,1)
+```
+
+and hence `Sturmian.two_lt_ice`: `2 < ice (charWord γ)`.  Both depend on **no** axiom
+beyond Lean's three.  This is the paper's Proposition 2.8 with `1 + φ = 2.618…` replaced by
+`12/5 = 2.4`.
+
+**Why `2` is the number that matters.**  The chain needs an exponent `e` with `e > 2` *and*
+`e > 2A(γ)`.  For the headline slope `A(log₃ 2) = 1`, so `e > 2` is the whole requirement,
+and `12/5` clears it. The axiom is therefore not needed for the headline case at all.
+
+### How it is proved — no continued fractions
+
+Mathlib has Dirichlet's theorem (`Real.exists_nat_abs_mul_sub_round_le`) but **not** the
+best-approximation property of continued-fraction convergents, so the argument is built
+from the definition of a *record* instead.
+
+1. **`Sturmian/Rotation.lean` — the periodicity lemma.**  `per_eq_of_min`: if `q` minimises
+   `‖jγ‖` over `1 ≤ j < Q`, then the prefix of `c_γ` of length `Q + q − 2` has period `q`.
+   Proof: `⌊jγ + off(q)⌋ = ⌊jγ⌋` for every `1 ≤ j < Q`, because no `jγ` can cross an
+   integer under a displacement smaller than its own distance to `ℤ`; the two-floor form of
+   `charWord` then gives `c_γ(m+q) = c_γ(m)` for `m + 2 < Q`.
+2. **`Sturmian/Records.lean` — records.**  `IsRecord γ q` says `q ≥ 1` beats every smaller
+   positive index.  `exists_record_le` (least minimiser) and `exists_record_gt` (Dirichlet)
+   give that records exist below every index and are unbounded with quality `→ 0`;
+   `record_min_lt_nextRec` upgrades record-ness to the hypothesis `per_eq_of_min` wants —
+   a record minimises up to the **next** record, not merely up to itself.
+3. **The sign claim.**  `off_mul_off_next_neg`: consecutive records lie on **opposite
+   sides** of the nearest integer.  Otherwise `r − p` would be a strictly better index than
+   `p`, forcing a record strictly between `p` and `r`.
+4. **The gap lemma.**  `gap_le`: for three consecutive records `p < r < s` with
+   `‖rγ‖ < 1/4`, one has `s ≥ r + p` — Fibonacci-type growth.  Proof (`lt_nrm_add`): for
+   `1 ≤ t < p`, the index `r + t` is strictly worse than `r`.  If `tγ` falls on `r`'s side,
+   the displacements add, and `‖rγ‖ < 1/4` keeps the sum away from the far integer.  If it
+   falls on `p`'s side, then `p − t` is an index below `p`, so record-ness of `p` forces
+   `‖tγ‖ > 2‖pγ‖ > 2‖rγ‖`, and the cancellation still leaves more than `‖rγ‖`.
+5. **The dichotomy.**  `exists_long_period`: with `x = r/p`, the record `p` repeats to power
+   `x + 1 − 2/p` and the record `r` to power `2 + 1/x − 2/r`.  Taking `x ≥ 3/2` or
+   `x < 3/2` gives `12/5` in either case once `p ≥ 20`, which `exists_record_gt` supplies.
+   Records are unbounded, so this happens arbitrarily far out.
+6. **`Sturmian/TierA.lean`** turns the prefix family into `ice ≥ 12/5` and feeds it to
+   `transcendental_of_prefix_family`.
+
+### What `12/5` costs, exactly
+
+The same two bounds, `max(x + 1, 2 + 1/x)`, are minimised at `x = φ`, where both equal
+`1 + φ`.  So this route reaches the BHZ constant **asymptotically**; `12/5` is what survives
+after the `−2/p` and `−2/r` corrections are absorbed at a finite record `p ≥ 20`.  Removing
+the axiom entirely (Tier B) means carrying those corrections to the limit instead of
+discharging them at a fixed threshold.  **Not attempted at this stage.**
+
+### Numerical check before the proof
+
+The identity the proof rests on, `L(q_n) = q_{n+1} + q_n − 2` for the length of the longest
+`q_n`-periodic prefix, was checked first: exact on all named slopes and on 386 of 400 random
+irrationals. The 14 exceptions are all at the terminal convergent of an exact rational,
+where the word is genuinely periodic forever and `L` is capped by the computed length — i.e.
+outside the irrationality hypothesis. Smallest maximal prefix power over all 386 usable
+slopes: `4.371981`. The tight case is `γ = 1/φ` (all partial quotients `1`), approaching
+`1 + φ = 2.618034` from below — consistent with `12/5` being provable and `1 + φ` not being
+attained at any finite record.
+
+### Stage-5 BHZ source search — still NOT CHECKED
+
+Three further attempts were made to reach Berthé–Holton–Zamboni, *Initial powers of Sturmian
+sequences*, Acta Arith. **122** (2006), 315–347, beyond the stage-4 attempts recorded in §2:
+
+| attempt | result |
+|---|---|
+| arXiv and HAL searched directly for the title and the three authors | no preprint version found |
+| arXiv **1510.00279** followed as a secondary source | cites BHZ but does not restate the §4.2 sentence |
+| arXiv **2103.08351** followed as a secondary source | likewise |
+
+So the axiom's text is still the paper's quotation of the source and **not** the source
+itself, and the two things a reader must verify at the source are unchanged — see §2.  This
+is now of reduced consequence: the headline case does not use the axiom.

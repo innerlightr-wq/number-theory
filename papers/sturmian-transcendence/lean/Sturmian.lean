@@ -13,9 +13,16 @@ STAGE 4 — `Numerator` (`[DJirr, Lemma 10.4]`, and Proposition 2.4 assembled wi
 axiom), `Ice` (the initial critical exponent and the extraction of Steps 1–2), and
 `DefinitionAudit` (every definition against the paper's verbatim text, with sanity lemmas).
 
+STAGE 5 — the BHZ floor, Tier A: `Rotation` (the three-distance periodicity lemma for
+`c_γ`), `Records` (best-approximation records, Fibonacci-type growth, a prefix power of
+`12/5`), and `TierA` (`ice(c_γ) > 2` unconditionally, the irrationality of `log₃ 2`, and
+the headline case on Ridout alone).
+
 **TWO axioms, both in `Axioms.lean`:** Theorem R (Ridout, in Bugeaud–Kekeç's single-prime
-form) and the Berthé–Holton–Zamboni floor `ice(c_γ) ≥ 1+φ`.  See `AXIOMS.md` and
-`AXIOM_AUDIT.txt`.
+form) and the Berthé–Holton–Zamboni floor `ice(c_γ) ≥ 1+φ`.  After stage 5 the second one
+is used **only** for slopes `γ ∈ [γ_A, γ*)`, where `γ_A = 6/(5 log₂ 3)`; for `γ < γ_A`, and
+in particular for the headline slope `γ = log₃ 2`, the results depend on Ridout alone.
+See `AXIOMS.md` and `AXIOM_AUDIT.txt`.
 -/
 import Sturmian.Basic
 import Sturmian.Word
@@ -31,3 +38,6 @@ import Sturmian.Aperiodic
 import Sturmian.Construct
 import Sturmian.Main
 import Sturmian.DefinitionAudit
+import Sturmian.Rotation
+import Sturmian.Records
+import Sturmian.TierA
