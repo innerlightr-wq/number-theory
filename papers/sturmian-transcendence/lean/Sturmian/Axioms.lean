@@ -6,8 +6,12 @@ its statement as the paper states it, the original source with the exact theorem
 and the paper's citation key.
 
 STAGE 1 declares exactly one axiom: Theorem R.
+STAGE 2 adds exactly two more, both named by the brief and both clearly labelled:
+the Berthé–Holton–Zamboni prefix-power input and the paper's height bound (Prop. 2.4).
 -/
 import Sturmian.Basic
+import Sturmian.Shadow
+import Mathlib.Analysis.SpecialFunctions.Log.Base
 
 namespace Sturmian
 
@@ -82,5 +86,67 @@ axiom ridout_single_prime {p : ℕ} [Fact p.Prime]
     (hpos : ∀ n, 0 < ‖ξ - (x n : ℚ_[p])‖)
     (hlt : ∀ n, ‖ξ - (x n : ℚ_[p])‖ < (H (x n) : ℝ) ^ (-2 - ε)) :
     Transcendental ℚ ξ
+
+/-! ## Axiom BHZ — the prefix-power family of Steps 1–2
+
+**Status: EXTERNAL PUBLISHED THEOREM (the floor) COMBINED WITH THE PAPER'S OWN STEPS 1–2
+(the extraction), NOT YET FORMALIZED.**  To be discharged in stage 3.
+
+**The external ingredient** is the paper's Proposition 2.8 (`{Floor; \cite[\S4.2]{BHZ06}}`),
+verbatim:
+
+> "For every irrational $\gamma$,
+>  $$\ice(c_\gamma)\;\ge\;1+\varphi=\varphi^{2}=\frac{3+\sqrt5}{2}=2.6180339887\ldots,$$
+>  with equality if and only if $a_k=1$ for all large $k$."
+
+together with the paper's Definition 2.5 (`\cite[\S2]{BHZ06}`) of `ice` and its remark
+
+> "Because the prefix power is defined as the largest *real* such $p$, we have
+>  $\lcp(\omega,W^{\infty})=p\,|W|$ *exactly*: no floor and no $O(1)$ is lost".
+
+**The paper's own part** is Step 1 ("fix a real `e` with `max(2A(γ),2) < e < ice(c_γ)`") and
+Step 2 ("choose an infinite sequence `W_1, W_2, …` of **primitive** prefixes of `c_γ` with
+`ℓ_j := |W_j| → ∞`, `ℓ_j ≥ 2`, and `lcp(c_γ, W_j^∞) ≥ e ℓ_j`"), plus Step 4's observations
+that `k_j ≥ 1` for large `ℓ_j` and that the shadows are pairwise distinct and distinct from
+the target.
+
+The depth is stated below as *agreement of the first `⌈e ℓ_j⌉` letters*, which is
+`lcp ≥ e ℓ_j` without naming `lcp`, and so needs no side condition.  `ice` itself is **not**
+formalized, which is exactly why this is an axiom rather than a theorem. -/
+axiom bhz_prefix_family {γ : ℝ} (hγ0 : 0 < γ) (hγ1 : γ < 1) (hirr : Irrational γ)
+    {e : ℝ} (he2 : 2 < e) (heφ : e < 1 + phi) :
+    ∃ (ℓ : ℕ → ℕ) (W : ℕ → Word),
+      (∀ j, 2 ≤ ℓ j) ∧
+      (∀ j, 1 ≤ ones (ℓ j) (W j)) ∧
+      Filter.Tendsto (fun j => (ℓ j : ℝ)) Filter.atTop Filter.atTop ∧
+      Function.Injective (fun j => per (ℓ j) (W j)) ∧
+      (∀ j, charWord γ ≠ per (ℓ j) (W j)) ∧
+      (∀ j (n : ℕ), (n : ℝ) < e * (ℓ j : ℝ) → charWord γ n = per (ℓ j) (W j) n)
+
+/-! ## Axiom 2.4 — the height of a shadow
+
+**Status: PROVED IN THE PAPER, NOT YET FORMALIZED — to be replaced by a proof in stage 3.**
+
+The paper's Proposition 2.4 (`{Height of a shadow; \cite[Lemma 10.4]{DJirr}, resting on
+\cite[Lemma 43]{LS21}}`), verbatim:
+
+> "Let $W$ be a conjugate of a standard word, $|W|=\ell$, with $k\ge1$ ones, and suppose
+>  $W$ is a factor of a Sturmian word of slope $\gamma$. Then
+>  $0<c_W\le3\ell\max(2^{\ell},3^{k})$ and
+>  $$\log_2 H\bigl(\PH(W^{\infty})\bigr)\;<\;\Av\,\ell+\log_2(3\ell)+\log_2 3 .$$"
+
+The two hypotheses "conjugate of a standard word" and "factor of a Sturmian word of slope
+`γ`" are expressed below by the formalizable facts the paper uses to obtain them: `W` is
+primitive of length `≥ 2` with `k ≥ 1` ones and `c_γ` **begins in `W²`**, whence `W` is a
+conjugate of a standard word by the paper's Proposition 2.3 (`\cite[Proposition 3.2]{BHZ06}`)
+and `W` is a factor of `c_γ`.  The conclusion is quoted exactly, with `H` and `A(γ)` in the
+paper's normalisations (`Sturmian.H`, `Sturmian.A`).
+
+`0 < c_W` is **not** taken on faith: it is proved as `Sturmian.cw_pos`. -/
+axiom shadow_height_bound {γ : ℝ} (hγ0 : 0 < γ) (hγ1 : γ < 1) (ℓ : ℕ) (W : Word)
+    (hℓ : 2 ≤ ℓ) (hk : 1 ≤ ones ℓ W)
+    (hpref : ∀ n : ℕ, (n : ℝ) < 2 * (ℓ : ℝ) → charWord γ n = per ℓ W n) :
+    Real.logb 2 (H (shadowRat ℓ W))
+      < A γ * (ℓ : ℝ) + Real.logb 2 (3 * (ℓ : ℝ)) + Real.logb 2 3
 
 end Sturmian
