@@ -22,10 +22,9 @@ Paper, Proposition 2.4, with its four-line proof:
 >  gives $|k-\gamma\ell|<1$, so $k\log_2 3<\gamma\ell\log_2 3+\log_2 3$ and therefore
 >  $\max(\ell,k\log_2 3)<\Av\ell+\log_2 3$."
 
-Every step of that is proved here except `c_W ≤ 3ℓ max(2^ℓ,3^k)`, which is the author's
-prior `\cite[Lemma 10.4]{DJirr}` and is the one remaining axiom of the proposition.
+Every step of that is proved here; the remaining input `c_W ≤ 3ℓ max(2^ℓ,3^k)` is itself
+proved in `Sturmian/Numerator.lean`, where Proposition 2.4 is then assembled.
 -/
-import Sturmian.Axioms
 import Sturmian.Shadow
 import Sturmian.Basic
 import Mathlib.Analysis.SpecialFunctions.Log.Base
@@ -96,6 +95,43 @@ lemma abs_ones_charWord_sub_lt_one {γ : ℝ} (hγ0 : 0 < γ) (hγ1 : γ < 1) (�
   have hgt : ((ℓ : ℝ) + 1) * γ < ((⌊((ℓ : ℝ) + 1) * γ⌋ : ℤ) : ℝ) + 1 := Int.lt_floor_add_one _
   constructor <;> nlinarith
 
+/-- **Sharp prefix balance.**  For `1 ≤ m ≤ ℓ`,
+`|ℓ·k_m(c_γ) − m·k_ℓ(c_γ)| < ℓ`, i.e. `|k_m − m·k_ℓ/ℓ| < 1`.
+
+This is the form of balance that `[DJirr, Lemma 10.4]` uses.  The source obtains it from
+"`W` is a cyclic permutation of a standard word" via its Theorem 10.3; for a **prefix** of
+`c_γ` it follows directly from the telescoping count and two floor estimates, with no
+appeal to standard words.  Both directions are strict. -/
+lemma abs_balance_prefix {γ : ℝ} (hγ0 : 0 < γ) (hγ1 : γ < 1) {m ℓ : ℕ}
+    (hm1 : 1 ≤ m) (hmℓ : m ≤ ℓ) :
+    |((ℓ : ℤ)) * ((ones m (charWord γ) : ℤ)) - ((m : ℤ)) * ((ones ℓ (charWord γ) : ℤ))|
+      < ((ℓ : ℤ)) := by
+  have hℓ1 : 1 ≤ ℓ := le_trans hm1 hmℓ
+  set A : ℤ := ⌊((m : ℝ) + 1) * γ⌋ with hAdef
+  set B : ℤ := ⌊((ℓ : ℝ) + 1) * γ⌋ with hBdef
+  have hA : ((ones m (charWord γ) : ℤ)) = A := ones_charWord hγ0 hγ1 m
+  have hB : ((ones ℓ (charWord γ) : ℤ)) = B := ones_charWord hγ0 hγ1 ℓ
+  rw [hA, hB]
+  -- the four floor estimates
+  have hAle : ((A : ℝ)) ≤ ((m : ℝ) + 1) * γ := Int.floor_le _
+  have hAgt : ((m : ℝ) + 1) * γ < ((A : ℝ)) + 1 := Int.lt_floor_add_one _
+  have hBle : ((B : ℝ)) ≤ ((ℓ : ℝ) + 1) * γ := Int.floor_le _
+  have hBgt : ((ℓ : ℝ) + 1) * γ < ((B : ℝ)) + 1 := Int.lt_floor_add_one _
+  have hmR : (1 : ℝ) ≤ (m : ℝ) := by exact_mod_cast hm1
+  have hmℓR : ((m : ℝ)) ≤ ((ℓ : ℝ)) := by exact_mod_cast hmℓ
+  have hℓR : (1 : ℝ) ≤ ((ℓ : ℝ)) := by exact_mod_cast hℓ1
+  -- the real inequality, then transfer back to ℤ
+  have hreal : |((ℓ : ℝ)) * ((A : ℝ)) - ((m : ℝ)) * ((B : ℝ))| < ((ℓ : ℝ)) := by
+    rw [abs_lt]
+    constructor
+    · -- lower: ℓA − mB > γ(ℓ−m) − ℓ ≥ −ℓ
+      nlinarith [mul_pos (lt_of_lt_of_le zero_lt_one hℓR) (sub_pos.mpr hγ1),
+        mul_nonneg (sub_nonneg.mpr hmℓR) (le_of_lt hγ0)]
+    · -- upper: ℓA − mB < γ(ℓ−m) + m ≤ ℓ
+      nlinarith [mul_nonneg (sub_nonneg.mpr hmℓR) (le_of_lt hγ0),
+        mul_nonneg (sub_nonneg.mpr hmℓR) (sub_nonneg.mpr (le_of_lt hγ1))]
+  exact_mod_cast hreal
+
 /-! ## The height bound -/
 
 /-- `H(c/d) ≤ max(c, |d|)`: reduction to lowest terms only shrinks numerator and
@@ -158,76 +194,5 @@ lemma max_lt_A_mul {γ : ℝ} (hγ0 : 0 < γ) (ℓ k : ℕ) (hℓ : 1 ≤ ℓ)
   · nlinarith
   · rw [hlogeq]
     nlinarith
-
-/-! ## Proposition 2.4, PROVED
-
-The paper's four-line proof, formalised.  The only external input is
-`Sturmian.cw_le_three_mul_len_mul_max` (the author's `\cite[Lemma 10.4]{DJirr}`); the
-balance bound, `0 < c_W`, `|δ| < max(2^ℓ,3^k)`, `H ≤ max(c_W,|δ|)` and the logarithm
-bookkeeping are all proved. -/
-
-/-- **Proposition 2.4 (height of a shadow).**  Was an axiom at stage 2; now a theorem. -/
-theorem shadow_height_bound {γ : ℝ} (hγ0 : 0 < γ) (hγ1 : γ < 1) (ℓ : ℕ) (W : Word)
-    (hℓ : 2 ≤ ℓ) (hk : 1 ≤ ones ℓ W)
-    (hpref : ∀ n : ℕ, (n : ℝ) < 2 * (ℓ : ℝ) → charWord γ n = per ℓ W n) :
-    Real.logb 2 (H (shadowRat ℓ W))
-      < A γ * (ℓ : ℝ) + Real.logb 2 (3 * (ℓ : ℝ)) + Real.logb 2 3 := by
-  have hℓ1 : 1 ≤ ℓ := le_trans (by norm_num) hℓ
-  have hℓR : (1 : ℝ) ≤ (ℓ : ℝ) := by exact_mod_cast hℓ1
-  set k : ℕ := ones ℓ W with hkdef
-  set c : ℤ := cw ℓ W with hcdef
-  set d : ℤ := (2 : ℤ) ^ ℓ - 3 ^ k with hddef
-  set M : ℤ := max ((2 : ℤ) ^ ℓ) (3 ^ k) with hMdef
-  -- `W` agrees with the length-`ℓ` prefix of `c_γ`, so the balance bound applies
-  have hWchar : ∀ i, i < ℓ → W i = charWord γ i := by
-    intro i hi
-    have hiR : (i : ℝ) < 2 * (ℓ : ℝ) := by
-      have : (i : ℝ) < (ℓ : ℝ) := by exact_mod_cast hi
-      linarith
-    rw [← per_apply_of_lt W hi, ← hpref i hiR]
-  have hones : k = ones ℓ (charWord γ) := by
-    rw [hkdef]; exact ones_congr hWchar
-  have hbal : ((k : ℝ)) < (ℓ : ℝ) * γ + 1 := by
-    have h := abs_ones_charWord_sub_lt_one hγ0 hγ1 ℓ
-    rw [abs_lt] at h
-    rw [hones]
-    linarith [h.2]
-  -- the three size facts
-  have hc : 0 < c := by rw [hcdef]; exact cw_pos hk
-  have hd : d ≠ 0 := by rw [hddef]; exact den_ne_zero hℓ1
-  have hHle : ((H (shadowRat ℓ W) : ℤ)) ≤ max c |d| := by
-    rw [shadowRat]; exact H_div_le hc hd
-  have hdlt : |d| < M := by rw [hddef, hMdef]; exact abs_den_lt_max hℓ1
-  have hcle : c ≤ 3 * (ℓ : ℤ) * M := by
-    rw [hcdef, hMdef, hkdef]
-    exact cw_le_three_mul_len_mul_max hγ0 hγ1 ℓ W hℓ hk hpref
-  have hMpos : 0 < M := by
-    rw [hMdef]; exact lt_of_lt_of_le (by positivity) (le_max_left _ _)
-  have h3ℓ : (1 : ℤ) ≤ 3 * (ℓ : ℤ) := by
-    have : (1 : ℤ) ≤ (ℓ : ℤ) := by exact_mod_cast hℓ1
-    linarith
-  have hmaxle : max c |d| ≤ 3 * (ℓ : ℤ) * M := by
-    refine max_le hcle (le_trans (le_of_lt hdlt) ?_)
-    nlinarith
-  -- pass to the reals and take logs
-  have hHR : ((H (shadowRat ℓ W) : ℝ)) ≤ 3 * (ℓ : ℝ) * max ((2 : ℝ) ^ ℓ) ((3 : ℝ) ^ k) := by
-    have hstep : ((H (shadowRat ℓ W) : ℤ)) ≤ 3 * (ℓ : ℤ) * M := le_trans hHle hmaxle
-    have hcast : ((3 * (ℓ : ℤ) * M : ℤ) : ℝ) = 3 * (ℓ : ℝ) * max ((2 : ℝ) ^ ℓ) ((3 : ℝ) ^ k) := by
-      rw [hMdef]; push_cast; ring
-    calc ((H (shadowRat ℓ W) : ℝ)) ≤ ((3 * (ℓ : ℤ) * M : ℤ) : ℝ) := by exact_mod_cast hstep
-      _ = _ := hcast
-  have hHpos : (0 : ℝ) < ((H (shadowRat ℓ W) : ℝ)) := by
-    have := H_pos (shadowRat ℓ W); exact_mod_cast this
-  have hMRpos : (0 : ℝ) < max ((2 : ℝ) ^ ℓ) ((3 : ℝ) ^ k) :=
-    lt_of_lt_of_le (by positivity) (le_max_left _ _)
-  have hb : (1 : ℝ) < 2 := by norm_num
-  calc Real.logb 2 (H (shadowRat ℓ W))
-      ≤ Real.logb 2 (3 * (ℓ : ℝ) * max ((2 : ℝ) ^ ℓ) ((3 : ℝ) ^ k)) :=
-        Real.logb_le_logb_of_le hb hHpos hHR
-    _ = Real.logb 2 (3 * (ℓ : ℝ)) + max (ℓ : ℝ) ((k : ℝ) * Real.logb 2 3) := by
-        rw [Real.logb_mul (by positivity) (ne_of_gt hMRpos), logb_max_pow]
-    _ < Real.logb 2 (3 * (ℓ : ℝ)) + (A γ * (ℓ : ℝ) + Real.logb 2 3) := by
-        have := max_lt_A_mul hγ0 ℓ k hℓ1 hbal; linarith
-    _ = A γ * (ℓ : ℝ) + Real.logb 2 (3 * (ℓ : ℝ)) + Real.logb 2 3 := by ring
 
 end Sturmian
