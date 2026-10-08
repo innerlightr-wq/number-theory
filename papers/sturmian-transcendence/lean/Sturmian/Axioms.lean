@@ -6,11 +6,12 @@ its statement as the paper states it, the original source with the exact theorem
 and the paper's citation key.
 
 STAGE 1 declares exactly one axiom: Theorem R.
-STAGE 2 adds exactly two more, both named by the brief and both clearly labelled:
-the Berthé–Holton–Zamboni prefix-power input and the paper's height bound (Prop. 2.4).
+STAGE 2 added two more; STAGE 3 turned one into a theorem and narrowed the other;
+STAGE 4 removed the numerator-bound axiom entirely.  **Two axioms remain.**
 -/
 import Sturmian.Basic
 import Sturmian.Shadow
+import Sturmian.Ice
 import Mathlib.Analysis.SpecialFunctions.Log.Base
 
 namespace Sturmian
@@ -104,69 +105,53 @@ together with the paper's Definition 2.5 (`\cite[\S2]{BHZ06}`) of `ice` and its 
 > "Because the prefix power is defined as the largest *real* such $p$, we have
 >  $\lcp(\omega,W^{\infty})=p\,|W|$ *exactly*: no floor and no $O(1)$ is lost".
 
-**The paper's own part** is Step 1 ("fix a real `e` with `max(2A(γ),2) < e < ice(c_γ)`") and
-Step 2 ("choose an infinite sequence `W_1, W_2, …` of **primitive** prefixes of `c_γ` with
-`ℓ_j := |W_j| → ∞`, `ℓ_j ≥ 2`, and `lcp(c_γ, W_j^∞) ≥ e ℓ_j`").
+**REDUCED AT STAGE 4 TO THE FLOOR ALONE.**  At stage 2 this axiom asserted six clauses, at
+stage 3 three, and it now asserts only the Berthé–Holton–Zamboni floor.  Everything the
+paper's Steps 1–2 and Step 4 add is proved:
 
-**NARROWED AT STAGE 3.**  At stage 2 this axiom also asserted three further clauses of the
-paper's Step 4.  All three are now **proved** and have been removed from it:
+* the extraction itself — `Sturmian.exists_prefix_power_of_lt_ice`, directly from the
+  definition of `ice` as a limit superior (`Sturmian/Ice.lean`);
+* the **primitive-root replacement is not needed at all.**  The paper performs it so that
+  `\cite[Proposition 3.2]{BHZ06}` applies, giving a conjugate of a standard word, giving
+  balance, giving the height bound; and so that minimal periods are distinct, giving Step
+  4's distinctness.  Here balance for prefixes of `c_γ` is proved directly
+  (`Sturmian.abs_balance_prefix`) and the distinctness was eliminated at stage 3, so the
+  extraction may take the prefix itself;
+* `k_j ≥ 1` for large `j` — from the telescoping count `Sturmian.ones_charWord`;
+* `c_γ ≠ W_j^∞` — `Sturmian.charWord_ne_per`;
+* injectivity of `j ↦ W_j^∞` — eliminated (finite fibres).
 
-* `k_j ≥ 1` for large `j` — proved from the telescoping count
-  `Sturmian.ones_charWord` (`k_ℓ(c_γ) = ⌊(ℓ+1)γ⌋`) together with `ℓ_j → ∞`;
-* `c_γ ≠ W_j^∞` — proved as `Sturmian.charWord_ne_per`, the aperiodicity of `c_γ` for
-  irrational `γ`, which is the one place irrationality is used;
-* injectivity of `j ↦ W_j^∞` — no longer needed at all: the infinitude of the shadow set is
-  derived instead from the fact that each shadow is approached to depth `e ℓ_j → ∞`, so each
-  value is taken only finitely often (`transcendental_of_prefix_family`).
+**SOURCE STATUS: NOT CHECKED — the source could not be retrieved.**  Acta Arithmetica
+**122** (2006), no. 4, 315–347 is paywalled; `doi:10.4064/aa122-4-1` returned HTTP 502 and
+the impan, EuDML and bibliotekanauki routes served unrelated documents.  So the
+paper-versus-source comparison that was done for Theorem R **could not be done here**.
 
-What remains is only: the lengths are at least `2`, they tend to infinity, and the first
-`⌈e ℓ_j⌉` letters agree.
+**AND NOTE WHAT THE PAPER ITSELF CITES.**  Proposition 2.8 is not quoted from a numbered
+theorem of `BHZ06`.  The paper says:
+
+> "This is `\cite[\S4.2]{BHZ06}`: in the sentence following the proof of their
+>  Theorem~1.2 they state that `\ice(\omega)\le3` if and only if all but finitely many
+>  `a_k` equal `1`, in which case `\ice(\omega)=1+\theta`, where `\theta=(1+\sqrt5)/2` is
+>  the golden mean fixed on `\cite[p.~3]{BHZ06}`."
+
+So the floor is the paper's own two-line **deduction** from an unnumbered sentence in
+BHZ's §4.2, not a verbatim BHZ statement.  There is no theorem number to quote.  The two
+things a reader must check at the source are: (i) the sentence after the proof of BHZ
+Theorem 1.2, and (ii) `θ = (1+√5)/2` on BHZ p. 3.
 
 The depth is stated below as *agreement of the first `⌈e ℓ_j⌉` letters*, which is
 `lcp ≥ e ℓ_j` without naming `lcp`, and so needs no side condition.  `ice` itself is **not**
 formalized, which is exactly why this is an axiom rather than a theorem. -/
-axiom bhz_prefix_family {γ : ℝ} (hγ0 : 0 < γ) (hγ1 : γ < 1) (hirr : Irrational γ)
-    {e : ℝ} (he2 : 2 < e) (heφ : e < 1 + phi) :
-    ∃ (ℓ : ℕ → ℕ) (W : ℕ → Word),
-      (∀ j, 2 ≤ ℓ j) ∧
-      Filter.Tendsto (fun j => (ℓ j : ℝ)) Filter.atTop Filter.atTop ∧
-      (∀ j (n : ℕ), (n : ℝ) < e * (ℓ j : ℝ) → charWord γ n = per (ℓ j) (W j) n)
+axiom bhz_ice_floor {γ : ℝ} (hγ0 : 0 < γ) (hγ1 : γ < 1) (hirr : Irrational γ) :
+    ENNReal.ofReal (1 + phi) ≤ ice (charWord γ)
 
-/-! ## Axiom DJ10.4 — the numerator bound of the paper's Proposition 2.4
+/-! ## Axioms removed at stage 4
 
-**Status: AUTHOR'S PRIOR RESULT, NOT YET FORMALIZED.**  Added at stage 3, where it replaced
-the coarser `shadow_height_bound` axiom of stage 2: **Proposition 2.4 is now a theorem**
-(`Sturmian.shadow_height_bound` in `Sturmian/Height.lean`), proved from the paper's own
-four-line argument plus this one input.
-
-The paper's Proposition 2.4 reads
-
-> `\begin{proposition}[{Height of a shadow; \cite[Lemma 10.4]{DJirr}, resting on
-> \cite[Lemma 43]{LS21}}]`
-> Let $W$ be a conjugate of a standard word, $|W|=\ell$, with $k\ge1$ ones, and suppose
-> $W$ is a factor of a Sturmian word of slope $\gamma$. Then
-> $0<c_W\le3\ell\max(2^{\ell},3^{k})$ and
-> $$\log_2 H\bigl(\PH(W^{\infty})\bigr)\;<\;\Av\,\ell+\log_2(3\ell)+\log_2 3 .$$
-
-and its proof identifies exactly which part is external:
-
-> "and $c_W\le3\ell\max(2^{\ell},3^{k})$ by \cite[Lemma 10.4]{DJirr}, whose input is that
->  $W^{\infty}$ is balanced, so that $|k_{i+1}(W)-(i+1)k/\ell|<1$."
-
-**That numerator bound is all this axiom asserts.**  `0 < c_W` is **proved**
-(`Sturmian.cw_pos`), the conclusion of Proposition 2.4 is **proved**
-(`Sturmian.shadow_height_bound`), and the balance bound `|k − γℓ| < 1` the proof also needs
-is **proved** for prefixes (`Sturmian.abs_ones_charWord_sub_lt_one`), by telescoping, rather
-than quoted.
-
-Source: `DJirr` = the author's *The 3x+1 conjugacy map sends every Sturmian word to an
-irrational 2-adic integer*, doi:10.5281/zenodo.23108370, Lemma 10.4 — **unrefereed**, and
-**NOT CHECKED** here.  Hypotheses are expressed as in stage 2: `|W| ≥ 2`, `k ≥ 1`, and
-`c_γ` begins in `W²` (whence `W` is a conjugate of a standard word by the paper's
-Proposition 2.3, and a factor of `c_γ`). -/
-axiom cw_le_three_mul_len_mul_max {γ : ℝ} (hγ0 : 0 < γ) (hγ1 : γ < 1) (ℓ : ℕ) (W : Word)
-    (hℓ : 2 ≤ ℓ) (hk : 1 ≤ ones ℓ W)
-    (hpref : ∀ n : ℕ, (n : ℝ) < 2 * (ℓ : ℝ) → charWord γ n = per ℓ W n) :
-    cw ℓ W ≤ 3 * (ℓ : ℤ) * max ((2 : ℤ) ^ ℓ) (3 ^ (ones ℓ W))
+**`cw_le_three_mul_len_mul_max` is gone.**  `[DJirr, Lemma 10.4]` is formalised in
+`Sturmian/Numerator.lean` as `Sturmian.cw_le_of_balance` (from the balance hypothesis the
+source's own proof uses) and `Sturmian.cw_le_prefix` (balance discharged for prefixes of
+`c_γ`).  Proposition 2.4 (`Sturmian.shadow_height_bound`) therefore now depends on **no**
+axiom.
+-/
 
 end Sturmian

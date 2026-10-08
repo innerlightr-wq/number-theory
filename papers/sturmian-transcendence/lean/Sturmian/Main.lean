@@ -19,6 +19,8 @@ The paper's proof of Theorem 1.3 runs in six steps (§3).  Their status here:
 import Sturmian.Skeleton
 import Sturmian.Shadow
 import Sturmian.Height
+import Sturmian.Numerator
+import Sturmian.Ice
 import Sturmian.Aperiodic
 import Sturmian.Construct
 import Mathlib.Analysis.SpecialFunctions.Log.Deriv
@@ -278,8 +280,18 @@ theorem transcendental_charWord (h : IsBL Φ) {γ : ℝ}
     have hm : 2 * A γ ≤ max (2 * A γ) 2 := le_max_left _ _
     rw [hedef]; linarith
   have heφ : e < 1 + phi := by rw [hedef]; linarith
-  obtain ⟨ℓ, W, hℓ2, hℓinf, hagree⟩ := bhz_prefix_family hγ0 hγ1 hirr he2 heφ
-  exact transcendental_of_prefix_family h hγ0 hγ1 hirr he2 heA hℓ2 hℓinf hagree
+  have he0 : (0 : ℝ) ≤ e := by linarith
+  have hphi0 : (0 : ℝ) ≤ 1 + phi := by have := one_lt_phi; linarith
+  have hlt : ENNReal.ofReal e < ice (charWord γ) := by
+    refine lt_of_lt_of_le ?_ (bhz_ice_floor hγ0 hγ1 hirr)
+    exact (ENNReal.ofReal_lt_ofReal_iff_of_nonneg he0).mpr heφ
+  choose ℓ hℓN hℓpos hagr using
+    fun j : ℕ => exists_prefix_power_of_lt_ice (ω := charWord γ) he0 hlt (max j 2)
+  refine transcendental_of_prefix_family h hγ0 hγ1 hirr he2 heA
+    (W := fun _ => charWord γ) (fun j => le_trans (le_max_right j 2) (hℓN j)) ?_
+    (fun j n hn => hagr j n hn)
+  refine tendsto_atTop_mono (fun j => ?_) tendsto_natCast_atTop_atTop
+  exact_mod_cast le_trans (le_max_left j 2) (hℓN j)
 
 /-! ## Step 6 — the transfer to `Φ(1c_γ)` and `Φ(0c_γ)`
 
