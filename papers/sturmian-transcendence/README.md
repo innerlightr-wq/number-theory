@@ -120,73 +120,97 @@ the critical-truncation question of §5 was first posed in
 
 Neither Pham's nor Cassidy's note is refereed, and no comparative claim is made about either.
 
-## Lean formalisation (stage 1 — logical skeleton)
+## Lean formalisation (stages 1–2)
 
 Branch `lean-formalization`, directory [`lean/`](lean).  **Lean 4 + Mathlib, pinned**:
-toolchain `leanprover/lean4:v4.34.0`, Mathlib `v4.34.0` (rev `5ed296525643`);
-`lean-toolchain` and `lake-manifest.json` are committed.
+toolchain `leanprover/lean4:v4.34.0`, Mathlib `v4.34.0` (rev `5ed2965256430c3649e86755f9576b54eca72435`);
+`lean-toolchain` and `lake-manifest.json` are committed.  1815 lines of Lean, 10 files,
+**no `sorry`** anywhere in the import closure of `Sturmian.lean`.
 
 ### What is machine-checked
 
-Everything in the import closure of `Sturmian.lean` compiles with **no `sorry`** and, per
-[`AXIOM_AUDIT.txt`](lean/AXIOM_AUDIT.txt), depends on no axiom beyond the three standard
-Lean ones (`propext`, `Classical.choice`, `Quot.sound`) plus the single named axiom below.
-
 | result | statement | named axiom used |
 |---|---|---|
-| `Sturmian.H`, `finite_setOf_H_le`, `exists_H_gt_of_infinite` | the paper's height `H(r) = max(\|num\|, den)`; each height is attained finitely often, so an infinite set of rationals has unbounded height | none |
-| `Sturmian.liouville_two_adic` | **the 2-adic Liouville inequality**: for `ξ ≠ r` rational with odd denominators, `\|ξ−r\|₂ ≥ (\|num ξ\| + den ξ)⁻¹ · H(r)⁻¹` | **none — proved** |
+| `Sturmian.H`, `finite_setOf_H_le` | the paper's `H(r) = max(\|num\|, den)`; each height is attained finitely often | none |
+| `Sturmian.liouville_two_adic` | **the 2-adic Liouville inequality**: `\|ξ−r\|₂ ≥ (\|num ξ\|+den ξ)⁻¹·H(r)⁻¹` for `ξ ≠ r` with odd denominators | none |
+| `Sturmian.two_A_lt_one_add_phi` | **the arithmetic of Corollary 1.4**: `γ < γ*` ⟹ `2A(γ) < 1+φ`, both branches of the `max` | none |
+| `Sturmian.approx_of_depth_height` | **exponent bookkeeping**, pointwise, with the paper's exact error terms (eq. 7 has *no floor and no O(1) loss*; eq. 9 is `A·ℓ + log₂(3ℓ) + log₂3`) | none |
+| `Sturmian.ones_succ`, `cw_succ`, `cw_cons_*_succ` | the recursions of the paper's `k_m(v)` and `c_m(v)`, **proved from the closed forms**, not substituted for them | none |
+| **`Sturmian.isBL_PhiBL`** | **`Φ` EXISTS**: `PhiBL` is constructed as the 2-adic limit of `−c_m(v)·3^(−k_m(v))` — eq. (3) solved for `Φ(v)` — and satisfies the Bernstein–Lagarias recursion | none |
+| **`Sturmian.IsBL.isometry`** | **Proposition 2.1**, the Bernstein–Lagarias isometry `\|Φ(v)−Φ(w)\|₂ = 2^(−lcp(v,w))`. The paper *cites* this; it is **proved here** from the recursion by induction on the `lcp` | none |
+| `Sturmian.IsBL.injective` | `Φ` is injective (Prop. 2.1's last clause) | none |
+| `Sturmian.IsBL.affinegen` | **the paper's eq. (3)**, `2^m Φ(σ^m v) = 3^{k_m(v)} Φ(v) + c_m(v)` | none |
+| **`Sturmian.shadow_formula`** | **Proposition 2.2**, `Φ(w^∞) = c_w/(2^ℓ − 3^k)`, with `2^ℓ ≠ 3^k` (`two_pow_ne_three_pow`), **odd denominator** (`shadowRat_den_odd`) and `c_w > 0` (`cw_pos`) | none |
+| **`Sturmian.IsBL.transfer`** | **the paper's eq. (12)**, `2Φ(c) = 3Φ(1c)+1 = Φ(0c)`, for every infinite word | none |
+| `Sturmian.shadowRat_inj_of_word_ne`, `shadowSet_infinite` | Step 4: distinct periodic words give distinct shadows, so an injective family gives an infinite set of rationals | none |
 | `Sturmian.transcendental_of_approxExp` | infinitely many **distinct** rationals with `\|ξ−r\|₂ ≤ H(r)^(−μ)`, `μ > 2` ⟹ `ξ` transcendental over `ℚ` | Theorem R |
 | `Sturmian.ne_rat_of_ApproxExp` | the same hypothesis at `μ > 1` already excludes every rational with odd denominator | none |
-| `Sturmian.two_A_lt_one_add_phi` | **the arithmetic of Corollary 1.4**: `γ < γ*` ⟹ `2A(γ) < 1 + φ`, both branches of the `max` | none |
-| `Sturmian.approx_of_depth_height` | **exponent bookkeeping**, pointwise: the paper's depth bound `\|ξ−r\|₂ ≤ 2^(−eℓ)` (eq. 20, *no floor and no O(1) loss*) and height bound `log₂ H(r) < A·ℓ + log₂(3ℓ) + log₂3` (eq. 22) give `\|ξ−r\|₂ ≤ H(r)^(−μ)` whenever `μ·B ≤ eℓ` | none |
+| `Sturmian.transcendental_cons_true`, `..._false` | **Step 6**: transcendence transfers along eq. (12), via `isAlgebraic_affine` (proved) | none |
+| `Sturmian.transcendental_of_prefix_family` | **Steps 3–6**: the prefix family of Steps 1–2 plus the height bound ⟹ `Φ(c)` transcendental | Theorem R |
+| `Sturmian.transcendental_PhiBL_charWord`, `..._mechanical` | **Corollary 1.4** for the constructed `Φ`: `Φ(c_γ)`, `Φ(1c_γ)`, `Φ(0c_γ)` transcendental for irrational `γ < γ*` | all three |
+
+`#print axioms` evidence: [`AXIOM_AUDIT.txt`](lean/AXIOM_AUDIT.txt) — **61 results audited,
+0 `sorryAx`, 52 depending on no named axiom, 9 on the three below, and nothing else.**
 
 ### What is assumed
 
-**One axiom, [`Sturmian/Axioms.lean`](lean/Sturmian/Axioms.lean):**
+**Three axioms, all in [`Sturmian/Axioms.lean`](lean/Sturmian/Axioms.lean), each with the
+paper's statement, the source, and a status label.  Full detail in
+[`AXIOMS.md`](lean/AXIOMS.md).**
 
-- `Sturmian.ridout_single_prime` — **Theorem R**, the single-prime form of Ridout's
-  theorem, i.e. Bugeaud–Kekeç, *On Mahler's classification of p-adic numbers*, Bull.
-  Austral. Math. Soc. **98** (2018), 203–211, **Theorem 1.3** (the paper's `BK18`,
-  printed reference [7]).  Its statement was checked **verbatim against the source** and
-  matches the paper's quotation with no hypothesis mismatch; the comparison table is in
-  [`AXIOMS.md`](lean/AXIOMS.md).  Status: *external published theorem*.
+| axiom | source | status |
+|---|---|---|
+| `ridout_single_prime` | **Theorem R** — Bugeaud–Kekeç, Bull. Austral. Math. Soc. **98** (2018), 203–211, **Thm 1.3** (the paper's `BK18`, printed ref. [7]). Checked **verbatim against the source**; hypothesis table in `AXIOMS.md` shows an exact match | *external published theorem* |
+| `bhz_prefix_family` | **Prop. 2.8** (`ice(c_γ) ≥ 1+φ`, Berthé–Holton–Zamboni, Acta Arith. **122** (2006), ref. [4]; **NOT CHECKED** directly) **combined with the paper's own Steps 1–2** | *external theorem + paper's own extraction, **not yet formalized*** |
+| `shadow_height_bound` | **Prop. 2.4** (the height of a shadow), which the paper **proves** in four lines from `[DJirr, Lemma 10.4]` and balance | ***PROVED IN THE PAPER, NOT YET FORMALIZED*** — to be replaced in stage 3 |
 
-**Not assumed, and not needed at stage 1:** the paper's Proposition 2.10 (irrationality,
-the author's prior unrefereed result).  `Sturmian.ne_rat_of_ApproxExp` derives irrationality
-from the proved Liouville inequality, for the skeleton's quantifier — infinitely many
-*distinct rationals*, which is the form Theorem R's hypothesis takes.  The paper's §2.4
-caution concerns the Koksma exponent `ω`, a different quantifier; see §3 of
-[`AXIOMS.md`](lean/AXIOMS.md).  Also not yet declared, because stage 1 never consumes them:
-BHZ's floor `ice(c_γ) ≥ 1+φ` (Prop 2.8) and the height bound (Prop 2.4).
+**Not assumed, and not needed:** the existence of `Φ` (constructed); the isometry (proved);
+the shadow formula (proved); the transfer identity (proved); and the paper's Proposition
+2.10 — the author's prior unrefereed irrationality result — because
+`Sturmian.ne_rat_of_ApproxExp` derives irrationality from the proved Liouville inequality
+for the skeleton's quantifier (infinitely many *distinct rationals*).  The paper's §2.4
+caution concerns the Koksma exponent `ω`, a different quantifier; see §4 of
+[`AXIOMS.md`](lean/AXIOMS.md).
 
-### What is NOT formalised
+### What is NOT formalised — stage 3
 
-Stages 2 and 3: `Φ` itself, the Bernstein–Lagarias isometry (Prop 2.1), the periodic-shadow
-formula (Prop 2.2), the transfer identity (eq. 12), the height bound (Prop 2.4), the
-Sturmian combinatorics, and `ice(c_γ) ≥ 1+φ` (Prop 2.8).  **Therefore the paper's Theorem
-1.3 and Corollary 1.4 are not yet machine-checked** — only the logical skeleton into which
-they fit.  Interfaces are recorded as `sorry` stubs in
-[`lean/Stubs/TODO.lean`](lean/Stubs/TODO.lean), which **`Sturmian.lean` does not import**.
+`ice` itself, the Sturmian combinatorics behind Steps 1–2, and the proof of Prop. 2.4.
+Consequently **Theorem 1.3 and Corollary 1.4 are machine-checked only modulo
+`bhz_prefix_family` and `shadow_height_bound`.**  Everything between them and the
+conclusion — the isometry, eq. (3), the shadow formula, the distinctness, the exponent
+bookkeeping, Theorem R's application and the eq. (12) transfer — is proved.  Remaining
+interfaces are recorded as `sorry` stubs in [`lean/Stubs/TODO.lean`](lean/Stubs/TODO.lean),
+which **`Sturmian.lean` does not import**.
 
-### Two discrepancies found while checking the axiom
+### Two discrepancies found while checking the axioms
 
 1. **Erratum in the paper's bibliography.** `paper/refs.bib` gives
-   `doi = {10.1017/S0004972718000345}` for `BK18`; that DOI is De Bondt–Sun in the same
-   volume.  The correct DOI is `10.1017/S0004972718000515`.  Author, journal, volume,
-   number and pages are correct.
+   `doi = {10.1017/S0004972718000345}` for `BK18`; that DOI resolves (checked against
+   Crossref) to De Bondt–Sun, *Classification of cubic homogeneous polynomial maps with
+   Jacobian matrices of rank two*, same volume, pp. 89–101.  The correct DOI is
+   **`10.1017/S0004972718000515`**.  Author, journal, volume, number and pages are correct.
 2. **Attribution in this README.** The "Related work and credit" section above attributes
    Theorem R to *Badziahin–Kristensen*; the paper's `BK18` and printed reference [7] are
    *Bugeaud–Kekeç*.
 
 Both are flagged for the author; no file outside `lean/` has been modified.
 
+### Index conventions, recorded because they matter
+
+* The paper indexes the letters of `c_γ` from `j = 1`; `Sturmian.Word` is indexed from `0`,
+  so `charWord γ n` is the paper's `c_γ(n+1)`.
+* `Sturmian.ApproxExp` quantifies over infinitely many **distinct elements of `ℚ`**; the
+  paper's `ω` is the Koksma exponent, which quantifies over polynomials.  See the
+  NORMALISATION NOTE in [`Sturmian/Basic.lean`](lean/Sturmian/Basic.lean).
+* `c_m` and `k_m` read only the first `m` letters (`cw_congr`, `ones_congr`), which is why
+  `cw ℓ (w^∞)` is the paper's `c_w`.
+
 ### Build
 
 ```
 cd lean
 lake exe cache get      # fetch the pinned Mathlib build
-lake build              # the stage-1 import closure
+lake build              # 3214 jobs; 38 s here with the Mathlib build already present
 lake env lean scripts/AxiomAudit.lean > AXIOM_AUDIT.txt
 ```
 
