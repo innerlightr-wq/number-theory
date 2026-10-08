@@ -6,10 +6,14 @@ Every Lean statement below is copied verbatim from the source files; every paper
 copied verbatim from `main.tex`, with the printed number taken from `main.pdf`.
 
 Toolchain `leanprover/lean4:v4.34.0`, Mathlib `v4.34.0`
-(rev `5ed2965256430c3649e86755f9576b54eca72435`).  18 files, 3573 lines, **no `sorry`** in
-the import closure of `Sturmian.lean`.  **One axiom** (`ridout_single_prime`); `#print axioms`
-evidence in [`AXIOM_AUDIT.txt`](AXIOM_AUDIT.txt) — 115 results, 0 `sorryAx`, 104 depending on
-no named axiom, 11 on Ridout.
+(rev `5ed2965256430c3649e86755f9576b54eca72435`).  18 files, 3699 lines, **no `sorry`** in the import
+closure of `Sturmian.lean`.  **One axiom** (`ridout_single_prime`); `#print axioms` evidence
+in [`AXIOM_AUDIT.txt`](AXIOM_AUDIT.txt) — 124 results, 0 `sorryAx`, 110 depending on no named
+axiom, 14 on Ridout.
+
+**Revised at v1.1.**  Three things this review flagged are now fixed: the shifts are covered
+(§3.6, formerly §5.4), `γ* < 1` is proved and `γ < 1` dropped (§4.2), and the description of
+the paper's route to Proposition 2.8 is corrected (§6.1).  The changed entries say so.
 
 ---
 
@@ -24,12 +28,12 @@ no named axiom, 11 on Ridout.
 | Definition 2.5 (`ice`) | Def. 2.5 | **formalised** — `prefixPower`, `ice` |
 | Proposition 2.6 (the `ice` formula) | Prop. 2.6 | **not formalised**, and **not used** — see §5.2 |
 | Proposition 2.8 (floor `ice ≥ 1+φ`) | Prop. 2.8 | **inequality proved** — `one_add_phi_le_ice`; **equality case not formalised** |
-| Lemma 2.9 (re-derivation of 2.8) | Lem. 2.9 | **not formalised as stated** — see §6.1 |
+| Lemma 2.9 (re-derivation of 2.8) | Lem. 2.9 | **not formalised as stated**, and neither is Prop. 2.6; the Lean proof does their combination directly — §6.1 |
 | Proposition 2.10 (irrationality) | Prop. 2.10 | **not used at all** — see §4.7 |
 | Theorem R (Ridout, single prime) | Thm. R | **AXIOM** — §1 |
 | Theorem 1.2 (quantitative, `ω` bound) | Thm. 1.2 | **not formalised** — see §5.1 |
-| Theorem 1.3 (transcendence under (T)) | Thm. 1.3 | **partially**: the `γ < γ*` instance is proved; (T) itself is not a stated Lean hypothesis, and the shifts are missing — §5.3, §5.4 |
-| Corollary 1.4 (unconditional range) | Cor. 1.4 | **proved for `Φ(c_γ)`, `Φ(1c_γ)`, `Φ(0c_γ)`**; the shifts are missing — §5.4 |
+| Theorem 1.3 (transcendence under (T)) | Thm. 1.3 | **conclusion fully proved** at `γ < γ*`, shifts included (§3.6); (T) itself is still not a stated Lean hypothesis — §5.3 |
+| Corollary 1.4 (unconditional range) | Cor. 1.4 | **PROVED IN FULL** (v1.1): `Φ(c_γ)`, `Φ(1c_γ)`, `Φ(0c_γ)` and `Φ` of **every shift** — §3.3, §3.6 |
 | Theorem 6.1 (Liouville alternative) | Thm. 6.1 | **not formalised** — §5.5 |
 | Theorem 7.3 (finite effective measure) | Thm. 7.3 | **not formalised** — §5.6 |
 | §5 (truncations), §4 (parity), §8 (scope) | — | **not formalised**; none of it is used |
@@ -316,7 +320,7 @@ agree" with no floor lost — the Definition-2.5 remark quoted in §2.7.
 
 ```lean
 theorem transcendental_charWord (h : IsBL Φ) {γ : ℝ}
-    (hγ0 : 0 < γ) (hγ1 : γ < 1) (hirr : Irrational γ) (hγs : γ < gammaStar) :
+    (hγ0 : 0 < γ) (hirr : Irrational γ) (hγs : γ < gammaStar) :
     Transcendental ℚ ((Φ (charWord γ) : ℚ_[2]))
 ```
 
@@ -324,14 +328,18 @@ theorem transcendental_charWord (h : IsBL Φ) {γ : ℝ}
 
 ```lean
 theorem transcendental_PhiBL_charWord {γ : ℝ}
-    (hγ0 : 0 < γ) (hγ1 : γ < 1) (hirr : Irrational γ) (hγs : γ < gammaStar) :
+    (hγ0 : 0 < γ) (hirr : Irrational γ) (hγs : γ < gammaStar) :
     Transcendental ℚ ((PhiBL (charWord γ) : ℚ_[2]))
 
 theorem transcendental_PhiBL_mechanical {γ : ℝ}
-    (hγ0 : 0 < γ) (hγ1 : γ < 1) (hirr : Irrational γ) (hγs : γ < gammaStar) :
+    (hγ0 : 0 < γ) (hirr : Irrational γ) (hγs : γ < gammaStar) :
     Transcendental ℚ ((PhiBL (cons true (charWord γ)) : ℚ_[2])) ∧
     Transcendental ℚ ((PhiBL (cons false (charWord γ)) : ℚ_[2]))
 ```
+
+**⚑ Misreadable 13a — the hypotheses are now exactly the paper's.**  `γ < 1` was a
+hypothesis through v1; since v1.1 `gammaStar_lt_one` is proved, so it is derived rather than
+assumed.  The three hypotheses are `0 < γ`, `Irrational γ`, `γ < γ*`.  See §4.2.
 
 **Plain English.**  For every irrational slope `γ` strictly between `0` and `γ*`, the three
 2-adic integers `Φ(c_γ)`, `Φ(1c_γ)` and `Φ(0c_γ)` are transcendental over `ℚ`.
@@ -410,6 +418,58 @@ Proposition 2.8 as printed quantifies over every irrational `γ`; the Lean theor
 defined for `γ ∈ (0,1)` in both the paper (§2.2, "For irrational `γ ∈ (0,1)`") and Lean, but
 a reader comparing the two statements side by side will see two extra hypotheses.
 
+### 3.6 Every shift — Corollary 1.4 in full (new at v1.1)
+
+```lean
+lemma transcendental_affine {y : ℚ_[2]} (a b : ℚ) (ha : a ≠ 0)
+    (hy : Transcendental ℚ y) : Transcendental ℚ ((a : ℚ_[2]) * y + (b : ℚ_[2]))
+
+theorem IsBL.transcendental_shiftIter (h : IsBL Φ) {v : Word}
+    (hv : Transcendental ℚ ((Φ v : ℚ_[2]))) (m : ℕ) :
+    Transcendental ℚ ((Φ (shiftIter m v) : ℚ_[2]))
+
+theorem transcendental_PhiBL_shifts {γ : ℝ}
+    (hγ0 : 0 < γ) (hirr : Irrational γ) (hγs : γ < gammaStar) (m : ℕ) :
+    Transcendental ℚ ((PhiBL (shiftIter m (charWord γ)) : ℚ_[2])) ∧
+    Transcendental ℚ ((PhiBL (shiftIter m (cons true (charWord γ))) : ℚ_[2])) ∧
+    Transcendental ℚ ((PhiBL (shiftIter m (cons false (charWord γ))) : ℚ_[2]))
+
+theorem transcendental_PhiBL_shiftIter_mechanical {γ : ℝ}
+    (hγ0 : 0 < γ) (hirr : Irrational γ) (hγs : γ < gammaStar) (k : ℕ) :
+    Transcendental ℚ ((PhiBL (shiftIter k (cons true (charWord γ))) : ℚ_[2]))
+
+theorem transcendental_PhiBL_logThreeTwo_shifts (m : ℕ) : …   -- the same at γ = log₃2
+```
+
+**Plain English.**  For every irrational slope below `γ*`, `Φ` of *every* shift of `c_γ`,
+`1c_γ` and `0c_γ` is transcendental.
+
+**The paper** — Theorem 1.3, verbatim:
+
+> Then $\PH(c_\gamma)$ is transcendental, and so are $\PH(1c_\gamma)$, $\PH(0c_\gamma)$ and
+> $\PH(\sigma^k 1c_\gamma)$ for every $k\ge0$.
+
+and Corollary 1.4, verbatim:
+
+> the numbers $\PH(c_\gamma)$, $\PH(1c_\gamma)$, $\PH(0c_\gamma)$ and $\PH$ of every shift
+> of these words are transcendental
+
+**How.**  `IsBL.affinegen` is the paper's eq. (3),
+`2^m Φ(σ^m v) = 3^{k_m(v)} Φ(v) + c_m(v)`, a relation with rational coefficients whose
+leading coefficient `3^{k_m(v)}/2^m` is never zero.  `transcendental_affine` (the forward
+direction of the existing `isAlgebraic_affine`) then propagates transcendence.
+
+**⚑ Misreadable 21 — "every shift of these words" is three families, and they overlap.**
+`shiftIter 1 (cons true w) = w` and `shiftIter 1 (cons false w) = w` (both machine-checked),
+so `σ(1c_γ) = σ(0c_γ) = c_γ` and the shift closure of the three words is
+`{σ^m c_γ : m ≥ 0} ∪ {1c_γ, 0c_γ}`.  `transcendental_PhiBL_shifts` states all three families
+anyway, so no reading of "every shift" is left out.  `m = 0` recovers §3.3 (also
+machine-checked).
+
+**⚑ Misreadable 22 — `shiftIter m v n = v (n + m)`, and the paper's `σ` is the same shift.**
+No index shift beyond the one in §2.1: `shiftIter m (charWord γ)` is the paper's
+`σ^m c_γ` with `c_γ` indexed from 1 as always.
+
 ---
 
 ## 4. Things a reader could misread — consolidated, plus four not yet listed
@@ -424,13 +484,29 @@ record that the headline case never needed the constant `1+φ` at all, only `e >
 reader should not read the existence of two thresholds as two different ranges of validity:
 the operative range is `γ < γ*`.
 
-### 4.2 `γ* < 1` is not proved, so the two hypotheses `γ < 1` and `γ < γ*` are both carried
+### 4.2 `γ* < 1` — RESOLVED at v1.1
 
-Numerically `γ* = 0.8258… < 1`, so `γ < γ*` implies `γ < 1` and the paper's single
-hypothesis is equivalent to Lean's pair.  **That implication is not machine-checked.**  The
-Lean theorems therefore state a hypothesis set that is *formally* slightly stronger than
-Corollary 1.4's, by an amount that is nil in fact but unverified in Lean.  Fixing it is one
-short lemma (`gammaStar < 1`); it is not done.
+Through v1 the main theorems carried both `γ < 1` and `γ < γ*`, because `γ* < 1` was not
+proved; the hypothesis set was therefore *formally* slightly stronger than Corollary 1.4's.
+Now proved:
+
+```lean
+lemma four_thirds_lt_log2three : (4 : ℝ) / 3 < log2three
+lemma one_add_phi_lt_two_mul_log2three : 1 + phi < 2 * log2three
+theorem gammaStar_lt_one : gammaStar < 1
+lemma lt_one_of_lt_gammaStar {γ : ℝ} (hγ : γ < gammaStar) : γ < 1
+```
+
+The rational witness `4/3` is chosen to sit strictly between `(3+√5)/4 = 1.30901…` and
+`log₂3 = 1.58496…`; `4/3 < log₂3` is `2^4 < 3^3`, and `(3+√5)/4 < 4/3` is `45 < 49`.  No
+decimal expansion of either side is used.  `γ < 1` is dropped from
+`transcendental_charWord`, `transcendental_PhiBL_charWord`,
+`transcendental_PhiBL_mechanical`, `transcendental_PhiBL_shifts` and the three `tierA`
+theorems, so their hypotheses are exactly `0 < γ`, `Irrational γ`, `γ < γ*`.
+
+**⚑ Still carried where it is genuinely needed.**  `one_add_phi_le_ice`, `two_lt_ice`,
+`twelve_fifths_le_ice`, `le_ice_of_lt_one_add_phi` and `transcendental_of_prefix_family`
+keep `γ < 1`: none of them assumes `γ < γ*`, and `charWord_ne_per` needs `γ ∈ (0,1)`.
 
 ### 4.3 `ice` enters the main theorems only through a lower bound
 
@@ -476,14 +552,11 @@ into a prefix family.  Note `A(γ) ≥ 1` always, so (T) implies `e > 2` automat
 statement with hypothesis `ENNReal.ofReal (2 * A γ) < ice (charWord γ)` is derivable from the
 existing pieces and is **not** currently stated.
 
-**5.4 The shifts — the one substantive gap.**  Theorem 1.3 claims `Φ(σ^k 1c_γ)` transcendental
-**for every `k ≥ 0`**, and Corollary 1.4 claims `Φ` of **every shift** of `c_γ`, `1c_γ`,
-`0c_γ`.  Lean covers `Φ(c_γ)`, `Φ(1c_γ)`, `Φ(0c_γ)` — that is `k = 0` and `k = 1`, since
-`σ(1c_γ) = c_γ`.  **`Φ(σ^k c_γ)` for `k ≥ 1` is not stated.**  It is not hard: eq. (3),
-proved as `IsBL.affinegen`, gives `2^m Φ(σ^m v) = 3^{k_m(v)} Φ(v) + c_m(v)`, an affine
-relation with rational coefficients and nonzero leading coefficient, and
-`transcendental_of_affine` is already in `Sturmian/Main.lean`.  It is simply absent, and this
-review does not add it.
+**5.4 The shifts — COVERED at v1.1, no longer a gap.**  Theorem 1.3's clause
+`Φ(σ^k 1c_γ)` for every `k ≥ 0`, and Corollary 1.4's "`Φ` of every shift of these words",
+are now `transcendental_PhiBL_shifts` and `transcendental_PhiBL_shiftIter_mechanical`
+(§3.6), by the route this review identified: eq. (3) as a rational-affine relation.
+**Corollary 1.4 is formalised in full.**
 
 **5.5 Theorem 6.1 (the Liouville alternative).**  For irrational `γ` with unbounded partial
 quotients, `ice = ∞` and the conclusion sharpens to a Liouville statement.  **Not
@@ -507,7 +580,7 @@ proved directly as `abs_balance_prefix`, so the primitive-root replacement is un
 
 ## 6. Corrections this review found
 
-### 6.1 The paper has its own re-derivation of the floor — Lemma 2.9
+### 6.1 The paper has its own re-derivation of the floor — Lemma 2.9  *(RESOLVED at v1.1)*
 
 `AXIOMS.md` and the README said, through stage 4 and again at stage 5, that Proposition 2.8
 rests on "the paper's own two-line deduction from an *unnumbered sentence* in BHZ §4.2".
@@ -539,8 +612,12 @@ So the paper's route to the floor is **Proposition 2.6 (cited to BHZ) + Lemma 2.
 * **The claim "no novelty" is if anything strengthened**, since the paper already states the
   elementary argument and labels it "not a new result".
 
-`AXIOMS.md` §2 and §9 and the README should be amended to cite Lemma 2.9.  **Not amended by
-this review**, which is read-only; flagged for the next edit.
+**Amended at v1.1.**  `AXIOMS.md` §2 (new subsection "The paper's own route, and how the
+Lean proof relates to it") and §9, and the README's "What is assumed" section, now state the
+two routes, say that the Lean proof follows neither exactly, keep the no-novelty statement,
+and keep the note that the BHZ source was never accessible.  The reader-verification list is
+extended from two items to three: the §4.2 sentence, `θ = (1+√5)/2` on p. 3, **and** the
+formula of Proposition 2.6, which is also cited to BHZ §4.2.
 
 ### 6.2 Two errata already on record, unchanged
 
@@ -556,12 +633,13 @@ this review**, which is read-only; flagged for the next edit.
 ## 7. Verdict on item 3 of the review brief
 
 * **Do the main theorems quantify over every irrational `γ < γ*`?**  Yes — `hγ0 : 0 < γ`,
-  `hγ1 : γ < 1`, `hirr : Irrational γ`, `hγs : γ < gammaStar`, with no hypothesis on the
-  partial quotients, and `γ` ranging over `ℝ`.  Subject to §4.2: `γ* < 1` is not proved, so
-  `γ < 1` is carried rather than derived.
+  `hirr : Irrational γ`, `hγs : γ < gammaStar`, with no hypothesis on the partial quotients,
+  and `γ` ranging over `ℝ`.  Since v1.1 these are **exactly** the paper's hypotheses:
+  `γ* < 1` is proved (§4.2), so `γ < 1` is derived rather than assumed.
 * **Do they cover `Φ(c_γ)`, `Φ(1c_γ)`, `Φ(0c_γ)`?**  Yes — §3.3, and at `γ = log₃2`
-  specifically in §3.4.
-* **What of the paper is not covered?**  §5 above.  The one substantive gap inside
-  Theorem 1.3 / Corollary 1.4 is **the shifts** (§5.4); everything else uncovered is a
-  separate theorem of the paper (1.2, 6.1, 7.3), an unused cited proposition (2.3, 2.6,
-  2.10), or the equality half of Proposition 2.8.
+  specifically in §3.4.  Since v1.1, **every shift** of all three as well (§3.6), so
+  Corollary 1.4 is formalised in full.
+* **What of the paper is not covered?**  §5 above.  After v1.1 nothing inside
+  Theorem 1.3 / Corollary 1.4 is missing; everything still uncovered is a separate theorem
+  of the paper (1.2, 6.1, 7.3), an unused cited proposition (2.3, 2.6, 2.10), the equality
+  half of Proposition 2.8, or material outside §§1–3.

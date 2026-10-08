@@ -95,6 +95,20 @@
  Classical.choice,
  Quot.sound,
  Sturmian.ridout_single_prime]
+'Sturmian.four_thirds_lt_log2three' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.one_add_phi_lt_two_mul_log2three' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.gammaStar_lt_one' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.lt_one_of_lt_gammaStar' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.transcendental_affine' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.IsBL.transcendental_shiftIter' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Sturmian.transcendental_PhiBL_shifts' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound,
+ Sturmian.ridout_single_prime]
+'Sturmian.transcendental_PhiBL_shiftIter_mechanical' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound,
+ Sturmian.ridout_single_prime]
 'Sturmian.nrm_eq_min' depends on axioms: [propext, Classical.choice, Quot.sound]
 'Sturmian.floor_add_off' depends on axioms: [propext, Classical.choice, Quot.sound]
 'Sturmian.charWord_add_eq' depends on axioms: [propext, Classical.choice, Quot.sound]
@@ -140,6 +154,10 @@
 'Sturmian.logThreeTwo_lt_gammaTierA' depends on axioms: [propext, Classical.choice, Quot.sound]
 'Sturmian.logThreeTwo_lt_gammaStar' depends on axioms: [propext, Classical.choice, Quot.sound]
 'Sturmian.transcendental_PhiBL_logThreeTwo' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound,
+ Sturmian.ridout_single_prime]
+'Sturmian.transcendental_PhiBL_logThreeTwo_shifts' depends on axioms: [propext,
  Classical.choice,
  Quot.sound,
  Sturmian.ridout_single_prime]

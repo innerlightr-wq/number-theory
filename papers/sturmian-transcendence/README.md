@@ -124,8 +124,8 @@ Neither Pham's nor Cassidy's note is refereed, and no comparative claim is made 
 
 Branch `lean-formalization`, directory [`lean/`](lean).  **Lean 4 + Mathlib, pinned**:
 toolchain `leanprover/lean4:v4.34.0`, Mathlib `v4.34.0` (rev `5ed2965256430c3649e86755f9576b54eca72435`);
-`lean-toolchain` and `lake-manifest.json` are committed.  3573 lines of Lean, 18 files,
-**no `sorry`** anywhere in the import closure of `Sturmian.lean`.
+`lean-toolchain` and `lake-manifest.json` are committed.  18 files, 3699 lines, **no `sorry`** anywhere
+in the import closure of `Sturmian.lean`.  Tagged `sturmian-transcendence-lean-v1.1`.
 
 > **ONE axiom: Ridout's theorem.**  Corollary 1.4 is machine-checked for every irrational
 > `γ < γ*` depending on a single external result — Ridout's theorem in Bugeaud–Kekeç's
@@ -150,13 +150,17 @@ toolchain `leanprover/lean4:v4.34.0`, Mathlib `v4.34.0` (rev `5ed2965256430c3649
 
 | theorem | slopes | axioms |
 |---|---|---|
-| `transcendental_PhiBL_charWord`, `..._mechanical` | `0 < γ < γ* = 0.8258…` | **Ridout only** |
-| `transcendental_PhiBL_logThreeTwo` | `γ = log₃ 2` (headline) | **Ridout only** |
+| `transcendental_PhiBL_charWord`, `..._mechanical`, `..._shifts` | `0 < γ < γ*` | **Ridout only** |
+| `transcendental_PhiBL_logThreeTwo`, `..._shifts` | `γ = log₃ 2` (headline) | **Ridout only** |
 | `transcendental_PhiBL_charWord_tierA`, `..._mechanical_tierA` (the elementary route) | `0 < γ < γ_A = 0.7571…` | **Ridout only** |
 | `one_add_phi_le_ice` (`ice(c_γ) ≥ 1+φ`), `two_lt_ice`, `twelve_fifths_le_ice` | every irrational `γ ∈ (0,1)` | **none** |
 
 The `γ_A` row is subsumed by the first and is kept deliberately: it records that the
 headline case never needed the constant `1+φ` at all, only `e > 2`, because `A(log₃2) = 1`.
+
+Since v1.1 the hypothesis `γ < 1` is **gone** from these statements: `gammaStar_lt_one`
+proves `γ* < 1`, so `γ < γ*` already gives it.  The hypotheses are exactly the paper's
+`0 < γ`, `Irrational γ`, `γ < γ*`.
 
 ### What is machine-checked
 
@@ -192,11 +196,15 @@ headline case never needed the constant `1+φ` at all, only `e > 2`, because `A(
 | **`Sturmian.one_add_phi_le_ice`** | **the paper's Proposition 2.8, PROVED**: `ice(c_γ) ≥ 1+φ` for every irrational `γ ∈ (0,1)`. Formerly the axiom `bhz_ice_floor`. Constant due to Berthé–Holton–Zamboni; **no novelty claimed** | none |
 | `Sturmian.twelve_fifths_le_ice`, `two_lt_ice` | `ice(c_γ) ≥ 12/5 > 2`; the weaker constant, all the headline slope needs | none |
 | **`Sturmian.irrational_logThreeTwo`, `A_logThreeTwo`** | `log₃ 2` is irrational (from `2^b ≠ 3^a`), and `A(log₃ 2) = 1` | none |
-| **`Sturmian.transcendental_PhiBL_logThreeTwo`** | **the headline case**: `Φ(c_{log₃2})`, `Φ(1c_{log₃2})`, `Φ(0c_{log₃2})` transcendental, **on Ridout alone** | Theorem R |
+| **`Sturmian.transcendental_PhiBL_shifts`** | **Corollary 1.4 in full**: `Φ(σ^m c_γ)`, `Φ(σ^m 1c_γ)`, `Φ(σ^m 0c_γ)` transcendental for **every** `m ≥ 0` — "`Φ` of every shift of these words". Via the paper's eq. (3), `2^m Φ(σ^m v) = 3^{k_m(v)}Φ(v) + c_m(v)`, as a rational-affine relation | Theorem R |
+| **`Sturmian.transcendental_PhiBL_logThreeTwo`**, `..._shifts` | **the headline case**: `Φ` of `c_{log₃2}`, `1c_{log₃2}`, `0c_{log₃2}` and every shift of them, transcendental, **on Ridout alone** | Theorem R |
+| `Sturmian.gammaStar_lt_one` | `γ* < 1`, through the rational witness `4/3` between `(3+√5)/4` and `log₂3`; so `γ < 1` is redundant given `γ < γ*` | none |
 
-`#print axioms` evidence: [`AXIOM_AUDIT.txt`](lean/AXIOM_AUDIT.txt) — **115 results audited,
-0 `sorryAx`, 104 depending on no named axiom, 11 on Ridout's theorem, and nothing else.
-`bhz_ice_floor` appears nowhere in the output: the axiom no longer exists.**
+`#print axioms` evidence: [`AXIOM_AUDIT.txt`](lean/AXIOM_AUDIT.txt) — **124 results audited,
+0 `sorryAx`, 110 depending on no named axiom, 14 on Ridout's theorem, and nothing else.
+`bhz_ice_floor` appears nowhere in the output: the axiom no longer exists.**  A
+statement-by-statement review against the paper, with the scope limits, is in
+[`STATEMENTS.md`](lean/STATEMENTS.md).
 
 Every definition is audited against the paper's verbatim text, with a machine-checked sanity
 lemma, in [`Sturmian/DefinitionAudit.lean`](lean/Sturmian/DefinitionAudit.lean): `charWord`
@@ -219,10 +227,24 @@ ref. [4]. The source was never retrieved — `doi:10.4064/aa122-4-1` returns HTT
 impan, EuDML and bibliotekanauki routes each serve an unrelated document, and no preprint
 exists on arXiv or HAL — so the statement had to be proved rather than checked. It now is
 (`Sturmian.one_add_phi_le_ice`), and **the inaccessibility no longer affects any result**:
-nothing in the development depends on the BHZ paper's text. What remains unverified is the
-*citation*, not the mathematics: the paper obtains Proposition 2.8 as its own two-line
-deduction from an *unnumbered sentence* in BHZ §4.2 (after the proof of their Theorem 1.2)
-plus `θ = (1+√5)/2` on their p. 3, and those two items are still unchecked.
+nothing in the development depends on the BHZ paper's text.
+
+**The paper's own route to Proposition 2.8, stated correctly** (this was described
+incompletely before v1.1). The paper gives two routes: the direct citation of an
+*unnumbered sentence* in BHZ §4.2 (after the proof of their Theorem 1.2), together with
+`θ = (1+√5)/2` on their p. 3; **and** Proposition 2.6 — the exact formula
+`ice(c_α) = 1 + limsup q_{k+1}/q_k`, also cited to BHZ §4.2 — combined with the paper's
+**own Lemma 2.9**, an elementary four-line continued-fraction re-derivation which the paper
+labels "it is not a new result". So the arithmetic half of the floor is proved in the paper
+and only the formula is imported.
+
+**The Lean proof follows neither route exactly, and claims no novelty.** It formalises
+neither Proposition 2.6 (which equates `ice` with a continued-fraction limsup, and Mathlib
+has no best-approximation property for convergents) nor Lemma 2.9 (whose proof is about the
+convergent recursion, for the same reason). It proves their combination in one step, from
+best-approximation *records* built from their definition. What remains unverified at the
+source is the paper's *citations* — the §4.2 sentence, `θ` on p. 3, and the formula of
+Proposition 2.6 — not the mathematics.
 
 **Not assumed, and not needed:** the Berthé–Holton–Zamboni floor (**proved**, stage 5);
 the existence of `Φ` (constructed); the isometry (proved);
@@ -246,7 +268,11 @@ Corollary 1.4 are machine-checked modulo **Ridout's theorem** and nothing else. 
 theorem is a result of another author and would be an axiom in any formalisation that does
 not also formalise its proof.
 
-Two things are deliberately *not* formalised:
+`Φ` of **every shift** is covered as of v1.1 (`transcendental_PhiBL_shifts`), so
+Corollary 1.4 is now formalised in full.  Theorem 1.2 (the `ω` bound), Proposition 2.6,
+Theorem 6.1 and Theorem 7.3 are **not** formalised; `STATEMENTS.md` §5 lists them.
+
+Two further things are deliberately *not* formalised:
 
 * **the equality case of Proposition 2.8** — `ice(c_γ) = 1+φ` iff the partial quotients are
   eventually all `1`.  The axiom never asserted it and nothing uses it.  That the

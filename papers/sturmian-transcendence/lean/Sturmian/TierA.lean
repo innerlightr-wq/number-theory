@@ -48,8 +48,9 @@ without the `ε`-argument of `Sturmian/Floor.lean` and without any statement abo
 Subsumed by `Sturmian.transcendental_charWord`, which now covers all `γ < γ*` on the same
 single axiom; kept as the short route. -/
 theorem transcendental_charWord_tierA (h : IsBL Φ) {γ : ℝ}
-    (hγ0 : 0 < γ) (hγ1 : γ < 1) (hirr : Irrational γ) (hγA : γ < gammaTierA) :
+    (hγ0 : 0 < γ) (hirr : Irrational γ) (hγA : γ < gammaTierA) :
     Transcendental ℚ ((Φ (charWord γ) : ℚ_[2])) := by
+  have hγ1 : γ < 1 := lt_one_of_lt_gammaStar (lt_trans hγA gammaTierA_lt_gammaStar)
   choose ℓ L hℓN hℓ2 hLge hagr using fun j : ℕ => exists_long_period hirr (max j 2)
   refine transcendental_of_prefix_family h hγ0 hγ1 hirr (e := 12 / 5) (by norm_num)
     (two_A_lt_twelve_fifths hγA) (W := fun _ => charWord γ) hℓ2 ?_ ?_
@@ -62,19 +63,19 @@ theorem transcendental_charWord_tierA (h : IsBL Φ) {γ : ℝ}
 
 /-- …and for the constructed Bernstein–Lagarias map. -/
 theorem transcendental_PhiBL_charWord_tierA {γ : ℝ}
-    (hγ0 : 0 < γ) (hγ1 : γ < 1) (hirr : Irrational γ) (hγA : γ < gammaTierA) :
+    (hγ0 : 0 < γ) (hirr : Irrational γ) (hγA : γ < gammaTierA) :
     Transcendental ℚ ((PhiBL (charWord γ) : ℚ_[2])) :=
-  transcendental_charWord_tierA isBL_PhiBL hγ0 hγ1 hirr hγA
+  transcendental_charWord_tierA isBL_PhiBL hγ0 hirr hγA
 
 /-- …and for the two mechanical words at intercept `0` (paper eq. (12)). -/
 theorem transcendental_PhiBL_mechanical_tierA {γ : ℝ}
-    (hγ0 : 0 < γ) (hγ1 : γ < 1) (hirr : Irrational γ) (hγA : γ < gammaTierA) :
+    (hγ0 : 0 < γ) (hirr : Irrational γ) (hγA : γ < gammaTierA) :
     Transcendental ℚ ((PhiBL (cons true (charWord γ)) : ℚ_[2])) ∧
     Transcendental ℚ ((PhiBL (cons false (charWord γ)) : ℚ_[2])) :=
   ⟨transcendental_cons_true isBL_PhiBL
-      (transcendental_PhiBL_charWord_tierA hγ0 hγ1 hirr hγA),
+      (transcendental_PhiBL_charWord_tierA hγ0 hirr hγA),
    transcendental_cons_false isBL_PhiBL
-      (transcendental_PhiBL_charWord_tierA hγ0 hγ1 hirr hγA)⟩
+      (transcendental_PhiBL_charWord_tierA hγ0 hirr hγA)⟩
 
 /-! ## The headline slope `γ = log₃ 2`
 
@@ -155,10 +156,19 @@ theorem transcendental_PhiBL_logThreeTwo :
     Transcendental ℚ ((PhiBL (charWord logThreeTwo) : ℚ_[2])) ∧
     Transcendental ℚ ((PhiBL (cons true (charWord logThreeTwo)) : ℚ_[2])) ∧
     Transcendental ℚ ((PhiBL (cons false (charWord logThreeTwo)) : ℚ_[2])) := by
-  have h := transcendental_PhiBL_charWord_tierA logThreeTwo_pos logThreeTwo_lt_one
+  have h := transcendental_PhiBL_charWord_tierA logThreeTwo_pos
     irrational_logThreeTwo logThreeTwo_lt_gammaTierA
-  have h2 := transcendental_PhiBL_mechanical_tierA logThreeTwo_pos logThreeTwo_lt_one
+  have h2 := transcendental_PhiBL_mechanical_tierA logThreeTwo_pos
     irrational_logThreeTwo logThreeTwo_lt_gammaTierA
   exact ⟨h, h2.1, h2.2⟩
+
+/-- **The headline case in full**, including every shift: Corollary 1.4 at the resonance
+slope `γ = β = log₃ 2`, "with no hypothesis on the partial quotients of `log₂ 3`". -/
+theorem transcendental_PhiBL_logThreeTwo_shifts (m : ℕ) :
+    Transcendental ℚ ((PhiBL (shiftIter m (charWord logThreeTwo)) : ℚ_[2])) ∧
+    Transcendental ℚ ((PhiBL (shiftIter m (cons true (charWord logThreeTwo))) : ℚ_[2])) ∧
+    Transcendental ℚ ((PhiBL (shiftIter m (cons false (charWord logThreeTwo))) : ℚ_[2])) :=
+  transcendental_PhiBL_shifts logThreeTwo_pos irrational_logThreeTwo
+    logThreeTwo_lt_gammaStar m
 
 end Sturmian
