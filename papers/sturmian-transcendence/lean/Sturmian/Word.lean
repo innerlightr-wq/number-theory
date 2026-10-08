@@ -62,6 +62,15 @@ lemma shift_shiftIter (m : ℕ) (v : Word) : shift (shiftIter m v) = shiftIter (
 lemma shiftIter_zero_apply (m : ℕ) (v : Word) : shiftIter m v 0 = v m := by
   simp [shiftIter]
 
+/-- `w^∞` for a finite word of length `ℓ` presented as `W : ℕ → Bool` read modulo `ℓ`. -/
+def per (ℓ : ℕ) (W : Word) : Word := fun n => W (n % ℓ)
+
+lemma per_apply_of_lt {ℓ : ℕ} (W : Word) {i : ℕ} (hi : i < ℓ) : per ℓ W i = W i := by
+  simp [per, Nat.mod_eq_of_lt hi]
+
+lemma shiftIter_per {ℓ : ℕ} (W : Word) : shiftIter ℓ (per ℓ W) = per ℓ W := by
+  funext n; simp [shiftIter, per, Nat.add_mod_right]
+
 /-! ## The characteristic Sturmian word
 
 Paper, §2.2: "For irrational $\gamma\in(0,1)$ the characteristic word is

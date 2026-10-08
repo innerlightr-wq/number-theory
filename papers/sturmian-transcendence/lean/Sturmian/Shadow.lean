@@ -20,15 +20,6 @@ import Mathlib.Data.Rat.Lemmas
 
 namespace Sturmian
 
-/-- `w^∞` for a finite word of length `ℓ` presented as `W : ℕ → Bool` read modulo `ℓ`. -/
-def per (ℓ : ℕ) (W : Word) : Word := fun n => W (n % ℓ)
-
-lemma per_apply_of_lt {ℓ : ℕ} (W : Word) {i : ℕ} (hi : i < ℓ) : per ℓ W i = W i := by
-  simp [per, Nat.mod_eq_of_lt hi]
-
-lemma shiftIter_per {ℓ : ℕ} (W : Word) : shiftIter ℓ (per ℓ W) = per ℓ W := by
-  funext n; simp [shiftIter, per, Nat.add_mod_right]
-
 /-- `k_ℓ(w^∞)` is the paper's `k`, the number of ones of `w`. -/
 lemma ones_per {ℓ : ℕ} (W : Word) : ones ℓ (per ℓ W) = ones ℓ W :=
   ones_congr fun i hi => per_apply_of_lt W hi
