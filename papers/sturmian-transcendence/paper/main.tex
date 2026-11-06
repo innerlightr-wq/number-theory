@@ -76,9 +76,12 @@ ones at slopes $\gamma\le\log_3 2$. Transcendence of $\PH$ on Sturmian words was
 Allikvere \cite{Allikvere26} in July 2026, for every Sturmian word of every slope; the proof here
 is independent and takes a different route, Ridout's theorem at the single place $2$, and is
 accompanied by a Lean~4 formalization in which Ridout's theorem is the sole axiom. Using only
-Ridout, the range $\gamma<\gs$ exceeds the range $\delta<0.791798\ldots$ reached by Ridout in
-\cite[Theorem 4.4]{Allikvere26}, the input that achieves it being the Berth\'e--Holton--Zamboni
-floor $\ice(c_\gamma)\ge1+\varphi$.
+Ridout, the slope range $\gamma<\gs$ for the characteristic word and its shift orbit exceeds the
+all-intercept range $\delta<0.791798\ldots$ of \cite[Theorem 4.4]{Allikvere26}; the gain comes
+from the Berth\'e--Holton--Zamboni floor $\ice(c_\gamma)\ge1+\varphi$, which is specific to the
+characteristic word, in place of the all-intercept repetition bound $2.50994\ldots$ used there.
+The two results are incomparable: \cite[Theorem 4.4]{Allikvere26} reaches every intercept, this
+paper reaches larger slopes at intercept $0$.
 \end{abstract}
 
 \maketitle
@@ -130,11 +133,14 @@ For Sturmian words Question~\ref{q:per} is a theorem. Write $\beta=\log_3 2=0.63
   Corollary~2, with a dual construction below $\beta$. This is a different number from the $2$-adic
   $\PH$; see Remark~\ref{rem:real}. Their later preprint \cite[Theorem 1]{LS21} concerns the
   $2$-adic value; we cite it as context only and depend on it nowhere.
-\item The author \cite[Theorems 8.5 and 10.1, Corollary 10.5]{DJirr} proved that $\PH(s)\notin\Q$
-  for \emph{every} mechanical word $s$ of every irrational slope and every intercept, effectively.
-  Cassidy \cite[Theorems R and S]{Cassidy26} proved the irrationality statement independently and
-  contemporaneously, by a $2$-adic repetition criterion, for every slope and intercept and for a
-  wider class of maps; his note was posted first (see \S\ref{sec:related}).
+\item Irrationality of $\PH(s)$ for every Sturmian word was obtained in 2026 by four independent
+  routes: Pham \cite{Pham26} (22 July, counting after Dubickas), Allikvere
+  \cite[Corollary 3.4]{Allikvere26} (25 July, periodic-shadow height bound, with the critical
+  slope in Remark~3.5), Cassidy \cite[Theorems R and S]{Cassidy26} (22 September, repetition
+  criterion, also for $3x+r$, $5x+1$ and Mahler's map), and the author
+  \cite[Theorems 8.5 and 10.1, Corollary 10.5]{DJirr} (23 September, the exact depth law with
+  effective height floors). Of these, \cite{DJirr} is the one whose ingredients this paper
+  reuses. See \S\ref{ss:priority} for the dated record.
 \end{itemize}
 
 Irrationality says $\PH(s)$ is not a rational point. It says nothing about whether $\PH(s)$ is
@@ -291,11 +297,16 @@ Berth\'e--Holton--Zamboni floor $\ice(c_\gamma)\ge1+\varphi=2.6180\ldots$
 $\gamma<\gs$ of Corollary~\ref{cor:uncond}.
 
 \subsection{What is new here}
-New in this paper: the transcendence theorem and its range, Theorem~\ref{thm:main} and
-Corollary~\ref{cor:uncond}; the quantitative bound $\om\ge\ice/\Av-1$ of
-Theorem~\ref{thm:quant}, obtained through $c_\gamma$; the parity obstruction of
-\S\ref{sec:parity} with the witness of Example~\ref{ex:witness}; and the two complements,
-Theorem~\ref{thm:liouville} and Theorem~\ref{thm:Bstar}.
+Relative to \cite{Allikvere26}, whose Theorem~4.4 already gives transcendence for every Sturmian
+word of slope $\delta<0.791798\ldots$ and whose Theorem~5.4 gives it for every Sturmian word of
+every slope, what is new here is: the quantitative bound $\om\ge\ice/\Av-1$ of
+Theorem~\ref{thm:quant}, obtained through $c_\gamma$; the slope range $(0.791798\ldots,\gs)$ at
+intercept $0$; the parity obstruction of \S\ref{sec:parity} with the witness of
+Example~\ref{ex:witness}; Theorem~\ref{thm:liouville}, which places $\PH(c_\gamma)$ in Mahler's
+class $U_1$ for unbounded partial quotients, a classification \cite{Allikvere26} does not make;
+Theorem~\ref{thm:Bstar}, the effective measure for bounded type at $\gamma\le\beta$; and the
+Lean~4 formalization \cite{DJlean}. The transcendence conclusion itself, for
+$\gamma<0.791798\ldots$, is contained in \cite[Theorem 4.4]{Allikvere26}.
 
 Three ingredients are the author's \emph{prior} work. They are quoted here with exact locators and
 are not claimed as new: the depth law at both convergent parities is \cite[Theorem 8.3]{DJirr}
@@ -329,12 +340,16 @@ proved irrationality independently, via the depth law and with effective height 
 
 This paper, of 7 October 2026, gives an independent transcendence proof by Ridout's theorem in the
 single-prime form \cite[Theorem 1.3]{BK18}, for $c_\gamma$, $1c_\gamma$, $0c_\gamma$ and their
-shifts at every irrational slope $\gamma<\gs$, together with a Lean~4 formalization in which
-Ridout's theorem is the sole axiom. Using only Ridout, that range exceeds the range
-$\delta<0.791798\ldots$ of \cite[Theorem 4.4]{Allikvere26}; the input achieving it is the
-Berth\'e--Holton--Zamboni floor $\ice(c_\gamma)\ge1+\varphi$ (Proposition~\ref{prop:icefloor}),
-in place of the repetition exponent $2.50994\ldots$ used there. In word class and in slope range
-taken together, \cite[Theorem 5.4]{Allikvere26} is stronger than anything proved here.
+shifts at every irrational slope $\gamma<\gs$, together with a Lean~4 formalization
+\cite{DJlean} in which Ridout's theorem is the sole axiom. Using only Ridout, that slope range exceeds the
+all-intercept range $\delta<0.791798\ldots$ of \cite[Theorem 4.4]{Allikvere26}; the gain comes
+from the Berth\'e--Holton--Zamboni floor $\ice(c_\gamma)\ge1+\varphi$
+(Proposition~\ref{prop:icefloor}), which is specific to the characteristic word, in place of the
+all-intercept Bugeaud--Kim repetition bound $2.50994\ldots$ used there. \emph{The two results
+are incomparable}: \cite[Theorem 4.4]{Allikvere26} reaches every intercept, this paper reaches
+larger slopes at intercept $0$, and \S\ref{ss:intercepts} exhibits Sturmian words with
+$\ice=2$ exactly, for which the present route gives nothing. In word class and slope range taken
+together, \cite[Theorem 5.4]{Allikvere26} is stronger than anything proved here.
 
 
 \subsection{Organisation}
@@ -744,7 +759,9 @@ $\PH(1c_\beta)=-\Xi_\alpha$ with $\alpha=\log_2 3$, $\beta=\log_3 2$. In
 \cite[Theorem 4.1]{DJedge} the sign is inside the definition,
 $\Xi_{\alpha,b}:=-\frac13\sum_{i\ge0}3^{-i}2^{S_i}=-\sum_{i\ge0}3^{-i-1}2^{\lfloor i\alpha+b\rfloor}$
 with $S_i=\lfloor i\alpha+b\rfloor$, and then $\PH(1c_\beta)=+\Xi_{\alpha,0}$. Equivalently
-$\Xi_{\alpha,0}=-\Xi_\alpha$. Both papers are internally correct; crossing the conventions is not.
+$\Xi_{\alpha,0}=-\Xi_\alpha$. Both papers are internally correct; crossing the conventions is not. The constant named $\Xi$
+in \cite[Theorem 4.4]{Allikvere26} is $\PH(1c_\beta)$, i.e.\ the \cite{DJedge} convention, so
+all three papers are discussing one number.
 We verified exactly, with $\PH$ computed from the parity-vector definition alone and certified
 floors, that $\PH(1c_\beta)=-\Xi_\alpha$ and $\PH(1c_\beta)=+\Xi_{\alpha,0}$ both hold modulo
 $2^{3000}$ (1893 terms summed) while the opposite signs both fail, and that
@@ -1110,12 +1127,15 @@ the term-size estimate \eqref{eq:terms} with the distribution of the terms, whil
 throughout this paper are the term exponents of their 2009 series. We do not rely on
 \cite[Theorem 1]{LS21}.
 
-Two contemporaneous independent contributions should be recorded, both concerning
+Three contemporaneous independent contributions should be recorded, all concerning
 \emph{irrationality}. We reuse the characterisations of \cite[\S1]{DJirr}. Pham
 \cite[Theorem 3, Corollaries 4--5]{Pham26}, in an unrefereed note dated 22 July 2026, transported
 Dubickas's counting argument to rational $2$-adic integers and drew the conclusion that every
 Sturmian parity word has irrational $\PH$-value; his Theorem 3 is moreover sensitive to the drift
-of the word. Cassidy \cite[Theorems R and S]{Cassidy26}, in an unrefereed note of September
+of the word. Allikvere \cite[Corollary 3.4]{Allikvere26}, on 25 July 2026 --- before both of the
+notes that follow --- obtained irrationality for every Sturmian word from his periodic-shadow
+height bound, with the critical slope treated in his Remark~3.5. Cassidy
+\cite[Theorems R and S]{Cassidy26}, in an unrefereed note of September
 2026, proved by a $2$-adic repetition (Liouville) criterion that no rational with odd denominator
 has an eventually Sturmian parity vector, for every slope and intercept, and for a wider class of
 maps: $3x+r$, $5x+1$ at slopes below $0.804$, and Mahler's map; his second route, through initial

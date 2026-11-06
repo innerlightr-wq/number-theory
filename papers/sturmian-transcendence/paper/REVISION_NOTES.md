@@ -181,14 +181,59 @@ Diff against v1: `main.tex` +91/−21, `refs.bib` +38/−1 — 108 insertions, 2
 > doi:10.5281/zenodo.21543841), for every Sturmian word of every slope, via a Subspace-theorem
 > criterion; the proof in this paper is independent and runs by Ridout's theorem at the single
 > place 2. The abstract, introduction, open-problems section and bibliography have been revised
-> accordingly, and references to Allikvere, Pham, Bondurant-David and the author's two June 2026
-> notes have been added.
+> accordingly, and references to Allikvere, Pham, Bondurant-David, the Lean companion and the
+> author's two June 2026 notes have been added. The Ridout range obtained here, γ < 0.8258977…
+> at intercept 0, is incomparable with Allikvere's all-intercept Ridout range δ < 0.791798…:
+> neither contains the other.
 
 ### (ii) Hexagon v2 comment field
 
 > v2: attribution correction, no mathematical change. Priority for transcendence of Φ on Sturmian
-> words belongs to Allikvere (25 July 2026, doi:10.5281/zenodo.21543841), whose Theorem 5.4
-> covers every Sturmian word of every slope; this paper gives an independent proof by the Ridout
-> route for γ < (3+√5)/(4 log₂3) = 0.8258977…, and the two open problems it listed on intercepts
-> and on slopes above that threshold are now marked settled by his Theorems 5.3–5.4. Definitions,
-> theorem statements, proofs, numbering and the Lean companion are unchanged.
+> words belongs to Allikvere (25 July 2026, doi:10.5281/zenodo.21543841), whose Theorem 5.4 covers
+> every Sturmian word of every slope, and whose Corollary 3.4 also predates the 2026 irrationality
+> notes; this paper gives an independent Ridout-route proof for γ < (3+√5)/(4 log₂3) = 0.8258977…
+> at intercept 0, incomparable with his all-intercept Theorem 4.4 (δ < 0.791798…). The two open
+> problems on intercepts and on slopes above that threshold are now marked settled by his
+> Theorems 5.3–5.4; definitions, theorem statements, proofs, numbering and the Lean companion are
+> unchanged.
+
+
+---
+
+## Second review round (6 November 2026) — three required fixes and two optional
+
+**1. Irrationality priority in §1.2 and §9.** Upheld. §1.9 had the dated record right while
+§1.2 and §9 still named only Pham, Cassidy and [DJirr], omitting Allikvere's Corollary 3.4
+(25 July), which predates both September notes.
+- §1.2 third bullet replaced by the four-route list: Pham (22 July), Allikvere (25 July,
+  Cor. 3.4, critical slope in Rem. 3.5), Cassidy (22 Sept), the author (23 Sept), closing with
+  "Of these, [DJirr] is the one whose ingredients this paper reuses."
+- §9: "Two contemporaneous independent contributions … both concerning irrationality" → "Three
+  … all concerning", with Allikvere inserted between Pham and Cassidy, noting 25 July is before
+  both notes that follow.
+
+**2. The "exceeds Theorem 4.4" claim needed the intercept caveat.** Upheld, and verified at
+source: Allikvere's Theorem 4.4 reads "Let w be a Sturmian word of slope δ" — every intercept —
+and its input is the Bugeaud–Kim universal repetition bound rep(s) ≤ 10−√32, giving
+dio(s) ≥ 2.50994…. The present range rests on the BHZ floor ice(c_γ) ≥ 1+φ, which is specific to
+the characteristic word, and §8.1 concedes Sturmian words with ice = 2 exactly. **Neither result
+contains the other.** Both the abstract and §1.9 now say so explicitly, naming Bugeaud–Kim and
+pointing at §8.1.
+
+**3. §1.8 "What is new here" rewritten relative to [Allikvere26].** "The transcendence theorem
+and its range" dropped from the list. New list: the quantitative bound ω ≥ ice/A(γ) − 1; the
+slope range (0.791798…, γ*) at intercept 0; the parity obstruction with its witness; the U₁
+classification for unbounded partial quotients, which [Allikvere26] does not make; the effective
+measure for bounded type at γ ≤ β; and the Lean formalization. Closes by conceding that the
+transcendence conclusion for γ < 0.791798… is contained in [Allikvere26, Theorem 4.4].
+
+**4. (optional, done) Lean entry.** Added `DJlean` — repo, path
+`papers/sturmian-transcendence/lean`, tag `sturmian-transcendence-lean-v1.1`, with the axiom
+statement — and cited at both places where the formalization is named.
+
+**5. (optional, done) Ξ conventions.** Half a sentence added to the Ξ remark: the constant named
+Ξ in [Allikvere26, Theorem 4.4] is Φ(1c_β), i.e. the [DJedge] convention, so all three papers
+discuss one number. Verified against his text: he writes Ξ = −Σ 2^⌊j log₂3⌋/3^{j+1} = Φ(w_β) with
+w_β "the upper mechanical word of slope log2/log3 and intercept 0".
+
+Rebuild after this round: `latexmk` exit 0, **21 pages, 0 undefined references or citations**.
