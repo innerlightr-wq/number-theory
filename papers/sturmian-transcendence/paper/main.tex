@@ -72,7 +72,13 @@ the digit-based transcendence criteria: the $2$-adic Hensel digits of $\PH(c_{\l
 measured to have full complexity $2^n$, against the parity word's $n+1$, and the shadow denominators
 $2^{\ell}-3^{k}$ are not $S$-units for any fixed finite $S$. We also record the Liouville
 alternative for unbounded partial quotients and a finite effective irrationality measure for bounded
-ones at slopes $\gamma\le\log_3 2$.
+ones at slopes $\gamma\le\log_3 2$. Transcendence of $\PH$ on Sturmian words was first proved by
+Allikvere \cite{Allikvere26} in July 2026, for every Sturmian word of every slope; the proof here
+is independent and takes a different route, Ridout's theorem at the single place $2$, and is
+accompanied by a Lean~4 formalization in which Ridout's theorem is the sole axiom. Using only
+Ridout, the range $\gamma<\gs$ exceeds the range $\delta<0.791798\ldots$ reached by Ridout in
+\cite[Theorem 4.4]{Allikvere26}, the input that achieves it being the Berth\'e--Holton--Zamboni
+floor $\ice(c_\gamma)\ge1+\varphi$.
 \end{abstract}
 
 \maketitle
@@ -132,7 +138,8 @@ For Sturmian words Question~\ref{q:per} is a theorem. Write $\beta=\log_3 2=0.63
 \end{itemize}
 
 Irrationality says $\PH(s)$ is not a rational point. It says nothing about whether $\PH(s)$ is
-algebraic. That is the gap this paper closes.
+algebraic. That gap was first closed by Allikvere \cite{Allikvere26}; this paper closes it
+independently, by a different route and for the words and slopes stated below.
 
 \subsection{Main results}
 Let $\gamma\in(0,1)$ be irrational with continued fraction $\gamma=[0;a_1,a_2,\dots]$ and
@@ -196,8 +203,8 @@ Theorem~\ref{thm:main} gives under its hypothesis~\eqref{eq:T}, and $\gs$ is suf
 necessary: slopes above $\gs$ with large partial quotients still satisfy \eqref{eq:T}
 (\S\ref{ss:aboveg}). It says nothing about intercepts other than $0$ beyond \S\ref{ss:intercepts},
 and nothing about approximation by \emph{integers}, which is problem~(2) of \cite[\S12]{DJirr} and
-remains open (\S\ref{ss:integer}). No claim of priority is made over \cite{Cassidy26}; see
-\S\ref{sec:related}.
+remains open (\S\ref{ss:integer}). No claim of priority is made over \cite{Allikvere26} or
+\cite{Cassidy26}; see \S\ref{ss:priority} and \S\ref{sec:related}.
 
 \subsection{Epistemic tiers}\label{ss:tiers}
 Three labels are used, and used consistently. \textbf{T1}: proved here or quoted from a cited source
@@ -302,12 +309,32 @@ and its floor are \cite[\S4.2]{BHZ06}, and the threshold is \cite[Theorem 1.3]{B
 keep a proof of an inherited statement it is labelled a re-derivation. A table of every ingredient
 against its prior source accompanies this paper.
 
-Transcendence of $\PH(s)$ for every Sturmian word $s$ was first proposed by Cassidy
-\cite[\S4.6]{Cassidy26}, with a sketch via Schlickewei's $p$-adic Subspace Theorem, recorded
-there as unaudited. We give a complete proof for characteristic words of every irrational slope
-$\gamma<\gs$, by a different route: Ridout's theorem in the single-prime form
-\cite[Theorem 1.3]{BK18}, together with the Berth\'e--Holton--Zamboni bound on initial powers.
-The general claim remains open.
+\subsection{Priority and independence}\label{ss:priority}
+The dated record is as follows. On 5 June 2026 the author introduced $\Xi_\alpha$ and the exact
+agreement-depth law with convergent periodic words \cite[Lemma 5.1, Theorem 7.1]{DJcarry}; on
+8 June 2026, $\Xi_{\alpha,\beta}$ for every intercept, its identification as a Hecke--Mahler value
+at $(1/3,2)$, and $\Xi\notin\Z$, with irrationality and an effective measure --- or transcendence
+by a $2$-adic Mahler method --- posed there as Open Problems~1 and~2 \cite{DJedge}. On 22 July 2026
+Pham \cite{Pham26} obtained irrationality for Sturmian words by a counting route. On 25 July 2026
+Allikvere \cite{Allikvere26} proved transcendence, and did so by both routes: irrationality for
+every Sturmian word (Corollary~3.4, with Remark~3.5 at the critical slope); transcendence by
+Ridout's theorem for slopes $\delta<0.791798\ldots$ (Theorem~4.4); and, from a Subspace-shadow
+criterion proved there in full (Theorem~5.3), transcendence for \emph{every} Sturmian word of
+\emph{every} slope (Theorem~5.4), with a prefix-exponent form needing no density (Corollary~5.5)
+and Thue--Morse block codings (Theorem~5.9). His drift pressure $m(\delta)=\max(1,\delta\log_2 3)$
+is the height exponent written $\Av$ here. On 22 September 2026 Cassidy \cite[\S4.6]{Cassidy26}
+recorded, independently, an unaudited sketch of the Subspace route. On 23 September 2026 the author
+proved irrationality independently, via the depth law and with effective height floors
+\cite{DJirr}.
+
+This paper, of 7 October 2026, gives an independent transcendence proof by Ridout's theorem in the
+single-prime form \cite[Theorem 1.3]{BK18}, for $c_\gamma$, $1c_\gamma$, $0c_\gamma$ and their
+shifts at every irrational slope $\gamma<\gs$, together with a Lean~4 formalization in which
+Ridout's theorem is the sole axiom. Using only Ridout, that range exceeds the range
+$\delta<0.791798\ldots$ of \cite[Theorem 4.4]{Allikvere26}; the input achieving it is the
+Berth\'e--Holton--Zamboni floor $\ice(c_\gamma)\ge1+\varphi$ (Proposition~\ref{prop:icefloor}),
+in place of the repetition exponent $2.50994\ldots$ used there. In word class and in slope range
+taken together, \cite[Theorem 5.4]{Allikvere26} is stronger than anything proved here.
 
 
 \subsection{Organisation}
@@ -318,6 +345,11 @@ alternative, \S\ref{sec:measure} a finite effective measure in the bounded-parti
 \S\ref{sec:scope} lists the scope limitations and open problems, \S\ref{sec:related} the related
 work. Appendix~\ref{app:schlickewei} re-derives the threshold from Schlickewei's subspace theorem;
 Appendix~\ref{app:verif} summarises the exact-arithmetic verification.
+
+\medskip
+\noindent
+\emph{Version history.} v1, 7 October 2026. v2, 6 November 2026: corrects priority and adds the
+references in \S\ref{ss:priority}; no mathematical content changed.
 
 \section{Setup}\label{sec:setup}
 
@@ -993,10 +1025,18 @@ it. For the golden slope no such word exists, since $(a_k,a_{k+1},a_{k+2})=(1,1,
 $\gamma=\beta$ whether such a word exists is open, being a statement about recurrence of patterns in
 the partial quotients of $\log_2 3$.
 
-\begin{question}\label{q:intercepts}
+\begin{question}[settled]\label{q:intercepts}
 Is $\PH(s)$ transcendental for every Sturmian word $s$ of every intercept, at least for
 $\gamma<\gs$?
 \end{question}
+
+\noindent
+\textbf{Settled, and not by the method of this paper.} Allikvere
+\cite[Theorem 5.4]{Allikvere26} gives transcendence for every Sturmian word of every slope and
+every intercept, via the Subspace-shadow criterion \cite[Theorem 5.3]{Allikvere26}. The
+limitation recorded above is therefore a limitation of the single-place Ridout route only. What
+remains genuinely open here is the finer question in the preceding paragraph: whether, at
+$\gamma=\beta$, a Sturmian word with $\ice=2$ exactly exists.
 
 \subsection{Slopes above \texorpdfstring{$\gs$}{gamma*}}\label{ss:aboveg}
 For $\gamma\ge\gs$ the condition \eqref{eq:T} becomes a genuine hypothesis on the partial quotients,
@@ -1006,10 +1046,20 @@ $>1$ for $\gamma=0.82200179\ldots$ and $<1$ for $\gamma=0.84889772\ldots$; both 
 (Appendix~\ref{app:verif}). Improving the range requires either a better height exponent than $\Av$
 or an input stronger than Theorem R at the single place $2$.
 
-\begin{question}\label{q:subspace}
+\begin{question}[settled]\label{q:subspace}
 Can the range be extended towards all slopes by an $S$-unit or Subspace argument over
 $\{\infty,2,3\}$, in place of the single place $2$?
 \end{question}
+
+\noindent
+\textbf{Settled in the affirmative.} This is exactly what Allikvere
+\cite[Theorems 5.3 and 5.4]{Allikvere26} carries out, with the slope-range bookkeeping supplied;
+the threshold there is $\tau>m(\delta)$, with $m(\delta)=\max(1,\delta\log_2 3)=\Av$. The same
+criterion has since been applied by Bondurant-David \cite{BondurantDavid26} to codings of
+irrational rotations by arcs of any length, where irrationality is obtained unconditionally and
+the corresponding transcendence statement is drawn conditionally on
+\cite[Theorem 5.3]{Allikvere26}. The discussion below is retained as a description of
+what the single-place route cannot reach, not as an open problem.
 
 \noindent
 This is the route sketched by Cassidy \cite[\S4.6]{Cassidy26}: build integer points
@@ -1073,13 +1123,16 @@ squares, is the method of \cite[\S10]{DJirr}. Both were found independently of \
 Cassidy's note was posted first. Neither note is refereed and we make no comparative claim about
 either.
 
-Transcendence of $\PH(s)$ for every Sturmian word $s$ was first proposed by Cassidy
-\cite[\S4.6]{Cassidy26}, with a sketch via Schlickewei's $p$-adic Subspace Theorem, recorded
-there as unaudited. The complete proof given here covers characteristic words of every irrational
-slope $\gamma<\gs$ and goes by a different route, Ridout's theorem in the single-prime form
-\cite[Theorem 1.3]{BK18} with the Berth\'e--Holton--Zamboni bound on initial powers; the general
-claim remains open. See \S\ref{ss:aboveg} for what an argument over $\{\infty,2,3\}$ would
-have to supply.
+Transcendence of $\PH(s)$ for Sturmian words was first proved by Allikvere
+\cite{Allikvere26} in July 2026, by both the Ridout route (Theorem~4.4, slopes
+$\delta<0.791798\ldots$) and a Subspace-shadow criterion proved there in full (Theorem~5.3),
+the latter giving every Sturmian word of every slope (Theorem~5.4). Cassidy
+\cite[\S4.6]{Cassidy26} recorded an independent and unaudited sketch of the Subspace route in
+September 2026. The proof given here is independent of both, covers $c_\gamma$, $1c_\gamma$,
+$0c_\gamma$ and their shifts at every irrational slope $\gamma<\gs$, and goes by Ridout's theorem
+in the single-prime form \cite[Theorem 1.3]{BK18} with the Berth\'e--Holton--Zamboni bound on
+initial powers. See \S\ref{ss:priority} for the dated record and \S\ref{ss:aboveg} for what the
+single place $2$ cannot reach.
 
 
 On the archimedean side the analogous programme is well developed: Ferenczi--Mauduit \cite{FM97},
