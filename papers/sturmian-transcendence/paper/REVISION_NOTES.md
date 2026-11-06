@@ -251,3 +251,24 @@ notes, Pham's and Cassidy's…", which would imply Allikvere's deposit *is* refe
 Zenodo deposit like the other two, so the sentence says none of the three has been refereed.
 
 Rebuild: `latexmk` exit 0, 21 pages, 0 undefined references or citations.
+
+---
+
+## Single-file version for Hexagon
+
+`main_hexagon_v2.tex` — the v2 source with the bibliography inlined, for venues that want one
+`.tex`. Produced by running bibtex on the two-file version and substituting the resulting
+`main.bbl` (amsplain, 29 `\bibitem`s) for `\bibliography{refs}`.
+
+* **Self-contained**: no `\input`, `\include`, `\includegraphics`, `\bibliography` or
+  `\addbibresource`. Verified by compiling in an empty directory containing only this one file —
+  no `refs.bib`, no `.bbl` — `latexmk` exit 0, **21 pages, 0 undefined references or citations**,
+  and bibtex is never invoked.
+* **`\bibliographystyle{amsplain}` is deliberately retained** above the inlined
+  `thebibliography`. Without it `amsart` renders the labels as `[10]` instead of `10.`; with it
+  the output is byte-for-byte the same text as the two-file build (checked by comparing
+  `pdftotext` output after whitespace normalisation).
+* Packages required: `fontenc`, `inputenc`, `amsmath/amssymb/amsthm/mathtools`, `geometry`,
+  `xcolor`, `booktabs`, `microtype`, `hyperref`, `url`.
+* `main.tex` + `refs.bib` remain the editing source; regenerate the single file after any
+  citation change rather than editing the inlined bibliography by hand.
