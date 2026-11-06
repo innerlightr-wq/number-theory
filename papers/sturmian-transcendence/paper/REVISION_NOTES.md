@@ -237,3 +237,17 @@ discuss one number. Verified against his text: he writes Ξ = −Σ 2^⌊j log�
 w_β "the upper mechanical word of slope log2/log3 and intercept 0".
 
 Rebuild after this round: `latexmk` exit 0, **21 pages, 0 undefined references or citations**.
+
+**6. (third round, 6 November 2026) §9 closing sentence.** With Allikvere inserted, the old
+closing line "Both were found independently of [DJirr], and Cassidy's note was posted first"
+had a dangling "both" and a now-false "posted first" (Allikvere, 25 July, is the earliest;
+Cassidy was first only relative to [DJirr]). Replaced by:
+
+> "All three were found independently of [DJirr] and precede it; Allikvere's is the earliest.
+> None of the three has been refereed, and we make no comparative claim about any of them."
+
+Deviation from the suggested wording, deliberately: the suggestion read "Of the two unrefereed
+notes, Pham's and Cassidy's…", which would imply Allikvere's deposit *is* refereed. It is a
+Zenodo deposit like the other two, so the sentence says none of the three has been refereed.
+
+Rebuild: `latexmk` exit 0, 21 pages, 0 undefined references or citations.
